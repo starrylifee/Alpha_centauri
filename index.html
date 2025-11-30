@@ -52,12 +52,7 @@
                     <p class="subtitle typewriter">MISSION CONTROL SYSTEM v2.026</p>
                 </div>
                 
-                <div class="video-container" style="background: url('assets/images/video-poster.png') center/cover no-repeat;">
-                    <video id="intro-video">
-                        <source src="assets/video/intro.mp4" type="video/mp4">
-                        <p>영상을 재생할 수 없습니다.</p>
-                    </video>
-                    <div class="video-overlay"></div>
+                <div class="video-thumbnail" style="background: url('assets/images/video-poster.png') center/cover no-repeat;">
                     <button id="play-video-btn" class="btn btn-play">▶ 미션 브리핑 재생</button>
                 </div>
                 
@@ -829,6 +824,17 @@
                 </div>
             </div>
         </section>
+    </div>
+
+    <!-- 비디오 모달 -->
+    <div id="video-modal" class="modal hidden">
+        <div class="video-modal-content">
+            <button id="video-modal-close" class="video-close-btn">✕</button>
+            <video id="intro-video" controls>
+                <source src="assets/video/intro.mp4" type="video/mp4">
+                <p>영상을 재생할 수 없습니다.</p>
+            </video>
+        </div>
     </div>
 
     <!-- 힌트 모달 -->

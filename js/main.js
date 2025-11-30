@@ -14,6 +14,8 @@ const App = (function() {
     let teamNameInput = null;
     let confirmTeamBtn = null;
     let teamNameDisplay = null;
+    let videoModal = null;
+    let videoModalCloseBtn = null;
     
     /**
      * DOM 요소 초기화
@@ -27,23 +29,42 @@ const App = (function() {
         teamNameInput = document.getElementById('team-name-input');
         confirmTeamBtn = document.getElementById('confirm-team-btn');
         teamNameDisplay = document.getElementById('team-name-display');
+        videoModal = document.getElementById('video-modal');
+        videoModalCloseBtn = document.getElementById('video-modal-close');
     }
     
     /**
      * 인트로 이벤트 설정
      */
     function setupIntro() {
-        // 영상 재생 버튼
-        if (playVideoBtn && introVideo) {
+        // 영상 재생 버튼 - 모달 열기
+        if (playVideoBtn && introVideo && videoModal) {
             playVideoBtn.addEventListener('click', () => {
+                videoModal.classList.remove('hidden');
                 introVideo.play();
-                playVideoBtn.classList.add('hidden');
             });
         }
         
-        // 영상 종료 시 작전 개시 버튼 활성화
+        // 비디오 모달 닫기 버튼
+        if (videoModalCloseBtn) {
+            videoModalCloseBtn.addEventListener('click', () => {
+                closeVideoModal();
+            });
+        }
+        
+        // 모달 배경 클릭 시 닫기
+        if (videoModal) {
+            videoModal.addEventListener('click', (e) => {
+                if (e.target === videoModal) {
+                    closeVideoModal();
+                }
+            });
+        }
+        
+        // 영상 종료 시 모달 닫고 작전 개시 버튼 활성화
         if (introVideo) {
             introVideo.addEventListener('ended', () => {
+                closeVideoModal();
                 enableStartButton();
             });
             
@@ -57,12 +78,7 @@ const App = (function() {
         // 영상 건너뛰기
         if (skipIntroBtn) {
             skipIntroBtn.addEventListener('click', () => {
-                if (introVideo) {
-                    introVideo.pause();
-                }
-                if (playVideoBtn) {
-                    playVideoBtn.classList.add('hidden');
-                }
+                closeVideoModal();
                 enableStartButton();
             });
         }
@@ -72,6 +88,18 @@ const App = (function() {
             startMissionBtn.addEventListener('click', () => {
                 showTeamModal();
             });
+        }
+    }
+    
+    /**
+     * 비디오 모달 닫기
+     */
+    function closeVideoModal() {
+        if (videoModal) {
+            videoModal.classList.add('hidden');
+        }
+        if (introVideo) {
+            introVideo.pause();
         }
     }
     
@@ -242,6 +270,11 @@ const App = (function() {
                 const hintModal = document.getElementById('hint-modal');
                 const hintDisplayModal = document.getElementById('hint-display-modal');
                 const bonusModal = document.getElementById('bonus-modal');
+                
+                // 비디오 모달 닫기
+                if (videoModal && !videoModal.classList.contains('hidden')) {
+                    closeVideoModal();
+                }
                 
                 if (hintModal && !hintModal.classList.contains('hidden')) {
                     hintModal.classList.add('hidden');

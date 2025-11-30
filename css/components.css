@@ -1119,6 +1119,95 @@
     display: none;
 }
 
+/* ========================================
+   Video Modal
+   ======================================== */
+.video-modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 900px;
+    background: #000;
+    border: 2px solid var(--neon-green);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 0 50px var(--neon-green-glow);
+    overflow: hidden;
+    animation: modalSlide 0.3s ease;
+}
+
+.video-modal-content video {
+    width: 100%;
+    height: auto;
+    display: block;
+    max-height: 80vh;
+}
+
+.video-close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.7);
+    border: 2px solid var(--neon-green);
+    border-radius: 50%;
+    color: var(--neon-green);
+    font-size: 1.2rem;
+    cursor: pointer;
+    z-index: 10;
+    transition: all var(--transition-fast);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-close-btn:hover {
+    background: var(--neon-green);
+    color: #000;
+    box-shadow: 0 0 20px var(--neon-green-glow);
+}
+
+/* Video Thumbnail */
+.video-thumbnail {
+    width: 100%;
+    max-width: 500px;
+    aspect-ratio: 16 / 9;
+    border-radius: var(--radius-lg);
+    border: 2px solid var(--border-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: var(--spacing-xl) auto;
+    position: relative;
+    cursor: pointer;
+    transition: all var(--transition-normal);
+    overflow: hidden;
+}
+
+.video-thumbnail::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    transition: all var(--transition-normal);
+}
+
+.video-thumbnail:hover {
+    border-color: var(--neon-green);
+    box-shadow: 0 0 30px var(--neon-green-glow);
+}
+
+.video-thumbnail:hover::before {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.video-thumbnail .btn-play {
+    position: relative;
+    z-index: 1;
+}
+
 .modal-content {
     background: var(--bg-secondary);
     border: 2px solid var(--border-color);
