@@ -1,0 +1,83 @@
+{
+  "_comment": "정답 설정 파일 - 추후 변경 가능",
+  "_note": "해시값은 js/validation.js의 generateHash() 함수로 생성할 수 있습니다.",
+  
+  "stage1": {
+    "description": "보안 접속 코드",
+    "questions": [
+      "조난자가 있는 행성의 이름은?",
+      "프록시마 센타우리는 어떤 종류의 별인가?",
+      "지구에서 프록시마까지의 거리는? (광년)"
+    ],
+    "answers": ["프록시마b", "적색왜성", "4.24"],
+    "combined": "프록시마b적색왜성4.24",
+    "validation": {
+      "type": "exact_match",
+      "ignoreSpaces": true,
+      "ignoreCase": false
+    },
+    "hint": "행성은 \"프록시마\"로 시작하고, 별의 종류는 크기가 작고 빨간색입니다. 거리는 4광년보다 조금 더 멀어요."
+  },
+  
+  "stage2": {
+    "description": "생존 구역",
+    "question": "조석 고정 행성에서 생존 가능한 구역의 명칭은?",
+    "keywords": ["황혼", "경계", "twilight", "terminator"],
+    "validation": {
+      "type": "keyword_match",
+      "partialMatch": true
+    },
+    "hint": "조석 고정된 행성에서는 항상 낮인 곳과 항상 밤인 곳 사이의 경계 지역이 생존에 적합합니다."
+  },
+  
+  "stage3": {
+    "description": "좌표 추적",
+    "questions": {
+      "region": "별 궤적을 보고 조난자가 있는 구역은?",
+      "latitude": "별의 중심 고도(위도)는?"
+    },
+    "answers": {
+      "region": "night",
+      "regionLabel": "밤의 지역",
+      "latitude": 45,
+      "latitudeRange": {
+        "min": 43,
+        "max": 47
+      }
+    },
+    "validation": {
+      "type": "multi_field",
+      "regionType": "exact_match",
+      "latitudeType": "range_match"
+    },
+    "hint": "별이 완전한 원을 그리며 회전한다면 그곳은 밤의 지역입니다. 별의 중심의 고도가 곧 그 지역의 위도입니다."
+  },
+  
+  "stage4": {
+    "description": "궤도 시뮬레이션",
+    "question": "햄스터 로봇 발사 타이밍 계산 - 학습자 입력 기반",
+    "validation": {
+      "type": "user_input",
+      "noCorrectAnswer": true
+    },
+    "feedbackMessages": {
+      "success": "🎉 축하합니다! 햄스터 로봇이 성공적으로 목표에 도달했습니다!",
+      "fail": "💪 아쉽지만 괜찮아요. 다음에는 꼭 성공할 거예요!"
+    },
+    "hint": "호만 전이 궤도를 이용할 때, 외행성이 도착지점에서 특정 각도만큼 앞서 있을 때 발사해야 합니다."
+  },
+  
+  "scoring": {
+    "maxTime": 200,
+    "timeUnit": "minutes",
+    "hintPenalty": 5,
+    "formula": "최종점수 = (200 - 소요시간(분)) - (힌트횟수 × 5)"
+  },
+  
+  "hints": {
+    "stage1": "행성은 \"프록시마\"로 시작하고, 별의 종류는 크기가 작고 빨간색입니다. 거리는 4광년보다 조금 더 멀어요.",
+    "stage2": "조석 고정된 행성에서는 항상 낮인 곳과 항상 밤인 곳 사이의 경계 지역이 생존에 적합합니다. 이 지역을 무엇이라고 부를까요?",
+    "stage3": "별이 완전한 원을 그리며 회전한다면 그곳은 밤의 지역입니다. 별의 중심(북극성 위치)의 고도가 곧 그 지역의 위도입니다.",
+    "stage4": "호만 전이 궤도를 이용할 때, 외행성이 도착지점에서 특정 각도만큼 앞서 있을 때 발사해야 합니다. 활동지의 계산 결과를 확인하세요."
+  }
+}
