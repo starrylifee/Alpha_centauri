@@ -309,6 +309,61 @@ const App = (function() {
     }
     
     /**
+     * Phase 입력값 검증
+     * @param {string} validateId - 검증할 입력 필드 ID 또는 특수 키
+     * @returns {boolean} 검증 통과 여부
+     */
+    function validatePhaseInput(validateId) {
+        // 에러 메시지 요소
+        const errorEl = document.getElementById(`${validateId}-error`);
+        
+        // 특수 검증 케이스
+        if (validateId === 'stage4-measure') {
+            // Stage 4 Phase 2: 측정값 및 평균 계산 검증
+            const innerAvg = document.getElementById('inner-avg')?.textContent;
+            const outerAvg = document.getElementById('outer-avg')?.textContent;
+            
+            if (innerAvg === '--' || outerAvg === '--') {
+                if (errorEl) errorEl.classList.remove('hidden');
+                return false;
+            }
+            if (errorEl) errorEl.classList.add('hidden');
+            return true;
+        }
+        
+        // 일반 입력 필드 검증
+        const inputEl = document.getElementById(validateId);
+        if (!inputEl) {
+            console.warn('[App] Validation element not found:', validateId);
+            return true; // 요소가 없으면 통과
+        }
+        
+        let isValid = false;
+        
+        // 입력 타입에 따른 검증
+        if (inputEl.tagName === 'SELECT') {
+            isValid = inputEl.value !== '';
+        } else if (inputEl.tagName === 'INPUT') {
+            isValid = inputEl.value.trim() !== '';
+        } else if (inputEl.tagName === 'TEXTAREA') {
+            isValid = inputEl.value.trim() !== '';
+        }
+        
+        // 에러 표시/숨김
+        if (errorEl) {
+            if (isValid) {
+                errorEl.classList.add('hidden');
+            } else {
+                errorEl.classList.remove('hidden');
+                // 입력 필드에 포커스
+                inputEl.focus();
+            }
+        }
+        
+        return isValid;
+    }
+    
+    /**
      * 단계 내 Phase 진행 시스템 설정
      */
     function setupPhaseSystem() {
@@ -319,6 +374,16 @@ const App = (function() {
             
             const nextPhaseNum = nextBtn.getAttribute('data-next-phase');
             if (!nextPhaseNum) return;
+            
+            // Validation 체크
+            const validateId = nextBtn.getAttribute('data-validate');
+            if (validateId) {
+                const isValid = validatePhaseInput(validateId);
+                if (!isValid) {
+                    console.log('[App] Validation failed for:', validateId);
+                    return; // 검증 실패 시 진행하지 않음
+                }
+            }
             
             // 현재 stage 찾기
             const currentStage = nextBtn.closest('.stage');
@@ -342,7 +407,67 @@ const App = (function() {
             }
         });
         
+        // 모든 "이전" 버튼에 이벤트 리스너 추가 (검증 없이 자유롭게 이동)
+        document.addEventListener('click', (e) => {
+            const prevBtn = e.target.closest('.btn-prev');
+            if (!prevBtn) return;
+            
+            const prevPhaseNum = prevBtn.getAttribute('data-prev-phase');
+            if (!prevPhaseNum) return;
+            
+            // 현재 stage 찾기
+            const currentStage = prevBtn.closest('.stage');
+            if (!currentStage) return;
+            
+            // 현재 phase 숨기기
+            const currentPhase = prevBtn.closest('.stage-phase');
+            if (currentPhase) {
+                currentPhase.classList.add('hidden');
+            }
+            
+            // 이전 phase 표시
+            const prevPhase = currentStage.querySelector(`.phase-${prevPhaseNum}`);
+            if (prevPhase) {
+                prevPhase.classList.remove('hidden');
+                
+                // 스크롤 상단으로
+                prevPhase.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                
+                console.log('[App] Returned to phase', prevPhaseNum);
+            }
+        });
+        
         console.log('[App] Phase system initialized');
+    }
+    
+    /**
+     * 조석 고정 시뮬레이션 설정
+     */
+    function setupTidalSimulation() {
+        const simBtn = document.getElementById('tidal-sim-btn');
+        const simOrbit = document.querySelector('.sim-orbit');
+        
+        if (!simBtn || !simOrbit) return;
+        
+        let isRunning = false;
+        
+        simBtn.addEventListener('click', () => {
+            if (isRunning) {
+                // 정지
+                simOrbit.classList.remove('animating');
+                simBtn.innerHTML = '<span>▶ 시뮬레이션 시작</span>';
+                simBtn.classList.remove('running');
+                isRunning = false;
+            } else {
+                // 시작
+                simOrbit.classList.add('animating');
+                simBtn.innerHTML = '<span>⏹ 시뮬레이션 정지</span>';
+                simBtn.classList.add('running');
+                isRunning = true;
+            }
+        });
+        
+        console.log('[App] Tidal simulation initialized');
     }
     
     /**
@@ -387,6 +512,7 @@ const App = (function() {
         setupBonusModal();
         setupHomeButton();
         setupPhaseSystem();
+        setupTidalSimulation();
         setupKeyboardShortcuts();
         setupBeforeUnload();
         

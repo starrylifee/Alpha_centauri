@@ -179,7 +179,7 @@
                         </div>
                         <div class="worksheet-content">
                             <p class="worksheet-instruction">"이곳은 지구가 아니다. 우리의 상식이 통하지 않는 곳이다."</p>
-                            <p class="worksheet-text">시뮬레이션을 관찰하고 빈칸을 채우세요.</p>
+                            <p class="worksheet-text">아래 시뮬레이션을 실행하고 빈칸을 채우세요.</p>
                             
                             <table class="data-table">
                                 <thead>
@@ -203,18 +203,42 @@
                                 </tbody>
                             </table>
                             
+                            <!-- 조석고정 시뮬레이션 -->
+                            <div class="tidal-lock-simulation">
+                                <div class="simulation-header">
+                                    <span class="simulation-title">🪐 공전/자전 시뮬레이션</span>
+                                    <button id="tidal-sim-btn" class="btn btn-secondary btn-sim">
+                                        <span>▶ 시뮬레이션 시작</span>
+                                    </button>
+                                </div>
+                                <div class="simulation-container">
+                                    <div class="sim-star">☀️</div>
+                                    <div class="sim-orbit">
+                                        <div class="sim-planet" id="sim-planet">
+                                            <div class="planet-surface">
+                                                <div class="planet-day">☀</div>
+                                                <div class="planet-night">🌙</div>
+                                            </div>
+                                            <div class="planet-marker">▲</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="simulation-hint">💡 행성의 ▲ 표시가 항상 어디를 향하는지 관찰하세요!</p>
+                            </div>
+                            
                             <div class="observation-question">
                                 <label>🔍 관측 결과: 행성의 한쪽 면이 계속 어디를 바라보고 있나요?</label>
                                 <div class="inline-input">
                                     <span>행성의 한쪽 면이 계속 (</span>
-                                    <input type="text" id="stage2-q1" class="inline-text-input" placeholder="별/항성" autocomplete="off">
+                                    <input type="text" id="stage2-q1" class="inline-text-input" placeholder="?" autocomplete="off">
                                     <span>) 쪽만 바라보며 돌고 있다.</span>
                                 </div>
+                                <p class="validation-error hidden" id="stage2-q1-error">⚠️ 관측 결과를 입력해주세요!</p>
                             </div>
                         </div>
                     </div>
                     
-                    <button class="btn btn-primary btn-next" data-next-phase="2">
+                    <button class="btn btn-primary btn-next" data-next-phase="2" data-validate="stage2-q1">
                         <span>관측 완료, 다음 분석 ▶</span>
                     </button>
                 </div>
@@ -231,10 +255,11 @@
                                 <label>📝 결론: 이 행성은 어떤 상태인가요?</label>
                                 <div class="inline-input">
                                     <span>이 행성은 (</span>
-                                    <input type="text" id="stage2-q2" class="inline-text-input" placeholder="현상 이름" autocomplete="off">
+                                    <input type="text" id="stage2-q2" class="inline-text-input" placeholder="?" autocomplete="off">
                                     <span>) 상태이다.</span>
                                 </div>
                                 <p class="hint-text">💡 달처럼 한쪽 면만 보여주는 현상의 이름은?</p>
+                                <p class="validation-error hidden" id="stage2-q2-error">⚠️ 현상 이름을 입력해주세요!</p>
                             </div>
                         </div>
                     </div>
@@ -256,9 +281,14 @@
                         <div class="diagram-label">조석 고정 행성 단면도</div>
                     </div>
                     
-                    <button class="btn btn-primary btn-next" data-next-phase="3">
-                        <span>생존 구역 탐색 ▶</span>
-                    </button>
+                    <div class="phase-nav-buttons">
+                        <button class="btn btn-secondary btn-prev" data-prev-phase="1">
+                            <span>◀ 이전</span>
+                        </button>
+                        <button class="btn btn-primary btn-next" data-next-phase="3" data-validate="stage2-q2">
+                            <span>생존 구역 탐색 ▶</span>
+                        </button>
+                    </div>
                 </div>
                 
                 <!-- Phase 3: 생존 구역 결정 -->
@@ -298,6 +328,10 @@
                             </div>
                         </div>
                     </div>
+                    
+                    <button class="btn btn-secondary btn-prev btn-prev-top" data-prev-phase="2">
+                        <span>◀ 이전 분석</span>
+                    </button>
                     
                     <button id="stage2-submit" class="btn btn-submit btn-full">
                         <span>1차 수색 지점 설정 완료</span>
@@ -384,6 +418,7 @@
                                     </select>
                                     <span>) 자전하기 때문입니다.</span>
                                 </div>
+                                <p class="validation-error hidden" id="stage3-q1-error">⚠️ 답을 선택해주세요!</p>
                             </div>
                             
                             <div class="observation-question">
@@ -396,9 +431,14 @@
                         </div>
                     </div>
                     
-                    <button class="btn btn-primary btn-next" data-next-phase="3">
-                        <span>그렇다면... ▶</span>
-                    </button>
+                    <div class="phase-nav-buttons">
+                        <button class="btn btn-secondary btn-prev" data-prev-phase="1">
+                            <span>◀ 이전</span>
+                        </button>
+                        <button class="btn btn-primary btn-next" data-next-phase="3" data-validate="stage3-q1">
+                            <span>그렇다면... ▶</span>
+                        </button>
+                    </div>
                 </div>
                 
                 <!-- Phase 3: 반전 공개 + 위치 추론 -->
@@ -423,16 +463,22 @@
                                 <label>📍 대원은 지금 어디에 있습니까?</label>
                                 <div class="inline-input">
                                     <span>대원은 현재 (</span>
-                                    <input type="text" id="stage3-q2" class="inline-text-input medium" placeholder="영원한 _의 영역" autocomplete="off">
+                                    <input type="text" id="stage3-q2" class="inline-text-input medium" placeholder="?" autocomplete="off">
                                     <span>)에 고립되어 있습니다.</span>
                                 </div>
+                                <p class="validation-error hidden" id="stage3-q2-error">⚠️ 대원의 위치를 입력해주세요!</p>
                             </div>
                         </div>
                     </div>
                     
-                    <button class="btn btn-primary btn-next" data-next-phase="4">
-                        <span>위치 확인 완료 ▶</span>
-                    </button>
+                    <div class="phase-nav-buttons">
+                        <button class="btn btn-secondary btn-prev" data-prev-phase="2">
+                            <span>◀ 이전</span>
+                        </button>
+                        <button class="btn btn-primary btn-next" data-next-phase="4" data-validate="stage3-q2">
+                            <span>위치 확인 완료 ▶</span>
+                        </button>
+                    </div>
                 </div>
                 
                 <!-- Phase 4: 홀로그램 시뮬레이션 -->
@@ -463,9 +509,14 @@
                         </div>
                     </div>
                     
-                    <button class="btn btn-primary btn-next" data-next-phase="5">
-                        <span>측정 완료 ▶</span>
-                    </button>
+                    <div class="phase-nav-buttons">
+                        <button class="btn btn-secondary btn-prev" data-prev-phase="3">
+                            <span>◀ 이전</span>
+                        </button>
+                        <button class="btn btn-primary btn-next" data-next-phase="5">
+                            <span>측정 완료 ▶</span>
+                        </button>
+                    </div>
                 </div>
                 
                 <!-- Phase 5: 최종 좌표 입력 -->
@@ -511,6 +562,10 @@
                             </div>
                         </div>
                     </div>
+
+                    <button class="btn btn-secondary btn-prev btn-prev-top" data-prev-phase="4">
+                        <span>◀ 이전 단계</span>
+                    </button>
 
                     <button id="stage3-submit" class="btn btn-submit btn-full">
                         <span>좌표 전송 완료</span>
@@ -609,12 +664,18 @@
                             <button class="btn btn-secondary btn-calc" id="calc-avg-btn">
                                 <span>평균 계산하기</span>
                             </button>
+                            <p class="validation-error hidden" id="stage4-measure-error">⚠️ 측정값을 모두 입력하고 평균 계산을 해주세요!</p>
                         </div>
                     </div>
                     
-                    <button class="btn btn-primary btn-next" data-next-phase="3">
-                        <span>발사 윈도우 계산 ▶</span>
-                    </button>
+                    <div class="phase-nav-buttons">
+                        <button class="btn btn-secondary btn-prev" data-prev-phase="1">
+                            <span>◀ 이전</span>
+                        </button>
+                        <button class="btn btn-primary btn-next" data-next-phase="3" data-validate="stage4-measure">
+                            <span>발사 윈도우 계산 ▶</span>
+                        </button>
+                    </div>
                 </div>
                 
                 <!-- Phase 3: 발사 윈도우 계산 -->
@@ -657,14 +718,20 @@
                                         <input type="number" id="stage4-angle" class="calc-input result-input" placeholder="?">
                                         <span>) 도 뒤에 있을 때 발사해야 한다!</span>
                                     </div>
+                                    <p class="validation-error hidden" id="stage4-angle-error">⚠️ 발사 각도를 입력해주세요!</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     
-                    <button class="btn btn-primary btn-next" data-next-phase="4">
-                        <span>실제 시뮬레이션 시작! ▶</span>
-                    </button>
+                    <div class="phase-nav-buttons">
+                        <button class="btn btn-secondary btn-prev" data-prev-phase="2">
+                            <span>◀ 이전</span>
+                        </button>
+                        <button class="btn btn-primary btn-next" data-next-phase="4" data-validate="stage4-angle">
+                            <span>실제 시뮬레이션 시작! ▶</span>
+                        </button>
+                    </div>
                 </div>
                 
                 <!-- Phase 4: Time Attack 결과 -->
@@ -746,6 +813,10 @@
                             </div>
                         </div>
                     </div>
+
+                    <button class="btn btn-secondary btn-prev btn-prev-top" data-prev-phase="3">
+                        <span>◀ 이전 단계</span>
+                    </button>
 
                     <button id="stage4-submit" class="btn btn-submit btn-full">
                         <span>최종 결과 전송</span>
