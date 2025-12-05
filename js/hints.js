@@ -3,8 +3,8 @@
  * 힌트 시스템
  */
 
-const Hints = (function() {
-    
+const Hints = (function () {
+
     // 단계별 힌트 데이터 (적절한 힌트로 수정)
     const hintData = {
         1: {
@@ -16,7 +16,7 @@ const Hints = (function() {
             used: false
         },
         3: {
-            text: '💡 힌트 3: 24시간 별 사진을 찍으려면 계속 어두워야 합니다! 황혼 지역은 밝아서 별 사진을 못 찍어요. 대원은 "밤의 지역"에 있습니다. 시뮬레이션 룸에서 북극성 고도를 측정하면 그게 위도입니다!',
+            text: '💡 힌트 3: 24시간 동안 별이 30도밖에 안 돌았으니 자전이 매우 느린 겁니다! 그리고 별 사진을 찍으려면 계속 어두워야 하니 대원은 "밤의 지역"에 있겠죠? 시뮬레이션 룸에서 북극성 고도를 측정하면 그게 바로 위도입니다!',
             used: false
         },
         4: {
@@ -24,45 +24,45 @@ const Hints = (function() {
             used: false
         }
     };
-    
+
     // 현재 선택된 단계
     let currentStage = null;
     let onConfirmCallback = null;
-    
+
     /**
      * 힌트 시스템 초기화
      */
     function init() {
         console.log('[Hints] Initializing...');
-        
+
         // 힌트 확인 모달 버튼 이벤트
         const cancelBtn = document.getElementById('hint-cancel');
         const confirmBtn = document.getElementById('hint-confirm');
         const closeBtn = document.getElementById('hint-close');
         const confirmModal = document.getElementById('hint-modal');
         const displayModal = document.getElementById('hint-display-modal');
-        
+
         if (cancelBtn) {
-            cancelBtn.addEventListener('click', function() {
+            cancelBtn.addEventListener('click', function () {
                 console.log('[Hints] Cancel clicked');
                 hideConfirmModal();
             });
         }
-        
+
         if (confirmBtn) {
-            confirmBtn.addEventListener('click', function() {
+            confirmBtn.addEventListener('click', function () {
                 console.log('[Hints] Confirm clicked, currentStage:', currentStage);
                 confirmHint();
             });
         }
-        
+
         if (closeBtn) {
-            closeBtn.addEventListener('click', function() {
+            closeBtn.addEventListener('click', function () {
                 console.log('[Hints] Close clicked');
                 hideDisplayModal();
             });
         }
-        
+
         // 배경 클릭시 모달 닫기
         if (confirmModal) {
             confirmModal.addEventListener('click', (e) => {
@@ -71,7 +71,7 @@ const Hints = (function() {
                 }
             });
         }
-        
+
         if (displayModal) {
             displayModal.addEventListener('click', (e) => {
                 if (e.target === displayModal) {
@@ -79,13 +79,13 @@ const Hints = (function() {
                 }
             });
         }
-        
+
         // 페널티 표시 업데이트
         updatePenaltyDisplay();
-        
+
         console.log('[Hints] Initialized successfully');
     }
-    
+
     /**
      * 힌트 요청 (확인 모달 표시)
      * @param {number} stage - 단계 번호
@@ -93,60 +93,60 @@ const Hints = (function() {
      */
     function requestHint(stage, callback) {
         console.log('[Hints] requestHint called for stage:', stage);
-        
+
         if (!hintData[stage]) {
             console.warn('[Hints] No hint available for stage', stage);
             return;
         }
-        
+
         currentStage = stage;
         onConfirmCallback = callback;
-        
+
         showConfirmModal();
     }
-    
+
     /**
      * 힌트 확인 처리
      */
     function confirmHint() {
         console.log('[Hints] confirmHint called, currentStage:', currentStage);
-        
+
         hideConfirmModal();
-        
+
         if (currentStage && hintData[currentStage]) {
             // 힌트 사용 횟수 증가
             const hintCount = Storage.incrementHintCount();
             console.log('[Hints] Hint count incremented to:', hintCount);
-            
+
             // 힌트 표시
             showHint(currentStage);
-            
+
             // 페널티 표시 업데이트
             updatePenaltyDisplay();
-            
+
             // 보너스 프로그램 체크
             checkBonusProgram();
-            
+
             // 콜백 실행
             if (typeof onConfirmCallback === 'function') {
                 onConfirmCallback(hintCount);
             }
-            
+
             console.log('[Hints] Hint used for stage', currentStage, '- Total hints:', hintCount);
         } else {
             console.warn('[Hints] confirmHint called but currentStage is:', currentStage);
         }
     }
-    
+
     /**
      * 힌트 표시
      * @param {number} stage - 단계 번호
      */
     function showHint(stage) {
         console.log('[Hints] showHint called for stage:', stage);
-        
+
         const hintText = document.getElementById('hint-text');
-        
+
         if (hintData[stage] && hintText) {
             hintText.textContent = hintData[stage].text;
             hintData[stage].used = true;
@@ -156,7 +156,7 @@ const Hints = (function() {
             console.warn('[Hints] Could not show hint. hintData:', !!hintData[stage], 'hintText:', !!hintText);
         }
     }
-    
+
     /**
      * 페널티 표시 업데이트
      */
@@ -166,9 +166,9 @@ const Hints = (function() {
             const hintCount = Storage.getHintCount();
             const penalty = hintCount * 5;
             penaltyDisplay.textContent = `-${penalty}점`;
-            
+
             console.log('[Hints] Penalty display updated:', `-${penalty}점`);
-            
+
             // 페널티가 있으면 강조
             if (penalty > 0) {
                 penaltyDisplay.classList.add('has-penalty');
@@ -179,22 +179,22 @@ const Hints = (function() {
             console.warn('[Hints] penalty-display element not found');
         }
     }
-    
+
     /**
      * 보너스 프로그램 체크 (-30점 이상 감점 시)
      */
     function checkBonusProgram() {
         const hintCount = Storage.getHintCount();
         const penalty = hintCount * 5;
-        
+
         console.log('[Hints] Checking bonus program. Penalty:', penalty);
-        
+
         // -30점 이상 감점 시 보너스 프로그램 표시
         if (penalty >= 30) {
             showBonusProgram();
         }
     }
-    
+
     /**
      * 보너스 프로그램 표시
      */
@@ -205,7 +205,7 @@ const Hints = (function() {
             console.log('[Hints] Bonus program modal shown');
         }
     }
-    
+
     /**
      * 확인 모달 표시
      */
@@ -218,7 +218,7 @@ const Hints = (function() {
             console.error('[Hints] hint-modal element not found!');
         }
     }
-    
+
     /**
      * 확인 모달 숨김
      */
@@ -230,7 +230,7 @@ const Hints = (function() {
         }
         // currentStage는 유지 (confirmHint에서 사용)
     }
-    
+
     /**
      * 힌트 표시 모달 보이기
      */
@@ -243,7 +243,7 @@ const Hints = (function() {
             console.error('[Hints] hint-display-modal element not found!');
         }
     }
-    
+
     /**
      * 힌트 표시 모달 숨김
      */
@@ -257,7 +257,7 @@ const Hints = (function() {
         currentStage = null;
         onConfirmCallback = null;
     }
-    
+
     /**
      * 특정 단계의 힌트 텍스트 가져오기
      * @param {number} stage - 단계 번호
@@ -266,7 +266,7 @@ const Hints = (function() {
     function getHintText(stage) {
         return hintData[stage]?.text || null;
     }
-    
+
     /**
      * 힌트 사용 여부 확인
      * @param {number} stage - 단계 번호
@@ -275,7 +275,7 @@ const Hints = (function() {
     function isHintUsed(stage) {
         return hintData[stage]?.used || false;
     }
-    
+
     /**
      * 모든 힌트 초기화
      */
@@ -286,7 +286,7 @@ const Hints = (function() {
         currentStage = null;
         onConfirmCallback = null;
     }
-    
+
     /**
      * 현재 페널티 점수 가져오기
      * @returns {number} 페널티 점수
@@ -294,7 +294,7 @@ const Hints = (function() {
     function getPenalty() {
         return Storage.getHintCount() * 5;
     }
-    
+
     // Public API
     return {
         init,

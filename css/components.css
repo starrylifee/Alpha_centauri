@@ -30,14 +30,14 @@
     background: linear-gradient(135deg, var(--neon-green-dim), var(--neon-green));
     color: var(--bg-primary);
     border: 2px solid var(--neon-green);
-    box-shadow: 
+    box-shadow:
         0 0 20px var(--neon-green-glow),
         inset 0 0 20px rgba(255, 255, 255, 0.1);
 }
 
 .btn-primary:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 
+    box-shadow:
         0 0 30px var(--neon-green-glow),
         0 5px 20px rgba(0, 0, 0, 0.3),
         inset 0 0 20px rgba(255, 255, 255, 0.2);
@@ -71,7 +71,7 @@
 
 .btn-submit:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 
+    box-shadow:
         0 0 25px var(--neon-blue-glow),
         0 5px 15px rgba(0, 0, 0, 0.3);
 }
@@ -144,18 +144,22 @@
     left: -100%;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.3),
-        transparent
-    );
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.3),
+            transparent);
     animation: btnGlow 3s infinite;
 }
 
 @keyframes btnGlow {
-    0% { left: -100%; }
-    50%, 100% { left: 100%; }
+    0% {
+        left: -100%;
+    }
+
+    50%,
+    100% {
+        left: 100%;
+    }
 }
 
 /* ========================================
@@ -265,11 +269,11 @@
     transition: all var(--transition-normal);
 }
 
-.radio-item input[type="radio"]:checked + .radio-custom {
+.radio-item input[type="radio"]:checked+.radio-custom {
     border-color: var(--neon-green);
 }
 
-.radio-item input[type="radio"]:checked + .radio-custom::after {
+.radio-item input[type="radio"]:checked+.radio-custom::after {
     content: '';
     position: absolute;
     top: 50%;
@@ -334,9 +338,17 @@
     border-radius: 50%;
 }
 
-.terminal-dot.red { background: #ff5f56; }
-.terminal-dot.yellow { background: #ffbd2e; }
-.terminal-dot.green { background: #27ca40; }
+.terminal-dot.red {
+    background: #ff5f56;
+}
+
+.terminal-dot.yellow {
+    background: #ffbd2e;
+}
+
+.terminal-dot.green {
+    background: #27ca40;
+}
 
 .terminal-title {
     margin-left: var(--spacing-md);
@@ -436,78 +448,177 @@
 }
 
 /* ========================================
-   Tidal Lock Visual
+   Tidal Lock Visual - 프록시마 b 다이어그램
    ======================================== */
 .tidal-lock-visual {
     margin-top: var(--spacing-lg);
     text-align: center;
 }
 
-.planet-diagram {
+.planet-orbit-diagram {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 0;
+    gap: var(--spacing-xl);
+    padding: var(--spacing-xl);
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: var(--radius-lg);
     margin-bottom: var(--spacing-md);
 }
 
-.star-side, .dark-side {
-    width: 120px;
-    height: 150px;
+/* 항성 */
+.diagram-star {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.diagram-star .star-emoji {
+    font-size: 4rem;
+    animation: starPulse 2s ease-in-out infinite;
+}
+
+@keyframes starPulse {
+
+    0%,
+    100% {
+        filter: drop-shadow(0 0 15px #ffd700);
+        transform: scale(1);
+    }
+
+    50% {
+        filter: drop-shadow(0 0 30px #ff8c00) drop-shadow(0 0 50px #ffd700);
+        transform: scale(1.05);
+    }
+}
+
+.diagram-star .star-label {
+    font-size: 0.75rem;
+    color: var(--warning-yellow);
+    font-family: var(--font-display);
+}
+
+/* 행성 - 원형 */
+.diagram-planet {
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    display: flex;
+}
+
+/* 낮 (항성 방향) */
+.planet-day-side {
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(90deg, #ff6b35, #f7931a);
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: var(--spacing-sm);
-    font-size: 0.8rem;
+    padding: var(--spacing-xs);
 }
 
-.star-side {
-    background: linear-gradient(90deg, #ff6b35 0%, #f7931a 100%);
-    border-radius: 10px 0 0 10px;
+/* 황혼지대 (중간) */
+.planet-twilight {
+    width: 20%;
+    height: 100%;
+    background: linear-gradient(90deg, #f7931a, #50fa7b, #16213e);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: twilightGlow 2s ease-in-out infinite;
+}
+
+@keyframes twilightGlow {
+
+    0%,
+    100% {
+        box-shadow: inset 0 0 10px rgba(80, 250, 123, 0.3);
+    }
+
+    50% {
+        box-shadow: inset 0 0 20px rgba(80, 250, 123, 0.6);
+    }
+}
+
+/* 밤 (반대편) */
+.planet-night-side {
+    width: 40%;
+    height: 100%;
+    background: linear-gradient(90deg, #16213e, #0a0a14);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: var(--spacing-xs);
+}
+
+.zone-temp {
+    font-size: 0.7rem;
+    font-weight: bold;
+}
+
+.zone-name {
+    font-size: 0.55rem;
+    opacity: 0.9;
+    text-align: center;
+}
+
+.planet-day-side .zone-temp,
+.planet-day-side .zone-name {
     color: #fff;
+    text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
 }
 
-.dark-side {
-    background: linear-gradient(90deg, #1a1a2e 0%, #16213e 100%);
-    border-radius: 0 10px 10px 0;
+.planet-twilight .zone-name {
+    color: var(--neon-green);
+    font-weight: bold;
+    writing-mode: vertical-rl;
+    font-size: 0.6rem;
+}
+
+.planet-night-side .zone-temp,
+.planet-night-side .zone-name {
     color: #8899a6;
 }
 
-.planet-core {
-    width: 60px;
-    height: 150px;
-    background: linear-gradient(90deg, 
-        #ff6b35 0%, 
-        #f7931a 20%, 
-        #50fa7b 40%, 
-        #50fa7b 60%,
-        #16213e 80%,
-        #1a1a2e 100%
-    );
-    position: relative;
+.diagram-label {
+    font-family: var(--font-display);
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    letter-spacing: 1px;
 }
 
-.twilight-zone {
-    position: absolute;
-    left: 50%;
-    top: 0;
-    transform: translateX(-50%);
-    width: 20px;
-    height: 100%;
-    background: linear-gradient(180deg, 
-        var(--neon-green) 0%,
-        transparent 20%,
-        transparent 80%,
-        var(--neon-green) 100%
-    );
-    opacity: 0.5;
-    animation: twilightPulse 2s ease-in-out infinite;
+/* 황혼지대 라벨 (프록시마 b 위에) */
+.twilight-label {
+    color: var(--neon-green);
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin-top: var(--spacing-md);
+    text-shadow: 0 0 10px var(--neon-green-glow);
+    text-align: center;
+    width: 100%;
 }
 
-@keyframes twilightPulse {
-    0%, 100% { opacity: 0.3; }
-    50% { opacity: 0.6; }
+/* 반응형 */
+@media (max-width: 480px) {
+    .planet-orbit-diagram {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+
+    .diagram-planet {
+        width: 120px;
+        height: 120px;
+    }
+
+    .diagram-star .star-emoji {
+        font-size: 3rem;
+    }
 }
 
 .temp {
@@ -612,8 +723,15 @@
 }
 
 @keyframes pulseRed {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.7; }
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
 }
 
 /* ========================================
@@ -632,6 +750,7 @@
         opacity: 0;
         transform: translateY(20px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -690,9 +809,12 @@
 }
 
 @keyframes nextBtnPulse {
-    0%, 100% {
+
+    0%,
+    100% {
         box-shadow: 0 0 20px var(--neon-green-glow);
     }
+
     50% {
         box-shadow: 0 0 40px var(--neon-green-glow), 0 0 60px var(--neon-green-glow);
     }
@@ -717,9 +839,12 @@
 }
 
 @keyframes revealPulse {
-    0%, 100% {
+
+    0%,
+    100% {
         box-shadow: 0 0 20px var(--alert-red-glow);
     }
+
     50% {
         box-shadow: 0 0 40px var(--alert-red-glow);
     }
@@ -778,10 +903,13 @@
 }
 
 @keyframes missionPulse {
-    0%, 100% { 
+
+    0%,
+    100% {
         box-shadow: 0 0 10px var(--neon-green-glow);
     }
-    50% { 
+
+    50% {
         box-shadow: 0 0 25px var(--neon-green-glow);
     }
 }
@@ -846,7 +974,7 @@
         flex-direction: column;
         text-align: center;
     }
-    
+
     .mission-steps li {
         padding-left: var(--spacing-2xl);
     }
@@ -902,8 +1030,13 @@
 }
 
 @keyframes trailRotate {
-    from { transform: translateX(-50%) rotate(0deg); }
-    to { transform: translateX(-50%) rotate(360deg); }
+    from {
+        transform: translateX(-50%) rotate(0deg);
+    }
+
+    to {
+        transform: translateX(-50%) rotate(360deg);
+    }
 }
 
 /* Arc Trail - 30 degree arc (for slow rotation planet) */
@@ -953,11 +1086,14 @@
 }
 
 @keyframes arcGlow {
-    0%, 100% { 
+
+    0%,
+    100% {
         border-top-color: rgba(255, 255, 255, 0.8);
         box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
     }
-    50% { 
+
+    50% {
         border-top-color: rgba(255, 255, 255, 1);
         box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
     }
@@ -985,11 +1121,10 @@
     left: 10%;
     right: 10%;
     height: 2px;
-    background: linear-gradient(90deg, 
-        transparent, 
-        var(--text-dim), 
-        transparent
-    );
+    background: linear-gradient(90deg,
+            transparent,
+            var(--text-dim),
+            transparent);
 }
 
 .angle-indicator {
@@ -1033,8 +1168,15 @@
 }
 
 @keyframes sunPulse {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); }
-    50% { transform: translate(-50%, -50%) scale(1.1); }
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.1);
+    }
 }
 
 .orbit-ring {
@@ -1076,13 +1218,23 @@
 }
 
 @keyframes orbitInner {
-    from { transform: rotate(0deg) translateX(50px); }
-    to { transform: rotate(360deg) translateX(50px); }
+    from {
+        transform: rotate(0deg) translateX(50px);
+    }
+
+    to {
+        transform: rotate(360deg) translateX(50px);
+    }
 }
 
 @keyframes orbitOuter {
-    from { transform: rotate(0deg) translateX(100px); }
-    to { transform: rotate(360deg) translateX(100px); }
+    from {
+        transform: rotate(0deg) translateX(100px);
+    }
+
+    to {
+        transform: rotate(360deg) translateX(100px);
+    }
 }
 
 .orbit-info {
@@ -1118,8 +1270,15 @@
 }
 
 @keyframes feedbackFade {
-    from { opacity: 0; transform: translateY(-10px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .feedback.success {
@@ -1261,13 +1420,14 @@
 }
 
 @keyframes modalSlide {
-    from { 
-        opacity: 0; 
-        transform: translateY(-20px) scale(0.95); 
+    from {
+        opacity: 0;
+        transform: translateY(-20px) scale(0.95);
     }
-    to { 
-        opacity: 1; 
-        transform: translateY(0) scale(1); 
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
     }
 }
 
@@ -1349,13 +1509,16 @@
 }
 
 @keyframes ringPulse {
-    0%, 100% { 
-        transform: scale(1); 
-        opacity: 1; 
+
+    0%,
+    100% {
+        transform: scale(1);
+        opacity: 1;
     }
-    50% { 
-        transform: scale(1.1); 
-        opacity: 0.7; 
+
+    50% {
+        transform: scale(1.1);
+        opacity: 0.7;
     }
 }
 
@@ -1408,8 +1571,15 @@
 }
 
 @keyframes badgeBounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 .badge-icon {
@@ -1533,19 +1703,19 @@
     .dual-input-group {
         grid-template-columns: 1fr;
     }
-    
+
     .success-details {
         grid-template-columns: 1fr;
     }
-    
+
     .result-stats {
         grid-template-columns: 1fr;
     }
-    
+
     .planet-diagram {
         transform: scale(0.8);
     }
-    
+
     .orbit-container {
         transform: scale(0.8);
     }
@@ -1556,19 +1726,19 @@
         padding: var(--spacing-sm) var(--spacing-md);
         font-size: 0.8rem;
     }
-    
+
     .btn-large {
         padding: var(--spacing-md) var(--spacing-lg);
     }
-    
+
     .input-group {
         flex-direction: column;
     }
-    
+
     .radio-group {
         flex-direction: column;
     }
-    
+
     .modal-content {
         width: 95%;
     }
@@ -1607,8 +1777,15 @@
 }
 
 @keyframes penaltyPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.2);
+    }
 }
 
 /* ========================================
@@ -1633,9 +1810,19 @@
 }
 
 @keyframes bonusStar {
-    0%, 100% { transform: rotate(0deg) scale(1); }
-    25% { transform: rotate(-10deg) scale(1.1); }
-    75% { transform: rotate(10deg) scale(1.1); }
+
+    0%,
+    100% {
+        transform: rotate(0deg) scale(1);
+    }
+
+    25% {
+        transform: rotate(-10deg) scale(1.1);
+    }
+
+    75% {
+        transform: rotate(10deg) scale(1.1);
+    }
 }
 
 .bonus-title {
@@ -1714,7 +1901,7 @@
         margin-right: var(--spacing-sm);
         padding-right: var(--spacing-sm);
     }
-    
+
     .penalty-display {
         font-size: 1rem;
     }
@@ -1727,7 +1914,7 @@
         align-items: flex-end;
         gap: var(--spacing-xs);
     }
-    
+
     .penalty-container {
         border-right: none;
         margin-right: 0;
@@ -1866,6 +2053,20 @@
     width: 180px;
 }
 
+.inline-text-input.short {
+    width: 60px;
+}
+
+/* Star Trails Photo */
+.startrails-photo {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--neon-blue);
+    box-shadow: 0 0 20px var(--neon-blue-glow);
+}
+
 .inline-text-input:focus {
     box-shadow: 0 0 15px var(--neon-green-glow);
 }
@@ -1929,8 +2130,15 @@
 }
 
 @keyframes safePulse {
-    0%, 100% { box-shadow: 0 0 10px var(--neon-green-glow); }
-    50% { box-shadow: 0 0 25px var(--neon-green-glow); }
+
+    0%,
+    100% {
+        box-shadow: 0 0 10px var(--neon-green-glow);
+    }
+
+    50% {
+        box-shadow: 0 0 25px var(--neon-green-glow);
+    }
 }
 
 .zone-icon {
@@ -1941,6 +2149,10 @@
     font-weight: bold;
     color: var(--text-primary);
     min-width: 100px;
+}
+
+.zone-name.zone-name-lg {
+    font-size: 1rem;
 }
 
 .zone-result {
@@ -2064,8 +2276,15 @@
 }
 
 @keyframes warningPulse {
-    0%, 100% { box-shadow: 0 0 10px rgba(255, 170, 0, 0.2); }
-    50% { box-shadow: 0 0 25px rgba(255, 170, 0, 0.4); }
+
+    0%,
+    100% {
+        box-shadow: 0 0 10px rgba(255, 170, 0, 0.2);
+    }
+
+    50% {
+        box-shadow: 0 0 25px rgba(255, 170, 0, 0.4);
+    }
 }
 
 .warning-icon {
@@ -2309,9 +2528,21 @@
 }
 
 @keyframes errorShake {
-    0%, 100% { transform: translateX(0); }
-    20%, 60% { transform: translateX(-5px); }
-    40%, 80% { transform: translateX(5px); }
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    20%,
+    60% {
+        transform: translateX(-5px);
+    }
+
+    40%,
+    80% {
+        transform: translateX(5px);
+    }
 }
 
 /* ========================================
@@ -2351,6 +2582,103 @@
     color: var(--alert-red);
 }
 
+/* Answer Check Button */
+.btn-check {
+    display: block;
+    margin: var(--spacing-lg) auto;
+}
+
+.btn-small {
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: 0.85rem;
+}
+
+/* Answer Feedback */
+.answer-feedback {
+    margin: var(--spacing-lg) 0;
+    padding: var(--spacing-lg);
+    border-radius: var(--radius-md);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--spacing-md);
+    justify-content: center;
+    text-align: center;
+}
+
+.answer-feedback.correct {
+    background: rgba(0, 255, 65, 0.15);
+    border: 2px solid var(--neon-green);
+}
+
+.answer-feedback.wrong {
+    background: rgba(255, 170, 0, 0.15);
+    border: 2px solid var(--warning-yellow);
+}
+
+.answer-feedback .feedback-icon {
+    font-size: 2rem;
+}
+
+.answer-feedback .feedback-text {
+    flex: 1;
+    min-width: 200px;
+    color: var(--text-primary);
+}
+
+.answer-feedback.correct .feedback-text strong {
+    color: var(--neon-green);
+}
+
+.answer-feedback.wrong .feedback-text strong {
+    color: var(--warning-yellow);
+}
+
+.hint-after-sim {
+    width: 100%;
+    margin-top: var(--spacing-md);
+    color: var(--neon-blue);
+}
+
+/* 관찰 기록 섹션 */
+.observation-record {
+    margin-top: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    background: rgba(0, 212, 255, 0.1);
+    border: 1px solid var(--neon-blue);
+    border-radius: var(--radius-md);
+}
+
+.observation-record label {
+    display: block;
+    color: var(--neon-blue);
+    font-weight: bold;
+    margin-bottom: var(--spacing-sm);
+}
+
+.observation-textarea {
+    width: 100%;
+    padding: var(--spacing-md);
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    resize: vertical;
+    min-height: 80px;
+}
+
+.observation-textarea:focus {
+    outline: none;
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 10px var(--neon-blue-glow);
+}
+
+.observation-textarea::placeholder {
+    color: var(--text-dim);
+}
+
 .simulation-container {
     position: relative;
     width: 100%;
@@ -2371,10 +2699,13 @@
 }
 
 @keyframes starGlow {
-    0%, 100% { 
+
+    0%,
+    100% {
         filter: drop-shadow(0 0 10px #ffd700);
     }
-    50% { 
+
+    50% {
         filter: drop-shadow(0 0 25px #ffd700) drop-shadow(0 0 40px #ff8c00);
     }
 }
@@ -2397,18 +2728,20 @@
     transform-origin: center center;
 }
 
+/* 행성 표면: 낮(아래=태양방향)과 밤(위) */
 .planet-surface {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    background: linear-gradient(180deg, #f39c12 0%, #f39c12 50%, #1a1a2e 50%, #1a1a2e 100%);
+    background: linear-gradient(180deg, #1a1a2e 0%, #1a1a2e 50%, #f39c12 50%, #f39c12 100%);
     display: flex;
     flex-direction: column;
     overflow: hidden;
     box-shadow: 0 0 10px rgba(243, 156, 18, 0.5);
 }
 
-.planet-day, .planet-night {
+.planet-day,
+.planet-night {
     flex: 1;
     display: flex;
     align-items: center;
@@ -2416,6 +2749,12 @@
     font-size: 0.7rem;
 }
 
+/* 밤이 위, 낮이 아래 */
+.planet-night {
+    order: -1;
+}
+
+/* 관찰자 마커 */
 .planet-marker {
     position: absolute;
     bottom: -18px;
@@ -2424,26 +2763,163 @@
     color: var(--neon-green);
     font-size: 1rem;
     text-shadow: 0 0 10px var(--neon-green);
+    z-index: 5;
 }
 
-/* Animation for tidal lock simulation - orbit rotates, planet stays same orientation */
+/* 조명 오버레이: 태양 방향만 밝게 (지구 모드용) */
+.planet-lighting-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    /* 아래쪽(태양 방향)이 밝고 위쪽이 어두움 */
+    background: linear-gradient(0deg,
+            rgba(255, 220, 100, 0.7) 0%,
+            rgba(255, 220, 100, 0.4) 40%,
+            transparent 50%,
+            rgba(0, 0, 30, 0.6) 60%,
+            rgba(0, 0, 30, 0.9) 100%);
+    pointer-events: none;
+    z-index: 3;
+    display: none;
+    /* 기본은 숨김, 지구 모드에서만 표시 */
+}
+
+/* ========================================
+   Animation: 공전
+   ======================================== */
 .sim-orbit.animating {
     animation: orbitRotate 6s linear infinite;
 }
 
 @keyframes orbitRotate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
-/* Planet counter-rotates to always face the star */
-.sim-orbit.animating .sim-planet {
-    animation: planetCounterRotate 6s linear infinite;
+/* ========================================
+   프록시마 b: 조석 고정
+   - 역회전 없음! orbit이 돌면 마커가 자연스럽게 중심(태양) 방향
+   - 공전과 자전이 같으므로 마커/조명이 항상 태양 방향
+   ======================================== */
+/* 조석 고정: 행성은 추가 회전 없이 orbit과 함께 이동 */
+
+/* 프록시마 모드: 조명 오버레이 표시 */
+.sim-orbit.tidal-lock .planet-lighting-overlay {
+    display: block;
 }
 
-@keyframes planetCounterRotate {
-    from { transform: translateX(-50%) translateY(-20px) rotate(0deg); }
-    to { transform: translateX(-50%) translateY(-20px) rotate(-360deg); }
+/* 프록시마 모드: 행성 배경을 단색으로 (빨간 행성) */
+.sim-orbit.tidal-lock .planet-surface {
+    background: #c0392b;
+}
+
+/* 프록시마 모드: ☀🌙 이모지 숨기기 */
+.sim-orbit.tidal-lock .planet-day,
+.sim-orbit.tidal-lock .planet-night {
+    visibility: hidden;
+}
+
+/* ========================================
+   지구: 빠른 자전
+   - 행성(표면+마커)이 빠르게 회전
+   - 조명 오버레이는 역회전하여 태양 방향 고정
+   ======================================== */
+.sim-orbit.animating.earth-mode .sim-planet {
+    animation: earthFastSpin 0.5s linear infinite;
+}
+
+/* 지구 모드: 조명 오버레이 표시 + 역회전 */
+.sim-orbit.earth-mode .planet-lighting-overlay {
+    display: block;
+}
+
+/* 지구 모드: 행성 배경을 단색으로 (조명 오버레이가 낮/밤 표시) */
+.sim-orbit.earth-mode .planet-surface {
+    background: #3498db;
+    /* 파란 지구색 */
+}
+
+/* 지구 모드: ☀🌙 이모지 숨기기 */
+.sim-orbit.earth-mode .planet-day,
+.sim-orbit.earth-mode .planet-night {
+    visibility: hidden;
+}
+
+.sim-orbit.animating.earth-mode .planet-lighting-overlay {
+    animation: lightingCounterFast 0.5s linear infinite;
+}
+
+@keyframes earthFastSpin {
+    from {
+        transform: translateX(-50%) translateY(-20px) rotate(0deg);
+    }
+
+    to {
+        transform: translateX(-50%) translateY(-20px) rotate(360deg);
+    }
+}
+
+@keyframes lightingCounterFast {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
+/* Planet Toggle Buttons */
+.planet-toggle {
+    display: flex;
+    gap: var(--spacing-xs);
+    background: rgba(0, 0, 0, 0.4);
+    padding: 4px;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.toggle-btn {
+    font-family: var(--font-display);
+    font-size: 0.8rem;
+    padding: var(--spacing-xs) var(--spacing-sm);
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: all var(--transition-fast);
+}
+
+.toggle-btn:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.toggle-btn.active {
+    background: var(--neon-green);
+    color: var(--bg-space);
+    font-weight: 600;
+    box-shadow: 0 0 10px var(--neon-green-glow);
+}
+
+/* Simulation Info Box */
+.simulation-info-box {
+    text-align: center;
+    padding: var(--spacing-sm) var(--spacing-md);
+    background: rgba(0, 255, 65, 0.1);
+    border-radius: var(--radius-sm);
+    margin-top: var(--spacing-md);
+    font-size: 0.9rem;
+    color: var(--neon-green);
 }
 
 .simulation-hint {
@@ -2458,27 +2934,27 @@
     .inline-input {
         font-size: 1rem;
     }
-    
+
     .inline-text-input,
     .inline-select {
         font-size: 0.9rem;
     }
-    
+
     .calc-formula {
         font-size: 1rem;
     }
-    
+
     .calc-input {
         width: 70px;
         font-size: 0.9rem;
     }
-    
+
     .measurement-table th,
     .measurement-table td {
         padding: var(--spacing-xs);
         font-size: 0.85rem;
     }
-    
+
     .table-input {
         width: 50px;
         font-size: 0.8rem;
@@ -2489,22 +2965,311 @@
     .worksheet-content {
         padding: var(--spacing-md);
     }
-    
+
     .observation-question {
         padding: var(--spacing-md);
     }
-    
+
     .inline-input {
         font-size: 0.9rem;
     }
-    
+
     .analysis-item {
         flex-direction: column;
         text-align: center;
     }
-    
+
     .calc-formula,
     .calc-conclusion {
         font-size: 0.9rem;
     }
+}
+
+/* ===== Image Modal / Lightbox ===== */
+.image-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-modal.hidden {
+    display: none;
+}
+
+.image-modal-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.9);
+    cursor: pointer;
+}
+
+.image-modal-content {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    z-index: 1;
+}
+
+.image-modal-content img {
+    max-width: 100%;
+    max-height: 90vh;
+    border-radius: var(--radius-md);
+    box-shadow: 0 0 40px rgba(0, 212, 255, 0.5);
+}
+
+.image-modal-close {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2.5rem;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    line-height: 1;
+}
+
+.image-modal-close:hover {
+    color: var(--neon-cyan);
+    transform: scale(1.2);
+}
+
+/* Clickable images */
+.clickable-image {
+    cursor: zoom-in;
+    transition: transform var(--transition-fast);
+}
+
+.clickable-image:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px var(--neon-blue-glow);
+}
+
+/* ===== Mission Images ===== */
+.mission-images {
+    display: flex;
+    justify-content: center;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.mission-figure {
+    flex: 1;
+    min-width: 200px;
+    max-width: 300px;
+    margin: 0;
+    text-align: center;
+}
+
+.mission-img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--neon-blue);
+    margin-bottom: var(--spacing-xs);
+    cursor: zoom-in;
+    transition: transform var(--transition-fast);
+}
+
+.mission-img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px var(--neon-blue-glow);
+}
+
+.mission-figure figcaption {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: var(--spacing-xs);
+}
+
+/* ===== Hohmann Simulation ===== */
+#hohmann-canvas {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    background: #050510;
+    border-radius: var(--radius-md);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
+    margin-bottom: var(--spacing-sm);
+}
+
+.sim-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+    width: 100%;
+}
+
+.sim-status {
+    min-height: 24px;
+    font-size: 0.9rem;
+    color: var(--neon-red);
+    text-align: center;
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(255, 51, 51, 0.5);
+}
+
+/* ===== Admin Button ===== */
+.btn-admin {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 1.2rem;
+    margin-right: var(--spacing-sm);
+    transition: all 0.3s ease;
+}
+
+.btn-admin:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--neon-blue);
+    border-color: var(--neon-blue);
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
+}
+
+/* ===== Modal Close Button ===== */
+.modal-close-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0 5px;
+    line-height: 1;
+    transition: color 0.3s;
+}
+
+.modal-close-btn:hover {
+    color: var(--neon-red);
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ===== Password & Admin Modals ===== */
+.password-instruction {
+    text-align: center;
+    margin-bottom: var(--spacing-md);
+    color: var(--text-primary);
+}
+
+.password-input-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+.admin-password-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-sm);
+}
+
+.admin-item {
+    display: flex;
+    justify-content: space-between;
+    padding: var(--spacing-sm);
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+}
+
+.stage-label {
+    color: var(--text-secondary);
+}
+
+.password-value {
+    color: var(--neon-green);
+    font-family: 'Share Tech Mono', monospace;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+/* ===== PDF Report Template ===== */
+#report-template {
+    position: absolute;
+    top: -9999px;
+    left: -9999px;
+    width: 800px;
+    /* A4 width approx */
+    background: white;
+    color: black;
+    padding: 40px;
+    font-family: 'Arial', sans-serif;
+}
+
+.report-container {
+    border: 2px solid #000;
+    padding: 20px;
+}
+
+.report-header {
+    text-align: center;
+    border-bottom: 2px solid #000;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+}
+
+.report-header h1 {
+    font-size: 24px;
+    margin-bottom: 15px;
+}
+
+.report-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+}
+
+.report-section {
+    margin-bottom: 25px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 15px;
+}
+
+.report-section h3 {
+    font-size: 16px;
+    background: #eee;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+}
+
+.report-section p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.report-footer {
+    text-align: center;
+    margin-top: 40px;
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.status-pass {
+    color: green;
+    font-weight: bold;
 }

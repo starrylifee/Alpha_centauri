@@ -1,40 +1,44 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proxima Rescue Command - Mission Control</title>
-    
+
     <!-- 파비콘 -->
     <link rel="icon" type="image/png" href="assets/images/video-poster.png">
     <link rel="apple-touch-icon" href="assets/images/video-poster.png">
-    
+
     <!-- Open Graph (카카오톡, 페이스북 등 SNS 공유용) -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="🚀 Proxima Rescue Command">
     <meta property="og:description" content="프록시마 센타우리 b 구조 작전! 우주 미션 시뮬레이션 게임">
     <meta property="og:image" content="https://starrylifee.github.io/Alpha_centauri/assets/images/video-poster.png">
     <meta property="og:url" content="https://starrylifee.github.io/Alpha_centauri/">
-    
+
     <!-- 트위터 카드 -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="🚀 Proxima Rescue Command">
     <meta name="twitter:description" content="프록시마 센타우리 b 구조 작전! 우주 미션 시뮬레이션 게임">
     <meta name="twitter:image" content="https://starrylifee.github.io/Alpha_centauri/assets/images/video-poster.png">
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
     <link rel="stylesheet" href="css/main.css">
     <link rel="stylesheet" href="css/components.css">
 </head>
+
 <body>
     <!-- 배경 효과 -->
     <div class="stars"></div>
     <div class="stars2"></div>
     <div class="stars3"></div>
     <div class="scanline"></div>
-    
+
     <!-- 메인 앱 컨테이너 -->
     <div id="app">
         <!-- 헤더 (타이머 & 팀 정보 & 페널티) -->
@@ -50,6 +54,7 @@
                 <div class="logo-text">PROXIMA RESCUE COMMAND</div>
             </div>
             <div class="header-right">
+                <button id="admin-mode-btn" class="btn-admin" title="관리자 모드">⚙️</button>
                 <div class="penalty-container">
                     <span class="penalty-label">힌트 감점</span>
                     <span id="penalty-display" class="penalty-display">-0점</span>
@@ -69,11 +74,12 @@
                     <h1 class="glitch" data-text="PROXIMA RESCUE">PROXIMA RESCUE</h1>
                     <p class="subtitle typewriter">MISSION CONTROL SYSTEM v2.026</p>
                 </div>
-                
-                <div class="video-thumbnail" style="background: url('assets/images/video-poster.png') center/cover no-repeat;">
+
+                <div class="video-thumbnail"
+                    style="background: url('assets/images/video-poster.png') center/cover no-repeat;">
                     <button id="play-video-btn" class="btn btn-play">▶ 미션 브리핑 재생</button>
                 </div>
-                
+
                 <button id="start-mission-btn" class="btn btn-primary btn-large hidden">
                     <span class="btn-glow"></span>
                     <span class="btn-text">[ 작전 개시 ]</span>
@@ -109,7 +115,7 @@
                     <h2 class="stage-title">보안 접속</h2>
                     <p class="stage-subtitle">SECURITY ACCESS PROTOCOL</p>
                 </div>
-                
+
                 <div class="terminal-window">
                     <div class="terminal-header">
                         <span class="terminal-dot red"></span>
@@ -146,14 +152,15 @@
                 </div>
 
                 <div class="input-group">
-                    <input type="text" id="stage1-input" class="code-input" placeholder="보안 코드 입력..." autocomplete="off">
+                    <input type="text" id="stage1-input" class="code-input" placeholder="보안 코드 입력..."
+                        autocomplete="off">
                     <button id="stage1-submit" class="btn btn-submit">
                         <span>검증</span>
                     </button>
                 </div>
-                
+
                 <div id="stage1-feedback" class="feedback hidden"></div>
-                
+
                 <button id="stage1-hint" class="btn btn-hint">
                     <span class="hint-icon">?</span>
                     <span>힌트 보기</span>
@@ -169,7 +176,7 @@
                     <h2 class="stage-title">죽음의 두 얼굴</h2>
                     <p class="stage-subtitle">ENVIRONMENT ANALYSIS</p>
                 </div>
-                
+
                 <!-- Phase 1: 환경 데이터 관측 -->
                 <div class="stage-phase phase-1" data-phase="1">
                     <div class="worksheet-panel">
@@ -179,8 +186,8 @@
                         </div>
                         <div class="worksheet-content">
                             <p class="worksheet-instruction">"이곳은 지구가 아니다. 우리의 상식이 통하지 않는 곳이다."</p>
-                            <p class="worksheet-text">아래 시뮬레이션을 실행하고 빈칸을 채우세요.</p>
-                            
+                            <p class="worksheet-text">아래 표를 보고 빈칸을 채우세요.</p>
+
                             <table class="data-table">
                                 <thead>
                                     <tr>
@@ -202,47 +209,71 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            
-                            <!-- 조석고정 시뮬레이션 -->
-                            <div class="tidal-lock-simulation">
+
+                            <div class="observation-question">
+                                <label>🔍 관측 결과: 프록시마 b의 공전과 자전 주기가 같다면, 행성의 한쪽 면은 항상 어디를 바라볼까요?</label>
+                                <div class="inline-input">
+                                    <span>행성의 한쪽 면이 계속 (</span>
+                                    <input type="text" id="stage2-q1" class="inline-text-input" placeholder="?"
+                                        autocomplete="off">
+                                    <span>) 쪽만 바라보며 돌고 있다.</span>
+                                </div>
+                                <p class="validation-error hidden" id="stage2-q1-error">⚠️ 답을 입력해주세요!</p>
+                            </div>
+
+                            <button id="check-q1-btn" class="btn btn-primary btn-check">
+                                <span>📝 답 확인하기</span>
+                            </button>
+
+                            <!-- 답 확인 후 피드백 -->
+                            <div id="q1-feedback" class="answer-feedback hidden"></div>
+
+                            <!-- 시뮬레이션 (처음엔 숨김) -->
+                            <div id="simulation-section" class="tidal-lock-simulation hidden">
                                 <div class="simulation-header">
                                     <span class="simulation-title">🪐 공전/자전 시뮬레이션</span>
+                                    <div class="planet-toggle">
+                                        <button class="toggle-btn" data-planet="earth">🌍 지구</button>
+                                        <button class="toggle-btn active" data-planet="proxima">🔴 프록시마 b</button>
+                                    </div>
                                     <button id="tidal-sim-btn" class="btn btn-secondary btn-sim">
                                         <span>▶ 시뮬레이션 시작</span>
                                     </button>
                                 </div>
                                 <div class="simulation-container">
                                     <div class="sim-star">☀️</div>
-                                    <div class="sim-orbit">
+                                    <div class="sim-orbit tidal-lock">
                                         <div class="sim-planet" id="sim-planet">
                                             <div class="planet-surface">
                                                 <div class="planet-day">☀</div>
                                                 <div class="planet-night">🌙</div>
                                             </div>
+                                            <div class="planet-lighting-overlay"></div>
                                             <div class="planet-marker">▲</div>
                                         </div>
                                     </div>
                                 </div>
-                                <p class="simulation-hint">💡 행성의 ▲ 표시가 항상 어디를 향하는지 관찰하세요!</p>
-                            </div>
-                            
-                            <div class="observation-question">
-                                <label>🔍 관측 결과: 행성의 한쪽 면이 계속 어디를 바라보고 있나요?</label>
-                                <div class="inline-input">
-                                    <span>행성의 한쪽 면이 계속 (</span>
-                                    <input type="text" id="stage2-q1" class="inline-text-input" placeholder="?" autocomplete="off">
-                                    <span>) 쪽만 바라보며 돌고 있다.</span>
+                                <div class="simulation-info-box">
+                                    <span id="sim-mode-info">🔴 프록시마 b: 조석 고정</span>
                                 </div>
-                                <p class="validation-error hidden" id="stage2-q1-error">⚠️ 관측 결과를 입력해주세요!</p>
+                                <p class="simulation-hint">💡 행성의 ▲ 표시와 밝은 면이 항상 어디를 향하는지 관찰하세요!</p>
+                            </div>
+
+                            <!-- 관찰 기록 (시뮬레이션 본 후 표시) -->
+                            <div id="observation-section" class="observation-record hidden">
+                                <label>📝 관찰 기록: 시뮬레이션에서 발견한 특징을 적어주세요.</label>
+                                <textarea id="observation-text" class="observation-textarea" placeholder=""
+                                    rows="3"></textarea>
+                                <p class="validation-error hidden" id="observation-error">⚠️ 관찰 내용을 적어주세요!</p>
                             </div>
                         </div>
                     </div>
-                    
-                    <button class="btn btn-primary btn-next" data-next-phase="2" data-validate="stage2-q1">
+
+                    <button class="btn btn-primary btn-next hidden" id="phase1-next-btn" data-next-phase="2">
                         <span>관측 완료, 다음 분석 ▶</span>
                     </button>
                 </div>
-                
+
                 <!-- Phase 2: 현상 분석 -->
                 <div class="stage-phase phase-2 hidden" data-phase="2">
                     <div class="worksheet-panel">
@@ -255,42 +286,55 @@
                                 <label>📝 결론: 이 행성은 어떤 상태인가요?</label>
                                 <div class="inline-input">
                                     <span>이 행성은 (</span>
-                                    <input type="text" id="stage2-q2" class="inline-text-input" placeholder="?" autocomplete="off">
+                                    <input type="text" id="stage2-q2" class="inline-text-input" placeholder="?"
+                                        autocomplete="off">
                                     <span>) 상태이다.</span>
                                 </div>
                                 <p class="hint-text">💡 달처럼 한쪽 면만 보여주는 현상의 이름은?</p>
                                 <p class="validation-error hidden" id="stage2-q2-error">⚠️ 현상 이름을 입력해주세요!</p>
                             </div>
+
+                            <button id="check-q2-btn" class="btn btn-primary btn-check">
+                                <span>📝 답 확인하기</span>
+                            </button>
+
+                            <div id="q2-feedback" class="answer-feedback hidden"></div>
                         </div>
                     </div>
-                    
+
                     <div class="tidal-lock-visual">
-                        <div class="planet-diagram">
-                            <div class="star-side">
-                                <span class="temp">🔥 +100°C</span>
-                                <span class="label">영원히 타오르는 낮</span>
+                        <div class="planet-orbit-diagram">
+                            <!-- 항성 -->
+                            <div class="diagram-star">
+                                <span class="star-emoji">☀️</span>
+                                <span class="star-label">프록시마 센타우리</span>
                             </div>
-                            <div class="planet-core">
-                                <div class="twilight-zone"></div>
-                            </div>
-                            <div class="dark-side">
-                                <span class="temp">❄️ -40°C</span>
-                                <span class="label">영원히 얼어붙은 밤</span>
+                            <!-- 행성 -->
+                            <div class="diagram-planet">
+                                <div class="planet-day-side">
+                                    <span class="zone-temp">🔥 +100°C</span>
+                                    <span class="zone-name">영원한 낮</span>
+                                </div>
+                                <div class="planet-twilight"></div>
+                                <div class="planet-night-side">
+                                    <span class="zone-temp">❄️ -40°C</span>
+                                    <span class="zone-name">영원한 밤</span>
+                                </div>
                             </div>
                         </div>
-                        <div class="diagram-label">조석 고정 행성 단면도</div>
+                        <div class="diagram-label">프록시마 b 행성</div>
                     </div>
-                    
+
                     <div class="phase-nav-buttons">
                         <button class="btn btn-secondary btn-prev" data-prev-phase="1">
                             <span>◀ 이전</span>
                         </button>
-                        <button class="btn btn-primary btn-next" data-next-phase="3" data-validate="stage2-q2">
+                        <button class="btn btn-primary btn-next hidden" id="phase2-next-btn" data-next-phase="3">
                             <span>생존 구역 탐색 ▶</span>
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- Phase 3: 생존 구역 결정 -->
                 <div class="stage-phase phase-3 hidden" data-phase="3">
                     <div class="worksheet-panel">
@@ -302,43 +346,45 @@
                             <div class="survival-analysis">
                                 <div class="analysis-item danger">
                                     <span class="zone-icon">☀️</span>
-                                    <span class="zone-name">낮의 지역</span>
+                                    <span class="zone-name zone-name-lg">낮의 지역</span>
                                     <span class="zone-result">→ 모든 것이 타버린다. (생존 불가)</span>
                                 </div>
                                 <div class="analysis-item danger">
                                     <span class="zone-icon">🌙</span>
-                                    <span class="zone-name">밤의 지역</span>
+                                    <span class="zone-name zone-name-lg">밤의 지역</span>
                                     <span class="zone-result">→ 모든 것이 얼어버린다. (생존 불가)</span>
                                 </div>
                                 <div class="analysis-item safe">
                                     <span class="zone-icon">🌅</span>
-                                    <span class="zone-name">???</span>
+                                    <span class="zone-name zone-name-lg">???</span>
                                     <span class="zone-result">→ 적절한 온도 (생존 가능!)</span>
                                 </div>
                             </div>
-                            
+
                             <div class="observation-question">
                                 <label>🎯 우리의 목표 지점 (1차 수색 지점):</label>
-                                <input type="text" id="stage2-input" class="code-input" placeholder="생존 가능 구역 이름 입력..." autocomplete="off">
+                                <input type="text" id="stage2-input" class="code-input" placeholder=""
+                                    autocomplete="off">
                             </div>
-                            
+
                             <div class="observation-question">
                                 <label>📝 선정 이유:</label>
-                                <textarea id="stage2-reason" class="reason-input" placeholder="왜 이 지역이 생존 가능한지 이유를 적어주세요..." rows="2"></textarea>
+                                <textarea id="stage2-reason" class="reason-input"
+                                    placeholder="왜 이 지역이 생존 가능한지 이유를 적어주세요..." rows="2"></textarea>
                             </div>
                         </div>
                     </div>
-                    
+
                     <button class="btn btn-secondary btn-prev btn-prev-top" data-prev-phase="2">
                         <span>◀ 이전 분석</span>
                     </button>
-                    
+
                     <button id="stage2-submit" class="btn btn-submit btn-full">
                         <span>1차 수색 지점 설정 완료</span>
                     </button>
-                    
+
                     <div id="stage2-feedback" class="feedback hidden"></div>
-                    
+
                     <button id="stage2-hint" class="btn btn-hint">
                         <span class="hint-icon">?</span>
                         <span>힌트 보기 (-5점)</span>
@@ -355,7 +401,7 @@
                     <h2 class="stage-title">어둠 속의 단서</h2>
                     <p class="stage-subtitle">LOCATION TRACKING</p>
                 </div>
-                
+
                 <!-- Phase 1: 사진 수신 및 분석 -->
                 <div class="stage-phase phase-1" data-phase="1">
                     <div class="worksheet-panel">
@@ -366,21 +412,14 @@
                         <div class="worksheet-content">
                             <p class="worksheet-instruction">조난 대원으로부터 암호화된 이미지 파일이 전송되었습니다.</p>
                             <p class="worksheet-text">분석 결과: 노출 시간(촬영 시간)이 무려 <strong>24시간</strong>입니다!</p>
-                            
+
                             <div class="star-trail-container">
                                 <div class="star-trail-image">
-                                    <div class="star-trail-visual arc-mode">
-                                        <div class="trail-arc"></div>
-                                        <div class="trail-center"></div>
-                                        <div class="horizon-line"></div>
-                                        <div class="angle-indicator">
-                                            <span class="angle-text">30°</span>
-                                        </div>
-                                    </div>
+                                    <img src="assets/images/startrails.jpg" alt="별 궤적 사진" class="startrails-photo">
                                 </div>
                                 <p class="image-caption">[수신된 별 궤적 사진 - 노출 24시간]</p>
                             </div>
-                            
+
                             <div class="comparison-box">
                                 <div class="compare-item">
                                     <span class="compare-label">🌍 지구에서 24시간이면</span>
@@ -388,17 +427,32 @@
                                 </div>
                                 <div class="compare-item highlight">
                                     <span class="compare-label">🔴 이 사진에서는</span>
-                                    <span class="compare-value">별이 겨우 <strong>30°</strong>만 움직였다!</span>
+                                    <span class="compare-value">
+                                        별이 겨우 (<input type="text" id="star-angle-input" class="inline-text-input short"
+                                            placeholder="?" autocomplete="off">)만 움직였다!
+                                    </span>
                                 </div>
                             </div>
+
+                            <p class="validation-error hidden" id="star-angle-error">⚠️ 사진을 보고 별이 움직인 각도를 입력해주세요!</p>
+
+                            <button id="check-angle-btn" class="btn btn-primary btn-check">
+                                <span>📝 답 확인하기</span>
+                            </button>
+
+                            <div id="angle-feedback" class="answer-feedback hidden"></div>
                         </div>
                     </div>
-                    
-                    <button class="btn btn-primary btn-next" data-next-phase="2">
-                        <span>분석 계속 ▶</span>
-                    </button>
+
+                    <div class="phase-nav-buttons">
+                        <button class="btn btn-secondary btn-prev-stage" data-prev-stage="2">
+                            <span>◀ 이전 단계</span>
+                        </button>
+                        <button class="btn btn-primary btn-next hidden" id="phase3-1-next-btn" data-next-phase="2">
+                            <span>분석 계속 ▶</span>
+                        </button>
+                    </div>
                 </div>
-                
                 <!-- Phase 2: 추론 입력 -->
                 <div class="stage-phase phase-2 hidden" data-phase="2">
                     <div class="worksheet-panel">
@@ -420,8 +474,14 @@
                                 </div>
                                 <p class="validation-error hidden" id="stage3-q1-error">⚠️ 답을 선택해주세요!</p>
                             </div>
-                            
-                            <div class="observation-question">
+
+                            <button id="check-rotation-btn" class="btn btn-primary btn-check">
+                                <span>📝 답 확인하기</span>
+                            </button>
+
+                            <div id="rotation-feedback" class="answer-feedback hidden"></div>
+
+                            <div class="observation-question hidden" id="star-visibility-section">
                                 <label>🌟 잠깐, 24시간 동안 별 사진을 찍으려면?</label>
                                 <p class="hint-text">💡 별이 보이려면 하늘이 어때야 할까요?</p>
                                 <div class="answer-reveal">
@@ -430,17 +490,17 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="phase-nav-buttons">
                         <button class="btn btn-secondary btn-prev" data-prev-phase="1">
                             <span>◀ 이전</span>
                         </button>
-                        <button class="btn btn-primary btn-next" data-next-phase="3" data-validate="stage3-q1">
+                        <button class="btn btn-primary btn-next hidden" id="phase3-2-next-btn" data-next-phase="3">
                             <span>그렇다면... ▶</span>
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- Phase 3: 반전 공개 + 위치 추론 -->
                 <div class="stage-phase phase-3 hidden" data-phase="3">
                     <div class="worksheet-panel alert-panel">
@@ -453,34 +513,41 @@
                                 <p class="reveal-warning">⚠️ 황혼 지역은 해가 지평선에 걸려 있어서</p>
                                 <p class="reveal-warning"><strong>밝습니다! 별 사진을 못 찍습니다!</strong></p>
                             </div>
-                            
+
                             <div class="big-reveal">
                                 <p class="reveal-text">대원은 현재 낮과 밤이 바뀌는 곳이 아니라...</p>
                                 <p class="reveal-highlight">해가 영원히 뜨지 않는 곳에 있습니다!</p>
                             </div>
-                            
+
                             <div class="observation-question">
                                 <label>📍 대원은 지금 어디에 있습니까?</label>
                                 <div class="inline-input">
                                     <span>대원은 현재 (</span>
-                                    <input type="text" id="stage3-q2" class="inline-text-input medium" placeholder="?" autocomplete="off">
+                                    <input type="text" id="stage3-q2" class="inline-text-input medium" placeholder="?"
+                                        autocomplete="off">
                                     <span>)에 고립되어 있습니다.</span>
                                 </div>
                                 <p class="validation-error hidden" id="stage3-q2-error">⚠️ 대원의 위치를 입력해주세요!</p>
                             </div>
+
+                            <button id="check-location-btn" class="btn btn-primary btn-check">
+                                <span>📝 답 확인하기</span>
+                            </button>
+
+                            <div id="location-feedback" class="answer-feedback hidden"></div>
                         </div>
                     </div>
-                    
+
                     <div class="phase-nav-buttons">
                         <button class="btn btn-secondary btn-prev" data-prev-phase="2">
                             <span>◀ 이전</span>
                         </button>
-                        <button class="btn btn-primary btn-next" data-next-phase="4" data-validate="stage3-q2">
+                        <button class="btn btn-primary btn-next hidden" id="phase3-3-next-btn" data-next-phase="4">
                             <span>위치 확인 완료 ▶</span>
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- Phase 4: 홀로그램 시뮬레이션 -->
                 <div class="stage-phase phase-4 hidden" data-phase="4">
                     <div class="worksheet-panel simulation-panel">
@@ -496,7 +563,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="mission-box">
                         <div class="mission-icon">🎯</div>
                         <div class="mission-content">
@@ -506,9 +573,20 @@
                                 <li>고도 측정기로 천장의 <strong>회전 중심점(북극성)</strong>을 측정하세요.</li>
                                 <li>측정된 <strong>고도(각도) = 조난자의 위도</strong>입니다!</li>
                             </ol>
+
+                            <div class="mission-images">
+                                <figure class="mission-figure">
+                                    <img src="assets/images/alt1.jpg" alt="고도 측정 방법" class="mission-img">
+                                    <figcaption>▲ 고도 측정 방법</figcaption>
+                                </figure>
+                                <figure class="mission-figure">
+                                    <img src="assets/images/alt2.jpg" alt="북극성의 고도가 위도인 이유" class="mission-img">
+                                    <figcaption>▲ 북극성의 고도 = 위도인 이유</figcaption>
+                                </figure>
+                            </div>
                         </div>
                     </div>
-                    
+
                     <div class="phase-nav-buttons">
                         <button class="btn btn-secondary btn-prev" data-prev-phase="3">
                             <span>◀ 이전</span>
@@ -518,7 +596,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- Phase 5: 최종 좌표 입력 -->
                 <div class="stage-phase phase-5 hidden" data-phase="5">
                     <div class="worksheet-panel">
@@ -534,23 +612,24 @@
                                         <span>프록시마 센타우리b 의 (</span>
                                         <select id="stage3-region" class="inline-select">
                                             <option value="">선택</option>
-                                            <option value="day">낮의 지역</option>
+                                            <option value="day">낮의 지역 (Day Zone)</option>
                                             <option value="night">밤의 지역 (Night Zone)</option>
-                                            <option value="twilight">황혼 지역</option>
+                                            <option value="twilight">황혼 지역 (Twilight Zone)</option>
                                         </select>
                                         <span>)</span>
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label>🎯 측정 데이터</label>
                                     <div class="inline-input">
                                         <span>측정된 고도(각도): (</span>
-                                        <input type="number" id="stage3-latitude" class="inline-number-input" placeholder="0~90" min="0" max="90">
+                                        <input type="number" id="stage3-latitude" class="inline-number-input"
+                                            placeholder="0~90" min="0" max="90">
                                         <span>) 도</span>
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group">
                                     <label>📌 위도 확정</label>
                                     <div class="inline-input">
@@ -570,9 +649,9 @@
                     <button id="stage3-submit" class="btn btn-submit btn-full">
                         <span>좌표 전송 완료</span>
                     </button>
-                    
+
                     <div id="stage3-feedback" class="feedback hidden"></div>
-                    
+
                     <button id="stage3-hint" class="btn btn-hint">
                         <span class="hint-icon">?</span>
                         <span>힌트 보기 (-5점)</span>
@@ -589,7 +668,7 @@
                     <h2 class="stage-title">운명의 타이밍</h2>
                     <p class="stage-subtitle">HOHMANN TRANSFER ORBIT</p>
                 </div>
-                
+
                 <!-- Phase 1: 상황 설명 -->
                 <div class="stage-phase phase-1" data-phase="1">
                     <div class="worksheet-panel">
@@ -600,29 +679,31 @@
                         <div class="worksheet-content">
                             <p class="worksheet-instruction">조난자의 위치는 파악되었습니다. 이제 구조선을 보낼 차례입니다!</p>
                             <p class="worksheet-text">연료를 가장 적게 사용하는 <strong>호만 전이 궤도</strong>를 이용합니다.</p>
-                            
+
                             <div class="warning-box">
                                 <span class="warning-icon">⚠️</span>
                                 <span>운명의 타이밍: 우주선 발사는 단 한 번의 기회입니다!</span>
                             </div>
-                            
+
                             <div class="orbit-visual">
-                                <div class="orbit-container">
-                                    <div class="sun-center">★</div>
-                                    <div class="orbit-ring inner"></div>
-                                    <div class="orbit-ring outer"></div>
-                                    <div class="planet-inner">🌍<span class="planet-label">본부</span></div>
-                                    <div class="planet-outer">🔴<span class="planet-label">조난자</span></div>
+                                <div class="orbit-visual">
+                                    <canvas id="hohmann-canvas" width="600" height="400"></canvas>
+                                    <div class="sim-controls">
+                                        <button id="sim-fail-btn" class="btn btn-secondary btn-small">
+                                            <span>💥 실패 시뮬레이션 보기</span>
+                                        </button>
+                                        <div id="sim-status" class="sim-status"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <button class="btn btn-primary btn-next" data-next-phase="2">
                         <span>공전 주기 측정 시작 ▶</span>
                     </button>
                 </div>
-                
+
                 <!-- Phase 2: 공전 주기 측정 -->
                 <div class="stage-phase phase-2 hidden" data-phase="2">
                     <div class="worksheet-panel">
@@ -632,7 +713,7 @@
                         </div>
                         <div class="worksheet-content">
                             <p class="worksheet-text">A0 궤도 매트 위를 도는 햄스터 로봇의 주기를 스톱워치로 <strong>3회</strong> 측정하세요.</p>
-                            
+
                             <table class="measurement-table">
                                 <thead>
                                     <tr>
@@ -660,14 +741,15 @@
                                     </tr>
                                 </tbody>
                             </table>
-                            
+
                             <button class="btn btn-secondary btn-calc" id="calc-avg-btn">
                                 <span>평균 계산하기</span>
                             </button>
-                            <p class="validation-error hidden" id="stage4-measure-error">⚠️ 측정값을 모두 입력하고 평균 계산을 해주세요!</p>
+                            <p class="validation-error hidden" id="stage4-measure-error">⚠️ 측정값을 모두 입력하고 평균 계산을 해주세요!
+                            </p>
                         </div>
                     </div>
-                    
+
                     <div class="phase-nav-buttons">
                         <button class="btn btn-secondary btn-prev" data-prev-phase="1">
                             <span>◀ 이전</span>
@@ -677,7 +759,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- Phase 3: 발사 윈도우 계산 -->
                 <div class="stage-phase phase-3 hidden" data-phase="3">
                     <div class="worksheet-panel">
@@ -687,7 +769,7 @@
                         </div>
                         <div class="worksheet-content">
                             <p class="worksheet-text">로켓이 내행성 → 외행성까지 날아가는 데 걸리는 시간이 <strong>3초</strong>라고 가정합니다.</p>
-                            
+
                             <div class="calculation-steps">
                                 <div class="calc-step">
                                     <label>① 외행성이 1초에 움직이는 각도</label>
@@ -699,7 +781,7 @@
                                         <span>) °/sec</span>
                                     </div>
                                 </div>
-                                
+
                                 <div class="calc-step">
                                     <label>② 로켓 이동 중 외행성이 움직이는 각도</label>
                                     <div class="calc-formula">
@@ -710,12 +792,13 @@
                                         <span>) °</span>
                                     </div>
                                 </div>
-                                
+
                                 <div class="calc-step highlight-step">
                                     <label>③ 결론 (발사 타이밍)</label>
                                     <div class="calc-conclusion">
                                         <span>로켓 도착 예정 지점보다 외행성이 (</span>
-                                        <input type="number" id="stage4-angle" class="calc-input result-input" placeholder="?">
+                                        <input type="number" id="stage4-angle" class="calc-input result-input"
+                                            placeholder="?">
                                         <span>) 도 뒤에 있을 때 발사해야 한다!</span>
                                     </div>
                                     <p class="validation-error hidden" id="stage4-angle-error">⚠️ 발사 각도를 입력해주세요!</p>
@@ -723,7 +806,7 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="phase-nav-buttons">
                         <button class="btn btn-secondary btn-prev" data-prev-phase="2">
                             <span>◀ 이전</span>
@@ -733,7 +816,7 @@
                         </button>
                     </div>
                 </div>
-                
+
                 <!-- Phase 4: Time Attack 결과 -->
                 <div class="stage-phase phase-4 hidden" data-phase="4">
                     <div class="worksheet-panel">
@@ -743,12 +826,11 @@
                         </div>
                         <div class="worksheet-content">
                             <p class="worksheet-text">실제 매트 위에서 시뮬레이션을 수행하고 결과를 기록하세요!</p>
-                            
+
                             <table class="result-table">
                                 <thead>
                                     <tr>
                                         <th>시도</th>
-                                        <th>힌트 사용</th>
                                         <th>결과</th>
                                         <th>소요 시간</th>
                                     </tr>
@@ -757,24 +839,17 @@
                                     <tr>
                                         <td>1차 시도</td>
                                         <td>
-                                            <input type="number" id="attempt1-hint" class="table-input small" placeholder="개" min="0" max="10">
-                                            <span class="table-suffix">개</span>
-                                        </td>
-                                        <td>
                                             <select id="attempt1-result" class="table-select">
                                                 <option value="">선택</option>
                                                 <option value="success">🎉 성공</option>
                                                 <option value="fail">실패</option>
                                             </select>
                                         </td>
-                                        <td><input type="text" id="attempt1-time" class="table-input" placeholder="시간"></td>
+                                        <td><input type="text" id="attempt1-time" class="table-input" placeholder="시간">
+                                        </td>
                                     </tr>
                                     <tr>
                                         <td>2차 시도</td>
-                                        <td>
-                                            <input type="number" id="attempt2-hint" class="table-input small" placeholder="개" min="0" max="10">
-                                            <span class="table-suffix">개</span>
-                                        </td>
                                         <td>
                                             <select id="attempt2-result" class="table-select">
                                                 <option value="">선택</option>
@@ -782,11 +857,12 @@
                                                 <option value="fail">실패</option>
                                             </select>
                                         </td>
-                                        <td><input type="text" id="attempt2-time" class="table-input" placeholder="시간"></td>
+                                        <td><input type="text" id="attempt2-time" class="table-input" placeholder="시간">
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
-                            
+
                             <div class="final-result-section">
                                 <div class="observation-question">
                                     <label>📝 최종 미션 결과</label>
@@ -803,7 +879,7 @@
                                         </label>
                                     </div>
                                 </div>
-                                
+
                                 <div id="success-details" class="success-details hidden">
                                     <div class="observation-question">
                                         <label>🕐 성공 시 로켓 비행 시간</label>
@@ -821,9 +897,9 @@
                     <button id="stage4-submit" class="btn btn-submit btn-full">
                         <span>최종 결과 전송</span>
                     </button>
-                    
+
                     <div id="stage4-feedback" class="feedback hidden"></div>
-                    
+
                     <button id="stage4-hint" class="btn btn-hint">
                         <span class="hint-icon">?</span>
                         <span>힌트 보기 (-5점)</span>
@@ -840,18 +916,18 @@
                     <h2 class="stage-title">미션 완료</h2>
                     <p class="stage-subtitle">MISSION COMPLETE</p>
                 </div>
-                
+
                 <div class="completion-panel">
                     <div class="completion-icon">
                         <div class="icon-ring"></div>
                         <span class="icon-check">✓</span>
                     </div>
-                    
+
                     <div class="completion-message">
                         <h3>구조 작전 완료 대기 중...</h3>
                         <p>실제 로봇 미션이 성공하면 아래 버튼을 눌러주세요.</p>
                     </div>
-                    
+
                     <button id="final-complete-btn" class="btn btn-primary btn-large">
                         <span class="btn-glow"></span>
                         <span class="btn-text">🎉 최종 구조 성공!</span>
@@ -870,13 +946,13 @@
                     <h1 class="result-title">MISSION ACCOMPLISHED</h1>
                     <p class="result-subtitle">프록시마 b 구조 작전 성공</p>
                 </div>
-                
+
                 <div class="result-card">
                     <div class="result-team">
                         <span class="label">TEAM</span>
                         <span id="result-team-name" class="value">-</span>
                     </div>
-                    
+
                     <div class="result-stats">
                         <div class="stat-item">
                             <span class="stat-icon">⏱️</span>
@@ -894,20 +970,23 @@
                             <span id="result-penalty" class="stat-value">-0점</span>
                         </div>
                     </div>
-                    
+
                     <div class="result-score">
                         <span class="score-label">최종 점수</span>
                         <span id="result-final-score" class="score-value">0</span>
                         <span class="score-unit">점</span>
                     </div>
                 </div>
-                
+
                 <div class="result-actions">
+                    <button id="download-report-btn" class="btn btn-primary">
+                        📄 보고서 다운로드
+                    </button>
                     <button id="restart-btn" class="btn btn-secondary">
                         처음부터 다시하기
                     </button>
                 </div>
-                
+
                 <div class="result-footer">
                     <p>📸 결과 화면을 스크린샷으로 저장하세요!</p>
                 </div>
@@ -991,12 +1070,125 @@
         </div>
     </div>
 
+    <!-- 비밀번호 입력 모달 -->
+    <div id="password-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔒 보안 접근 승인</h2>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p class="password-instruction">다음 단계로 넘어가려면 비밀번호를 입력하세요.</p>
+                <div class="password-input-container">
+                    <input type="text" id="stage-password-input" class="modal-input" placeholder="PASSWORD"
+                        autocomplete="off">
+                    <p id="password-error" class="error-message hidden">⛔ 잘못된 비밀번호입니다.</p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="password-submit-btn" class="btn btn-primary">승인 요청</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 관리자 모달 -->
+    <div id="admin-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔑 관리자 모드</h2>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="admin-password-list">
+                    <div class="admin-item">
+                        <span class="stage-label">Stage 1 → 2:</span>
+                        <span class="password-value">ZEBRA</span>
+                    </div>
+                    <div class="admin-item">
+                        <span class="stage-label">Stage 2 → 3:</span>
+                        <span class="password-value">PIZZA</span>
+                    </div>
+                    <div class="admin-item">
+                        <span class="stage-label">Stage 3 → 4:</span>
+                        <span class="password-value">JAZZ</span>
+                    </div>
+                    <div class="admin-item">
+                        <span class="stage-label">영상 건너뛰기:</span>
+                        <span class="password-value">tlsekq</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="admin-close-btn" class="btn btn-secondary">닫기</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF 보고서 템플릿 (숨김) -->
+    <div id="report-template" class="hidden">
+        <div class="report-container">
+            <div class="report-header">
+                <h1>PROXIMA RESCUE MISSION REPORT</h1>
+                <div class="report-meta">
+                    <p><strong>TEAM:</strong> <span id="report-team"></span></p>
+                    <p><strong>DATE:</strong> <span id="report-date"></span></p>
+                    <p><strong>TIME:</strong> <span id="report-time"></span></p>
+                </div>
+            </div>
+            <div class="report-body">
+                <div class="report-section">
+                    <h3>STAGE 1: SECURITY CLEARANCE</h3>
+                    <p>Status: <span class="status-pass">CLEARED</span></p>
+                </div>
+                <div class="report-section">
+                    <h3>STAGE 2: ENVIRONMENTAL ANALYSIS</h3>
+                    <p><strong>Star Type:</strong> <span id="report-q1"></span></p>
+                    <p><strong>Planet Rotation:</strong> <span id="report-q2"></span></p>
+                    <p><strong>Survival Zone:</strong> <span id="report-zone"></span></p>
+                    <p><strong>Reasoning:</strong> <span id="report-reason"></span></p>
+                </div>
+                <div class="report-section">
+                    <h3>STAGE 3: LOCATION TRACKING</h3>
+                    <p><strong>Star Trail Angle:</strong> <span id="report-angle"></span></p>
+                    <p><strong>Rotation Speed:</strong> <span id="report-speed"></span></p>
+                    <p><strong>Current Location:</strong> <span id="report-location"></span></p>
+                    <p><strong>Latitude:</strong> <span id="report-latitude"></span></p>
+                </div>
+                <div class="report-section">
+                    <h3>STAGE 4: HOHMANN TRANSFER</h3>
+                    <p><strong>Inner Orbit Period:</strong> <span id="report-inner"></span> sec</p>
+                    <p><strong>Outer Orbit Period:</strong> <span id="report-outer"></span> sec</p>
+                    <p><strong>Transfer Window:</strong> CALCULATED</p>
+                </div>
+                <div class="report-footer">
+                    <p>MISSION STATUS: <strong>SUCCESS</strong></p>
+                    <p>PROXIMA COMMAND CENTER</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 이미지 확대 모달 -->
+    <div id="image-modal" class="image-modal hidden">
+        <div class="image-modal-backdrop"></div>
+        <div class="image-modal-content">
+            <button class="image-modal-close">&times;</button>
+            <img id="modal-image" src="" alt="확대 이미지">
+        </div>
+    </div>
+
+    <!-- PDF Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <!-- 스크립트 -->
     <script src="js/storage.js"></script>
     <script src="js/timer.js"></script>
     <script src="js/validation.js"></script>
     <script src="js/hints.js"></script>
     <script src="js/stages.js"></script>
+    <script src="js/hohmann.js"></script>
     <script src="js/main.js"></script>
 </body>
+
 </html>
