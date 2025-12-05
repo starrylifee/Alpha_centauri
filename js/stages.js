@@ -626,6 +626,7 @@ const Stages = (function () {
         phaseButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 const currentPhase = btn.closest('.stage-phase');
+                const currentStage = btn.closest('.stage'); // 현재 스테이지 컨테이너 찾기
                 const nextPhaseNum = btn.dataset.nextPhase;
                 const validateTarget = btn.dataset.validate;
 
@@ -663,9 +664,11 @@ const Stages = (function () {
                 }
 
                 // Move to next phase
-                if (currentPhase) currentPhase.classList.add('hidden');
-                const nextPhase = document.querySelector(`.stage-phase.phase-${nextPhaseNum}`);
-                if (nextPhase) nextPhase.classList.remove('hidden');
+                if (currentPhase && currentStage) {
+                    currentPhase.classList.add('hidden');
+                    const nextPhase = currentStage.querySelector(`.stage-phase.phase-${nextPhaseNum}`);
+                    if (nextPhase) nextPhase.classList.remove('hidden');
+                }
             });
         });
 
@@ -673,11 +676,14 @@ const Stages = (function () {
         prevButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 const currentPhase = btn.closest('.stage-phase');
+                const currentStage = btn.closest('.stage'); // 현재 스테이지 컨테이너 찾기
                 const prevPhaseNum = btn.dataset.prevPhase;
 
-                if (currentPhase) currentPhase.classList.add('hidden');
-                const prevPhase = document.querySelector(`.stage-phase.phase-${prevPhaseNum}`);
-                if (prevPhase) prevPhase.classList.remove('hidden');
+                if (currentPhase && currentStage) {
+                    currentPhase.classList.add('hidden');
+                    const prevPhase = currentStage.querySelector(`.stage-phase.phase-${prevPhaseNum}`);
+                    if (prevPhase) prevPhase.classList.remove('hidden');
+                }
             });
         });
 
