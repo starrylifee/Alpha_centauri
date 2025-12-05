@@ -624,7 +624,7 @@ const Stages = (function () {
 
         // Simulation Check (Phase 1)
         // Simulation Check (Phase 1)
-        const simFailBtn = document.querySelector('.btn-sim-fail');
+        const simFailBtn = document.getElementById('sim-fail-btn');
         // Stage 4의 Phase 1 버튼만 선택하도록 수정
         const phase1NextBtn = document.querySelector('#step-4 .stage-phase.phase-1 .btn-next');
 
