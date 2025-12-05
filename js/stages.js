@@ -621,75 +621,12 @@ const Stages = (function () {
             });
         }
 
-        // Phase Navigation Logic
-        const phaseButtons = document.querySelectorAll('.stage-phase .btn-next');
-        phaseButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const currentPhase = btn.closest('.stage-phase');
-                const currentStage = btn.closest('.stage'); // 현재 스테이지 컨테이너 찾기
-                const nextPhaseNum = btn.dataset.nextPhase;
-                const validateTarget = btn.dataset.validate;
-
-                // Validation
-                if (validateTarget === 'stage4-measure') {
-                    // 공전 주기 측정 검증
-                    const inputs = [
-                        document.getElementById('inner-1'), document.getElementById('inner-2'), document.getElementById('inner-3'),
-                        document.getElementById('outer-1'), document.getElementById('outer-2'), document.getElementById('outer-3')
-                    ];
-                    const allFilled = inputs.every(input => input && input.value.trim() !== '');
-                    const errorMsg = document.getElementById('stage4-measure-error');
-
-                    if (!allFilled) {
-                        if (errorMsg) errorMsg.classList.remove('hidden');
-                        return;
-                    }
-                    if (errorMsg) errorMsg.classList.add('hidden');
-                } else if (validateTarget === 'stage4-angle') {
-                    // 발사 윈도우 계산 검증
-                    const inputs = [
-                        document.getElementById('calc-period'),
-                        document.getElementById('calc-speed'),
-                        document.getElementById('calc-travel'),
-                        document.getElementById('stage4-angle')
-                    ];
-                    const allFilled = inputs.every(input => input && input.value.trim() !== '');
-                    const errorMsg = document.getElementById('stage4-angle-error');
-
-                    if (!allFilled) {
-                        if (errorMsg) errorMsg.classList.remove('hidden');
-                        return;
-                    }
-                    if (errorMsg) errorMsg.classList.add('hidden');
-                }
-
-                // Move to next phase
-                if (currentPhase && currentStage) {
-                    currentPhase.classList.add('hidden');
-                    const nextPhase = currentStage.querySelector(`.stage-phase.phase-${nextPhaseNum}`);
-                    if (nextPhase) nextPhase.classList.remove('hidden');
-                }
-            });
-        });
-
-        const prevButtons = document.querySelectorAll('.stage-phase .btn-prev');
-        prevButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const currentPhase = btn.closest('.stage-phase');
-                const currentStage = btn.closest('.stage'); // 현재 스테이지 컨테이너 찾기
-                const prevPhaseNum = btn.dataset.prevPhase;
-
-                if (currentPhase && currentStage) {
-                    currentPhase.classList.add('hidden');
-                    const prevPhase = currentStage.querySelector(`.stage-phase.phase-${prevPhaseNum}`);
-                    if (prevPhase) prevPhase.classList.remove('hidden');
-                }
-            });
-        });
 
         // Simulation Check (Phase 1)
+        // Simulation Check (Phase 1)
         const simFailBtn = document.querySelector('.btn-sim-fail');
-        const phase1NextBtn = document.querySelector('.stage-phase.phase-1 .btn-next');
+        // Stage 4의 Phase 1 버튼만 선택하도록 수정
+        const phase1NextBtn = document.querySelector('#step-4 .stage-phase.phase-1 .btn-next');
 
         if (phase1NextBtn) {
             // 초기에는 비활성화 (CSS로 스타일링 필요할 수 있음)
@@ -897,11 +834,77 @@ const Stages = (function () {
     function setupAllStages() {
         initElements();
         setupStage1();
-        setupAdminButton();
         setupStage2();
         setupStage3();
         setupStage4();
         setupStage5();
+        setupAdminButton();
+
+        // Phase Navigation Logic (Global)
+        const phaseButtons = document.querySelectorAll('.stage-phase .btn-next');
+        phaseButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const currentPhase = btn.closest('.stage-phase');
+                const currentStage = btn.closest('.stage'); // 현재 스테이지 컨테이너 찾기
+                const nextPhaseNum = btn.dataset.nextPhase;
+                const validateTarget = btn.dataset.validate;
+
+                // Validation
+                if (validateTarget === 'stage4-measure') {
+                    // 공전 주기 측정 검증
+                    const inputs = [
+                        document.getElementById('inner-1'), document.getElementById('inner-2'), document.getElementById('inner-3'),
+                        document.getElementById('outer-1'), document.getElementById('outer-2'), document.getElementById('outer-3')
+                    ];
+                    const allFilled = inputs.every(input => input && input.value.trim() !== '');
+                    const errorMsg = document.getElementById('stage4-measure-error');
+
+                    if (!allFilled) {
+                        if (errorMsg) errorMsg.classList.remove('hidden');
+                        return;
+                    }
+                    if (errorMsg) errorMsg.classList.add('hidden');
+                } else if (validateTarget === 'stage4-angle') {
+                    // 발사 윈도우 계산 검증
+                    const inputs = [
+                        document.getElementById('calc-period'),
+                        document.getElementById('calc-speed'),
+                        document.getElementById('calc-travel'),
+                        document.getElementById('stage4-angle')
+                    ];
+                    const allFilled = inputs.every(input => input && input.value.trim() !== '');
+                    const errorMsg = document.getElementById('stage4-angle-error');
+
+                    if (!allFilled) {
+                        if (errorMsg) errorMsg.classList.remove('hidden');
+                        return;
+                    }
+                    if (errorMsg) errorMsg.classList.add('hidden');
+                }
+
+                // Move to next phase
+                if (currentPhase && currentStage) {
+                    currentPhase.classList.add('hidden');
+                    const nextPhase = currentStage.querySelector(`.stage-phase.phase-${nextPhaseNum}`);
+                    if (nextPhase) nextPhase.classList.remove('hidden');
+                }
+            });
+        });
+
+        const prevButtons = document.querySelectorAll('.stage-phase .btn-prev');
+        prevButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const currentPhase = btn.closest('.stage-phase');
+                const currentStage = btn.closest('.stage'); // 현재 스테이지 컨테이너 찾기
+                const prevPhaseNum = btn.dataset.prevPhase;
+
+                if (currentPhase && currentStage) {
+                    currentPhase.classList.add('hidden');
+                    const prevPhase = currentStage.querySelector(`.stage-phase.phase-${prevPhaseNum}`);
+                    if (prevPhase) prevPhase.classList.remove('hidden');
+                }
+            });
+        });
         setupResult();
 
         console.log('[Stages] All stages setup complete');
