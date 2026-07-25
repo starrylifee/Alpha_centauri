@@ -3273,3 +3273,28 @@
     color: green;
     font-weight: bold;
 }
+/* ========================================
+   Activity Photo (실제 수업 활동 사진)
+   ======================================== */
+.activity-photo {
+    margin: var(--spacing-lg) 0;
+    text-align: center;
+}
+
+.activity-photo img {
+    display: block;
+    max-width: 100%;
+    max-height: 46vh;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    cursor: zoom-in;
+}
+
+.activity-photo figcaption {
+    margin-top: var(--spacing-sm);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
