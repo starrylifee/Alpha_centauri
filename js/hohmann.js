@@ -44,16 +44,17 @@ const HohmannSim = (function () {
             failBtn.addEventListener('click', startFailureSimulation);
         }
 
-        // 애니메이션 시작
-        startAnimation();
+        // 첫 화면만 한 번 그려두고, 실제 애니메이션은 스테이지 4에 들어올 때 시작한다
+        // (크롬북에서 수업 내내 rAF 루프가 도는 것을 막기 위함)
+        draw();
         console.log('[HohmannSim] Initialized');
     }
 
     /**
-     * 애니메이션 루프
+     * 애니메이션 루프 시작
      */
     function startAnimation() {
-        if (animationId) cancelAnimationFrame(animationId);
+        if (animationId) return; // 이미 돌고 있으면 무시
 
         function loop() {
             update();
@@ -61,6 +62,29 @@ const HohmannSim = (function () {
             animationId = requestAnimationFrame(loop);
         }
         loop();
+    }
+
+    /**
+     * 애니메이션 루프 정지
+     */
+    function stopAnimation() {
+        if (animationId) {
+            cancelAnimationFrame(animationId);
+            animationId = null;
+        }
+    }
+
+    /**
+     * 스테이지 진입/이탈에 맞춰 켜고 끈다
+     * @param {boolean} active - 활성화 여부
+     */
+    function setActive(active) {
+        if (!canvas) return;
+        if (active) {
+            startAnimation();
+        } else {
+            stopAnimation();
+        }
     }
 
     /**
@@ -249,6 +273,7 @@ const HohmannSim = (function () {
     }
 
     return {
-        init
+        init,
+        setActive
     };
 })();

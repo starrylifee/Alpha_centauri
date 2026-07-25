@@ -212,6 +212,11 @@ const Stages = (function () {
             }
         }
 
+        // 호만 전이 시뮬레이션은 스테이지 4에서만 돌린다 (배터리·발열 절약)
+        if (typeof HohmannSim !== 'undefined') {
+            HohmannSim.setActive(stageNum === 4);
+        }
+
         // 상태 저장
         Storage.setCurrentStage(stageNum);
 
@@ -230,6 +235,11 @@ const Stages = (function () {
             if (elements[`stage${i}`]) {
                 elements[`stage${i}`].classList.add('hidden');
             }
+        }
+
+        // 결과 화면에서는 시뮬레이션도 멈춘다
+        if (typeof HohmannSim !== 'undefined') {
+            HohmannSim.setActive(false);
         }
 
         // 결과 화면 표시
@@ -522,15 +532,24 @@ const Stages = (function () {
                     // 구역 텍스트 가져오기
                     const regionSelect = document.getElementById('stage3-region');
                     const regionText = regionSelect.options[regionSelect.selectedIndex].text;
-                    const starAngle = Storage.getAllData().stage3Angle || '15'; // 저장된 각도 사용
+
+                    // 저장된 각도 사용 (Phase 1 정답이 30도)
+                    const starAngle = Storage.getAllData().stage3Angle || '30';
+
+                    // 자전 속도 = 24시간 동안 움직인 각도 / 24
+                    // 지구는 360/24 = 15도/시간, 이 행성은 30/24 = 1.25도/시간으로 훨씬 느리다
+                    const angleNum = parseFloat(starAngle);
+                    const rotationSpeed = isNaN(angleNum)
+                        ? '-'
+                        : `${(angleNum / 24).toFixed(2)}도/시간`;
 
                     // 보고서용 데이터 저장
                     Storage.update('stage3Data', {
                         region: region,
                         latitude: latitude,
                         angle: starAngle + '도', // 사용자 입력값
-                        speed: '15도/시간', // 고정값 (과학적 사실)
-                        location: regionText, // 선택한 구역 텍스트
+                        speed: rotationSpeed,   // 입력 각도에서 계산
+                        location: regionText,   // 선택한 구역 텍스트
                     });
                     showFeedback(elements.stage3Feedback, '✓ 구조 포인트 생성 완료! 궤도 진입 시퀀스 가동...', 'success');
                     setTimeout(() => {
@@ -732,6 +751,12 @@ const Stages = (function () {
 
         if (!template) return;
 
+        // 라이브러리 로드 실패 시 조용히 아무 일도 안 일어나는 것을 막는다
+        if (typeof html2canvas === 'undefined' || !window.jspdf) {
+            alert('보고서 생성 도구를 불러오지 못했습니다.\n페이지를 새로고침한 뒤 다시 시도해주세요.');
+            return;
+        }
+
         // 데이터 채우기
         document.getElementById('report-team').textContent = data.teamName || '익명 팀';
         document.getElementById('report-date').textContent = new Date().toLocaleDateString();
@@ -746,8 +771,8 @@ const Stages = (function () {
 
         // Stage 3
         const s3 = data.stage3Data || {};
-        document.getElementById('report-angle').textContent = s3.angle || '15도';
-        document.getElementById('report-speed').textContent = s3.speed || '15도/시간';
+        document.getElementById('report-angle').textContent = s3.angle || '-';
+        document.getElementById('report-speed').textContent = s3.speed || '-';
         document.getElementById('report-location').textContent = s3.location || '-';
         document.getElementById('report-latitude').textContent = s3.latitude || '-';
 
@@ -840,71 +865,11 @@ const Stages = (function () {
         setupStage5();
         setupAdminButton();
 
-        // Phase Navigation Logic (Global)
-        const phaseButtons = document.querySelectorAll('.stage-phase .btn-next');
-        phaseButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const currentPhase = btn.closest('.stage-phase');
-                const currentStage = btn.closest('.stage'); // 현재 스테이지 컨테이너 찾기
-                const nextPhaseNum = btn.dataset.nextPhase;
-                const validateTarget = btn.dataset.validate;
+        // 페이즈 이동(.btn-next / .btn-prev)은 main.js의 setupPhaseSystem()이
+        // document 위임으로 한 곳에서만 처리한다.
+        // 예전에는 여기서도 버튼마다 리스너를 붙였는데, 버튼 리스너가 먼저 실행돼
+        // 화면을 넘긴 뒤에 main.js가 뒤늦게 검증하는 바람에 검증이 무력화됐다.
 
-                // Validation
-                if (validateTarget === 'stage4-measure') {
-                    // 공전 주기 측정 검증
-                    const inputs = [
-                        document.getElementById('inner-1'), document.getElementById('inner-2'), document.getElementById('inner-3'),
-                        document.getElementById('outer-1'), document.getElementById('outer-2'), document.getElementById('outer-3')
-                    ];
-                    const allFilled = inputs.every(input => input && input.value.trim() !== '');
-                    const errorMsg = document.getElementById('stage4-measure-error');
-
-                    if (!allFilled) {
-                        if (errorMsg) errorMsg.classList.remove('hidden');
-                        return;
-                    }
-                    if (errorMsg) errorMsg.classList.add('hidden');
-                } else if (validateTarget === 'stage4-angle') {
-                    // 발사 윈도우 계산 검증
-                    const inputs = [
-                        document.getElementById('calc-period'),
-                        document.getElementById('calc-speed'),
-                        document.getElementById('calc-travel'),
-                        document.getElementById('stage4-angle')
-                    ];
-                    const allFilled = inputs.every(input => input && input.value.trim() !== '');
-                    const errorMsg = document.getElementById('stage4-angle-error');
-
-                    if (!allFilled) {
-                        if (errorMsg) errorMsg.classList.remove('hidden');
-                        return;
-                    }
-                    if (errorMsg) errorMsg.classList.add('hidden');
-                }
-
-                // Move to next phase
-                if (currentPhase && currentStage) {
-                    currentPhase.classList.add('hidden');
-                    const nextPhase = currentStage.querySelector(`.stage-phase.phase-${nextPhaseNum}`);
-                    if (nextPhase) nextPhase.classList.remove('hidden');
-                }
-            });
-        });
-
-        const prevButtons = document.querySelectorAll('.stage-phase .btn-prev');
-        prevButtons.forEach(btn => {
-            btn.addEventListener('click', () => {
-                const currentPhase = btn.closest('.stage-phase');
-                const currentStage = btn.closest('.stage'); // 현재 스테이지 컨테이너 찾기
-                const prevPhaseNum = btn.dataset.prevPhase;
-
-                if (currentPhase && currentStage) {
-                    currentPhase.classList.add('hidden');
-                    const prevPhase = currentStage.querySelector(`.stage-phase.phase-${prevPhaseNum}`);
-                    if (prevPhase) prevPhase.classList.remove('hidden');
-                }
-            });
-        });
         setupResult();
 
         console.log('[Stages] All stages setup complete');
