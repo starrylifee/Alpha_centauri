@@ -7,21 +7,21 @@
     <title>Proxima Rescue Command - Mission Control</title>
 
     <!-- 파비콘 -->
-    <link rel="icon" type="image/png" href="assets/images/video-poster.png">
-    <link rel="apple-touch-icon" href="assets/images/video-poster.png">
+    <link rel="icon" type="image/png" href="assets/images/favicon-180.png">
+    <link rel="apple-touch-icon" href="assets/images/favicon-180.png">
 
     <!-- Open Graph (카카오톡, 페이스북 등 SNS 공유용) -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="🚀 Proxima Rescue Command">
     <meta property="og:description" content="프록시마 센타우리 b 구조 작전! 우주 미션 시뮬레이션 게임">
-    <meta property="og:image" content="https://starrylifee.github.io/Alpha_centauri/assets/images/video-poster.png">
+    <meta property="og:image" content="https://starrylifee.github.io/Alpha_centauri/assets/images/og-image.jpg">
     <meta property="og:url" content="https://starrylifee.github.io/Alpha_centauri/">
 
     <!-- 트위터 카드 -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="🚀 Proxima Rescue Command">
     <meta name="twitter:description" content="프록시마 센타우리 b 구조 작전! 우주 미션 시뮬레이션 게임">
-    <meta name="twitter:image" content="https://starrylifee.github.io/Alpha_centauri/assets/images/video-poster.png">
+    <meta name="twitter:image" content="https://starrylifee.github.io/Alpha_centauri/assets/images/og-image.jpg">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -801,7 +801,7 @@
                                             placeholder="?">
                                         <span>) 도 뒤에 있을 때 발사해야 한다!</span>
                                     </div>
-                                    <p class="validation-error hidden" id="stage4-angle-error">⚠️ 발사 각도를 입력해주세요!</p>
+                                    <p class="validation-error hidden" id="stage4-angle-error">⚠️ 계산 과정을 모두 채우고 발사 각도를 입력해주세요!</p>
                                 </div>
                             </div>
                         </div>
@@ -1177,9 +1177,9 @@
         </div>
     </div>
 
-    <!-- PDF Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- PDF Libraries (학교망에서 CDN이 막혀도 보고서가 나오도록 파일로 포함) -->
+    <script src="js/vendor/html2canvas.min.js"></script>
+    <script src="js/vendor/jspdf.umd.min.js"></script>
 
     <!-- 스크립트 -->
     <script src="js/storage.js"></script>

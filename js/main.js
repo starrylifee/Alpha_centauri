@@ -143,6 +143,19 @@ const App = (function () {
         // 작전 개시 버튼
         if (startMissionBtn) {
             startMissionBtn.addEventListener('click', () => {
+                // 홈 버튼으로 잠시 나왔던 경우: 팀 이름을 다시 묻지 않고 이어서 진행
+                const resumeStage = Storage.getAllData().resumeStage || 0;
+                const teamName = Storage.getTeamName();
+
+                if (resumeStage > 0 && teamName) {
+                    updateTeamNameDisplay(teamName);
+                    Timer.start(Storage.getElapsedTime());
+                    Stages.showStage(resumeStage);
+                    Storage.update('resumeStage', 0);
+                    console.log('[App] Resumed at stage', resumeStage);
+                    return;
+                }
+
                 showTeamModal();
             });
         }
@@ -162,15 +175,36 @@ const App = (function () {
 
     /**
      * 작전 개시 버튼 활성화
+     * @param {string} [label] - 버튼에 표시할 문구 (진행 중이면 "이어서 진행")
      */
-    function enableStartButton() {
+    function enableStartButton(label) {
         if (startMissionBtn) {
             startMissionBtn.classList.remove('hidden');
             startMissionBtn.style.animation = 'pulse 2s ease-in-out infinite';
+
+            if (label) {
+                const textEl = startMissionBtn.querySelector('.btn-text');
+                if (textEl) textEl.textContent = label;
+            }
         }
         if (skipIntroBtn) {
             skipIntroBtn.classList.add('hidden');
         }
+    }
+
+    /**
+     * 홈으로 나왔던 게임이 남아 있으면 "이어서 진행" 버튼을 띄운다
+     * @returns {boolean} 이어할 게임이 있는지
+     */
+    function showResumeButtonIfNeeded() {
+        const resumeStage = Storage.getAllData().resumeStage || 0;
+        const teamName = Storage.getTeamName();
+
+        if (resumeStage > 0 && teamName && !Storage.isCompleted()) {
+            enableStartButton('[ 이어서 진행 ]');
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -251,11 +285,11 @@ const App = (function () {
      */
     function restoreState() {
         // 완료된 게임인지 확인
+        // (결과 화면이 경과 시간을 읽으므로 타이머를 먼저 복원해야 함)
         if (Storage.isCompleted()) {
-            Stages.showResult();
             Timer.restore();
-            const teamName = Storage.getTeamName();
-            updateTeamNameDisplay(teamName);
+            updateTeamNameDisplay(Storage.getTeamName());
+            Stages.showResult();
             return true;
         }
 
@@ -266,10 +300,10 @@ const App = (function () {
         if (currentStage > 0 && teamName) {
             updateTeamNameDisplay(teamName);
 
-            // 타이머 복원 및 재시작
-            if (Timer.restore()) {
-                Timer.start(Storage.getElapsedTime());
-            }
+            // 저장된 시간부터 타이머 재개
+            // (10초 미만이라 저장값이 0이어도 반드시 다시 돌려야 한다)
+            Timer.restore();
+            Timer.start(Storage.getElapsedTime());
 
             // 해당 단계로 이동
             Stages.showStage(currentStage);
@@ -374,18 +408,36 @@ const App = (function () {
         // 에러 메시지 요소
         const errorEl = document.getElementById(`${validateId}-error`);
 
+        /** 여러 입력 칸이 모두 채워졌는지 확인 */
+        const allFilled = (ids) => ids.every(id => {
+            const el = document.getElementById(id);
+            return el && el.value.trim() !== '';
+        });
+
         // 특수 검증 케이스
         if (validateId === 'stage4-measure') {
-            // Stage 4 Phase 2: 측정값 및 평균 계산 검증
+            // Stage 4 Phase 2: 측정값 6칸 + 평균 계산 버튼까지 눌렀는지 검증
+            const measured = allFilled(['inner-1', 'inner-2', 'inner-3', 'outer-1', 'outer-2', 'outer-3']);
             const innerAvg = document.getElementById('inner-avg')?.textContent;
             const outerAvg = document.getElementById('outer-avg')?.textContent;
+            const isValid = measured && innerAvg !== '--' && outerAvg !== '--';
 
-            if (innerAvg === '--' || outerAvg === '--') {
-                if (errorEl) errorEl.classList.remove('hidden');
-                return false;
+            if (errorEl) errorEl.classList.toggle('hidden', isValid);
+            return isValid;
+        }
+
+        if (validateId === 'stage4-angle') {
+            // Stage 4 Phase 3: 계산 과정 전체와 발사 각도가 채워졌는지 검증
+            const isValid = allFilled(['calc-period', 'calc-speed', 'calc-travel', 'stage4-angle']);
+
+            if (errorEl) errorEl.classList.toggle('hidden', isValid);
+            if (!isValid) {
+                const firstEmpty = ['calc-period', 'calc-speed', 'calc-travel', 'stage4-angle']
+                    .map(id => document.getElementById(id))
+                    .find(el => el && el.value.trim() === '');
+                firstEmpty?.focus();
             }
-            if (errorEl) errorEl.classList.add('hidden');
-            return true;
+            return isValid;
         }
 
         // 일반 입력 필드 검증
@@ -1015,14 +1067,17 @@ const App = (function () {
         if (homeBtn) {
             homeBtn.addEventListener('click', () => {
                 if (confirm('처음 화면으로 돌아가시겠습니까?\n(진행 상황은 저장됩니다)')) {
-                    // 현재 시간 저장
+                    // 돌아올 단계를 먼저 기억해 둔다
+                    // (showStage(0)이 currentStage를 0으로 덮어쓰기 때문)
+                    Storage.update('resumeStage', Storage.getCurrentStage());
+
+                    // 현재 시간 저장 후 타이머 정지
                     Storage.saveElapsedTime(Timer.getElapsed());
-
-                    // Step 0으로 이동
-                    Stages.showStage(0);
-
-                    // 타이머 정지
                     Timer.stop();
+
+                    // Step 0으로 이동 (이어서 진행할 수 있게 버튼을 남겨둔다)
+                    Stages.showStage(0);
+                    showResumeButtonIfNeeded();
                 }
             });
         }
@@ -1068,14 +1123,13 @@ const App = (function () {
         // 페널티 표시 초기화
         Hints.updatePenaltyDisplay();
 
-        // [테스트용] 저장 복원 비활성화 - 항상 새 게임 시작
-        // const restored = restoreState();
-        // if (!restored) {
-        //     Stages.showStage(0);
-        // }
-
-        // 항상 Step 0부터 시작
-        Stages.showStage(0);
+        // 저장된 진행 상황 복원 (없으면 처음 화면부터)
+        const restored = restoreState();
+        if (!restored) {
+            Stages.showStage(0);
+            // 홈으로 나온 상태에서 새로고침한 경우에도 이어서 진행할 수 있게
+            showResumeButtonIfNeeded();
+        }
 
         console.log('[App] Initialization complete');
     }
