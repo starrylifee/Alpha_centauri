@@ -80,10 +80,30 @@ const Hints = (function () {
             });
         }
 
+        // 감점 안내 문구를 설정값에 맞춰 채운다 (HTML에 숫자를 박아두지 않는다)
+        updatePenaltyLabels();
+
         // 페널티 표시 업데이트
         updatePenaltyDisplay();
 
         console.log('[Hints] Initialized successfully');
+    }
+
+    /**
+     * 힌트 버튼과 확인 모달의 감점 안내를 Scoring 설정에 맞춰 갱신
+     */
+    function updatePenaltyLabels() {
+        const penalty = Scoring.HINT_PENALTY;
+
+        document.querySelectorAll('.btn-hint').forEach(btn => {
+            const textEl = btn.querySelector('span:last-child');
+            if (textEl) textEl.textContent = `힌트 보기 (-${penalty}점)`;
+        });
+
+        const warning = document.querySelector('#hint-modal .warning-text');
+        if (warning) {
+            warning.innerHTML = `힌트를 사용하면 <strong>${penalty}점</strong>이 차감됩니다.`;
+        }
     }
 
     /**
@@ -114,9 +134,19 @@ const Hints = (function () {
         hideConfirmModal();
 
         if (currentStage && hintData[currentStage]) {
-            // 힌트 사용 횟수 증가
-            const hintCount = Storage.incrementHintCount();
-            console.log('[Hints] Hint count incremented to:', hintCount);
+            // 이미 본 힌트를 다시 보는 것은 감점하지 않는다
+            // (새로고침해도 유지되도록 저장소에 기록해 둔다)
+            const alreadyUsed = Storage.isHintUsed(currentStage);
+
+            let hintCount;
+            if (alreadyUsed) {
+                hintCount = Storage.getHintCount();
+                console.log('[Hints] Already used, no extra penalty. Stage:', currentStage);
+            } else {
+                Storage.markHintUsed(currentStage);
+                hintCount = Storage.incrementHintCount();
+                console.log('[Hints] Hint count incremented to:', hintCount);
+            }
 
             // 힌트 표시
             showHint(currentStage);
@@ -124,8 +154,10 @@ const Hints = (function () {
             // 페널티 표시 업데이트
             updatePenaltyDisplay();
 
-            // 보너스 프로그램 체크
-            checkBonusProgram();
+            // 보너스 프로그램 체크 (새로 쓴 힌트일 때만)
+            if (!alreadyUsed) {
+                checkBonusProgram();
+            }
 
             // 콜백 실행
             if (typeof onConfirmCallback === 'function') {
@@ -164,7 +196,7 @@ const Hints = (function () {
         const penaltyDisplay = document.getElementById('penalty-display');
         if (penaltyDisplay) {
             const hintCount = Storage.getHintCount();
-            const penalty = hintCount * 5;
+            const penalty = Scoring.penaltyFor(hintCount);
             penaltyDisplay.textContent = `-${penalty}점`;
 
             console.log('[Hints] Penalty display updated:', `-${penalty}점`);
@@ -184,13 +216,12 @@ const Hints = (function () {
      * 보너스 프로그램 체크 (-30점 이상 감점 시)
      */
     function checkBonusProgram() {
-        const hintCount = Storage.getHintCount();
-        const penalty = hintCount * 5;
+        const penalty = Scoring.penaltyFor(Storage.getHintCount());
 
         console.log('[Hints] Checking bonus program. Penalty:', penalty);
 
-        // -30점 이상 감점 시 보너스 프로그램 표시
-        if (penalty >= 30) {
+        // 감점이 기준치에 도달하면 보너스 프로그램 표시
+        if (penalty >= Scoring.BONUS_PENALTY_THRESHOLD) {
             showBonusProgram();
         }
     }
@@ -273,7 +304,7 @@ const Hints = (function () {
      * @returns {boolean} 사용 여부
      */
     function isHintUsed(stage) {
-        return hintData[stage]?.used || false;
+        return Storage.isHintUsed(stage);
     }
 
     /**
@@ -292,7 +323,7 @@ const Hints = (function () {
      * @returns {number} 페널티 점수
      */
     function getPenalty() {
-        return Storage.getHintCount() * 5;
+        return Scoring.penaltyFor(Storage.getHintCount());
     }
 
     // Public API

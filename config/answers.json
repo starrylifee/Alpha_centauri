@@ -71,10 +71,13 @@
   },
   
   "scoring": {
-    "maxTime": 200,
+    "_source": "실제 값은 js/config.js의 Scoring 모듈에 있습니다. 여기는 기록용입니다.",
+    "maxTime": 250,
     "timeUnit": "minutes",
-    "hintPenalty": 5,
-    "formula": "최종점수 = (200 - 소요시간(분)) - (힌트횟수 × 5)"
+    "hintPenalty": 10,
+    "bonusPenaltyThreshold": 30,
+    "formula": "최종점수 = (250 - 소요시간(분)) - (힌트횟수 × 10)",
+    "_note": "9시~12시 30분 수업 기준. 쉬는 시간에는 홈 버튼으로 타이머를 멈춘다."
   },
   
   "hints": {

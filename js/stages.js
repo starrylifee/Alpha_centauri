@@ -258,12 +258,9 @@ const Stages = (function () {
         const data = Storage.getAllData();
         const elapsedSeconds = Timer.getElapsed();
         const hintCount = data.hintCount || 0;
-        const penalty = hintCount * 5;
 
-        // 점수 계산: (200분 - 소요시간(분)) - (힌트 * 5)
-        const elapsedMinutes = Math.floor(elapsedSeconds / 60);
-        const baseScore = Math.max(0, 200 - elapsedMinutes);
-        const finalScore = Math.max(0, baseScore - penalty);
+        // 점수 계산 기준은 js/config.js에 모여 있다
+        const { penalty, finalScore } = Scoring.calculate(elapsedSeconds, hintCount);
 
         // 결과 표시
         if (elements.resultTeamName) {

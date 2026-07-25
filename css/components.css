@@ -1751,9 +1751,16 @@
     display: inline-flex;
     flex-direction: column;
     align-items: flex-end;
+    flex-shrink: 0;
     margin-right: var(--spacing-lg);
     padding-right: var(--spacing-lg);
     border-right: 1px solid var(--border-color);
+}
+
+/* 감점이 두 자리(-30점)가 되면 "힌트 감 / 점"으로 잘려서 줄바꿈을 막는다 */
+.penalty-label,
+.penalty-display {
+    white-space: nowrap;
 }
 
 .penalty-label {

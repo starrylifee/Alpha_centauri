@@ -18,8 +18,14 @@ const Timer = (function() {
      * @returns {string} 포맷팅된 시간 문자열
      */
     function formatTime(totalSeconds) {
-        const minutes = Math.floor(totalSeconds / 60);
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
         const seconds = totalSeconds % 60;
+
+        // 1시간이 넘으면 H:MM:SS로 보여준다 (150:00 같은 표기를 피하려고)
+        if (hours > 0) {
+            return `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
         return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
     }
     

@@ -12,6 +12,7 @@ const Storage = (function() {
         startTimestamp: null,
         elapsedTime: 0,
         hintCount: 0,
+        usedHints: [],
         teamName: '',
         stageData: {
             stage4: {
@@ -145,6 +146,33 @@ const Storage = (function() {
     function getHintCount() {
         return load().hintCount || 0;
     }
+
+    /**
+     * 해당 단계 힌트를 이미 봤는지 확인
+     * (새로고침해도 유지되므로 같은 힌트로 두 번 감점되지 않는다)
+     * @param {number} stage - 단계 번호
+     * @returns {boolean} 사용 여부
+     */
+    function isHintUsed(stage) {
+        const used = load().usedHints || [];
+        return used.includes(Number(stage));
+    }
+
+    /**
+     * 해당 단계 힌트를 봤다고 기록
+     * @param {number} stage - 단계 번호
+     */
+    function markHintUsed(stage) {
+        const data = load();
+        const used = data.usedHints || [];
+
+        if (!used.includes(Number(stage))) {
+            used.push(Number(stage));
+            data.usedHints = used;
+            save(data);
+        }
+        return used;
+    }
     
     /**
      * 팀 이름 설정
@@ -249,6 +277,8 @@ const Storage = (function() {
         getElapsedTime,
         incrementHintCount,
         getHintCount,
+        isHintUsed,
+        markHintUsed,
         setTeamName,
         getTeamName,
         setStage4Data,
