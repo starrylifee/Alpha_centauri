@@ -387,11 +387,13 @@ const App = (function () {
 
         // 특수 검증 케이스
         if (validateId === 'stage4-measure') {
-            // Stage 4 Phase 2: 측정값 6칸 + 평균 계산 버튼까지 눌렀는지 검증
-            const measured = allFilled(['inner-1', 'inner-2', 'inner-3', 'outer-1', 'outer-2', 'outer-3']);
-            const innerAvg = document.getElementById('inner-avg')?.textContent;
-            const outerAvg = document.getElementById('outer-avg')?.textContent;
-            const isValid = measured && innerAvg !== '--' && outerAvg !== '--';
+            // Stage 4 Phase 2: 측정값 9칸 + 평균 계산 버튼까지 눌렀는지 검증
+            const measured = allFilled(['inner-1', 'inner-2', 'inner-3',
+                'outer-1', 'outer-2', 'outer-3',
+                'rocket-1', 'rocket-2', 'rocket-3']);
+            const avgs = ['inner-avg', 'outer-avg', 'rocket-avg']
+                .map(id => document.getElementById(id)?.textContent);
+            const isValid = measured && avgs.every(v => v && v !== '--');
 
             if (errorEl) errorEl.classList.toggle('hidden', isValid);
             return isValid;

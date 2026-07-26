@@ -603,12 +603,30 @@ const Stages = (function () {
                     outerAvgEl.textContent = outerAvg > 0 ? outerAvg.toFixed(1) : '--';
                 }
 
-                console.log('[Stages] Calculated averages - Inner:', innerAvg, 'Outer:', outerAvg);
+                // 로켓 편도 시간 평균 (예전에는 3초로 고정돼 있던 값)
+                const rocket1 = parseFloat(document.getElementById('rocket-1')?.value) || 0;
+                const rocket2 = parseFloat(document.getElementById('rocket-2')?.value) || 0;
+                const rocket3 = parseFloat(document.getElementById('rocket-3')?.value) || 0;
+                const rocketAvg = (rocket1 + rocket2 + rocket3) / 3;
+
+                const rocketAvgEl = document.getElementById('rocket-avg');
+                if (rocketAvgEl) {
+                    rocketAvgEl.textContent = rocketAvg > 0 ? rocketAvg.toFixed(1) : '--';
+                }
+
+                // 발사 윈도우 계산식 ②에 로켓 시간을 바로 물려준다
+                const rocketDisplay = document.getElementById('calc-rocket-display');
+                if (rocketDisplay) {
+                    rocketDisplay.textContent = rocketAvg > 0 ? rocketAvg.toFixed(1) : '?';
+                }
+
+                console.log('[Stages] Calculated averages - Inner:', innerAvg, 'Outer:', outerAvg, 'Rocket:', rocketAvg);
 
                 // 보고서용 데이터 저장
                 Storage.update('stage4Averages', {
                     inner: innerAvg,
-                    outer: outerAvg
+                    outer: outerAvg,
+                    rocket: rocketAvg
                 });
             });
         }
@@ -685,21 +703,19 @@ const Stages = (function () {
                 const angle = elements.stage4Angle?.value || '';
                 const time = elements.stage4Time?.value || '';
 
-                // 추가 데이터 수집
-                const attempt1Result = document.getElementById('attempt1-result')?.value || '';
-                const attempt1Time = document.getElementById('attempt1-time')?.value || '';
-                const attempt2Result = document.getElementById('attempt2-result')?.value || '';
-                const attempt2Time = document.getElementById('attempt2-time')?.value || '';
+                // 시도 기록 3회 (발사한 눈금 / 결과 / 실패 원인)
+                const attempts = [1, 2, 3].map(n => ({
+                    result: document.getElementById(`attempt${n}-result`)?.value || '',
+                    angle: document.getElementById(`attempt${n}-time`)?.value || '',
+                    cause: document.getElementById(`attempt${n}-cause`)?.value || ''
+                }));
 
                 const validation = Validation.validateStage4(result, angle, time);
 
                 // Stage 4 데이터 저장 (확장)
                 Storage.setStage4Data({
                     ...validation.data,
-                    attempts: [
-                        { result: attempt1Result, time: attempt1Time },
-                        { result: attempt2Result, time: attempt2Time }
-                    ]
+                    attempts
                 });
 
                 if (validation.isSuccess) {
@@ -780,20 +796,12 @@ const Stages = (function () {
         document.getElementById('report-inner').textContent = s4Avg.inner ? s4Avg.inner.toFixed(1) : '-';
         document.getElementById('report-outer').textContent = s4Avg.outer ? s4Avg.outer.toFixed(1) : '-';
 
-        // 발사 윈도우 (계산된 각도)
-        const launchAngle = s4Data.angle || '-';
-        const transferWindowEl = document.querySelector('#report-template .report-section:nth-child(4) p:nth-child(4)'); // Transfer Window 요소 찾기 (기존 템플릿에 ID가 없어서 추가 필요하거나 선택자 사용)
+        document.getElementById('report-rocket').textContent = s4Avg.rocket ? s4Avg.rocket.toFixed(1) : '-';
 
-        // 템플릿에 ID가 없으므로 querySelector로 접근 시도, 실패 시 무시
-        // 더 정확하게는 HTML 템플릿을 수정하여 ID를 부여하는 것이 좋음.
-        // 여기서는 기존 'CALCULATED' 텍스트를 대체하기 위해 HTML 수정 없이 JS로 처리 시도.
-        // 하지만 HTML 수정이 더 깔끔함. 일단 JS로 처리.
-        const reportBody = template.querySelector('.report-body');
-        const stage4Section = reportBody.querySelectorAll('.report-section')[3]; // 4번째 섹션
-        if (stage4Section) {
-            const pTags = stage4Section.querySelectorAll('p');
-            if (pTags[2]) pTags[2].innerHTML = `<strong>Transfer Window:</strong> ${launchAngle}도 (계산됨)`;
-        }
+        // 발사 윈도우 (팀이 계산한 리드 각도)
+        const launchAngle = s4Data.angle || '-';
+        document.getElementById('report-window').textContent =
+            launchAngle === '-' ? '-' : `${launchAngle}도 (계산됨)`;
 
         // PDF 생성
         template.classList.remove('hidden');

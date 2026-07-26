@@ -718,12 +718,13 @@
                             <span>미션 1. 공전 주기 측정</span>
                         </div>
                         <div class="worksheet-content">
-                            <p class="worksheet-text">A0 궤도 매트 위를 도는 햄스터 로봇의 주기를 스톱워치로 <strong>3회</strong> 측정하세요.</p>
+                            <p class="worksheet-text">A0 궤도 매트에서 로봇 <strong>세 대</strong>를 각각 <strong>3회씩</strong> 측정하세요.
+                                두 행성은 <strong>한 바퀴 도는 시간</strong>, 로켓은 <strong>발사대에서 조난자 궤도까지 가는 시간</strong>입니다.</p>
 
                             <figure class="activity-photo">
                                 <img src="assets/images/orbit-activity.jpg"
-                                    alt="A0 궤도 매트 위에서 햄스터 로봇 두 대가 안쪽·바깥쪽 궤도를 도는 모습">
-                                <figcaption>▲ 궤도 매트 배치: 안쪽이 본부(내행성), 바깥쪽이 조난자(외행성) (클릭하면 크게 보입니다)</figcaption>
+                                    alt="A0 궤도 매트 위에서 햄스터 로봇이 안쪽·바깥쪽 궤도를 도는 모습">
+                                <figcaption>▲ 궤도 매트 배치: 안쪽이 본부(내행성), 바깥쪽이 조난자(외행성), 가운데가 로켓 발사대 (클릭하면 크게 보입니다)</figcaption>
                             </figure>
 
                             <table class="measurement-table">
@@ -750,6 +751,13 @@
                                         <td><input type="number" class="table-input" id="outer-2" placeholder="초"></td>
                                         <td><input type="number" class="table-input" id="outer-3" placeholder="초"></td>
                                         <td><span id="outer-avg" class="avg-value">--</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>🚀 로켓 (편도)</td>
+                                        <td><input type="number" class="table-input" id="rocket-1" placeholder="초"></td>
+                                        <td><input type="number" class="table-input" id="rocket-2" placeholder="초"></td>
+                                        <td><input type="number" class="table-input" id="rocket-3" placeholder="초"></td>
+                                        <td><span id="rocket-avg" class="avg-value">--</span></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -780,7 +788,7 @@
                             <span>미션 2. 발사 윈도우 계산</span>
                         </div>
                         <div class="worksheet-content">
-                            <p class="worksheet-text">로켓이 내행성 → 외행성까지 날아가는 데 걸리는 시간이 <strong>3초</strong>라고 가정합니다.</p>
+                            <p class="worksheet-text">앞에서 잰 <strong>로켓 비행 시간</strong>을 그대로 씁니다. 팀마다 다른 값이 나옵니다.</p>
 
                             <div class="calculation-steps">
                                 <div class="calc-step">
@@ -799,7 +807,9 @@
                                     <div class="calc-formula">
                                         <span>(</span>
                                         <span id="calc-speed-display" class="calc-display">?</span>
-                                        <span>)° × 3초 = (</span>
+                                        <span>)° × (</span>
+                                        <span id="calc-rocket-display" class="calc-display">?</span>
+                                        <span>)초 = (</span>
                                         <input type="number" id="calc-travel" class="calc-input" placeholder="결과">
                                         <span>) °</span>
                                     </div>
@@ -843,13 +853,15 @@
                                 <thead>
                                     <tr>
                                         <th>시도</th>
+                                        <th>발사한 눈금</th>
                                         <th>결과</th>
-                                        <th>소요 시간</th>
+                                        <th>실패했다면 왜?</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>1차 시도</td>
+                                        <td>1차</td>
+                                        <td><input type="number" id="attempt1-time" class="table-input small" placeholder="°"></td>
                                         <td>
                                             <select id="attempt1-result" class="table-select">
                                                 <option value="">선택</option>
@@ -857,11 +869,19 @@
                                                 <option value="fail">실패</option>
                                             </select>
                                         </td>
-                                        <td><input type="text" id="attempt1-time" class="table-input" placeholder="시간">
+                                        <td>
+                                            <select id="attempt1-cause" class="table-select">
+                                                <option value="">선택</option>
+                                                <option value="early">너무 일찍 쐈다</option>
+                                                <option value="late">너무 늦게 쐈다</option>
+                                                <option value="off">로켓이 길을 벗어났다</option>
+                                                <option value="etc">그 밖의 이유</option>
+                                            </select>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td>2차 시도</td>
+                                        <td>2차</td>
+                                        <td><input type="number" id="attempt2-time" class="table-input small" placeholder="°"></td>
                                         <td>
                                             <select id="attempt2-result" class="table-select">
                                                 <option value="">선택</option>
@@ -869,7 +889,34 @@
                                                 <option value="fail">실패</option>
                                             </select>
                                         </td>
-                                        <td><input type="text" id="attempt2-time" class="table-input" placeholder="시간">
+                                        <td>
+                                            <select id="attempt2-cause" class="table-select">
+                                                <option value="">선택</option>
+                                                <option value="early">너무 일찍 쐈다</option>
+                                                <option value="late">너무 늦게 쐈다</option>
+                                                <option value="off">로켓이 길을 벗어났다</option>
+                                                <option value="etc">그 밖의 이유</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>3차</td>
+                                        <td><input type="number" id="attempt3-time" class="table-input small" placeholder="°"></td>
+                                        <td>
+                                            <select id="attempt3-result" class="table-select">
+                                                <option value="">선택</option>
+                                                <option value="success">🎉 성공</option>
+                                                <option value="fail">실패</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <select id="attempt3-cause" class="table-select">
+                                                <option value="">선택</option>
+                                                <option value="early">너무 일찍 쐈다</option>
+                                                <option value="late">너무 늦게 쐈다</option>
+                                                <option value="off">로켓이 길을 벗어났다</option>
+                                                <option value="etc">그 밖의 이유</option>
+                                            </select>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -894,8 +941,10 @@
 
                                 <div id="success-details" class="success-details hidden">
                                     <div class="observation-question">
-                                        <label>🕐 성공 시 로켓 비행 시간</label>
-                                        <input type="text" id="stage4-time" class="code-input" placeholder="예: 3초">
+                                        <!-- id는 예전 "비행 시간" 칸을 그대로 쓴다 (저장·보고서가 이 이름을 참조) -->
+                                        <label>🎯 계산한 각도와 실제로 성공한 눈금이 달랐다면, 왜 그럴까요?</label>
+                                        <input type="text" id="stage4-time" class="code-input"
+                                            placeholder="예: 스톱워치를 늦게 눌러서 주기를 길게 쟀다">
                                     </div>
                                 </div>
                             </div>
@@ -1137,7 +1186,8 @@
                     <h3>STAGE 4: HOHMANN TRANSFER</h3>
                     <p><strong>Inner Orbit Period:</strong> <span id="report-inner"></span> sec</p>
                     <p><strong>Outer Orbit Period:</strong> <span id="report-outer"></span> sec</p>
-                    <p><strong>Transfer Window:</strong> CALCULATED</p>
+                    <p><strong>Rocket Flight Time:</strong> <span id="report-rocket"></span> sec</p>
+                    <p><strong>Transfer Window:</strong> <span id="report-window">-</span></p>
                 </div>
                 <div class="report-footer">
                     <p>MISSION STATUS: <strong>SUCCESS</strong></p>

@@ -1943,6 +1943,11 @@
     font-weight: 500;
 }
 
+/* 문장을 적는 칸은 칸 전체를 쓴다 (기본 .code-input은 flex 안에서만 늘어난다) */
+.observation-question .code-input {
+    width: 100%;
+}
+
 .hint-text {
     font-size: 0.9rem;
     color: var(--warning-yellow);
