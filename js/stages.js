@@ -787,7 +787,7 @@ const Stages = (function () {
         document.getElementById('report-angle').textContent = s3.angle || '-';
         document.getElementById('report-speed').textContent = s3.speed || '-';
         document.getElementById('report-location').textContent = s3.location || '-';
-        document.getElementById('report-latitude').textContent = s3.latitude || '-';
+        document.getElementById('report-latitude').textContent = s3.latitude ? `북위 ${s3.latitude}도` : '-';
 
         // Stage 4
         const s4Avg = data.stage4Averages || {};
@@ -807,20 +807,23 @@ const Stages = (function () {
         template.classList.remove('hidden');
 
         try {
+            // scale 2 + PNG로 뽑으면 10MB를 넘어 크롬북 PDF 뷰어가 멈춘다.
+            // 글자만 읽으면 되는 문서라 scale 1.5 + JPEG로 충분하다.
             const canvas = await html2canvas(template.querySelector('.report-container'), {
-                scale: 2,
+                scale: 1.5,
                 useCORS: true,
-                logging: false
+                logging: false,
+                backgroundColor: '#ffffff'   // JPEG는 투명도를 못 담는다. 보고서는 흰 바탕이다
             });
 
-            const imgData = canvas.toDataURL('image/png');
+            const imgData = canvas.toDataURL('image/jpeg', 0.85);
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('p', 'mm', 'a4');
             const imgProps = pdf.getImageProperties(imgData);
             const pdfWidth = pdf.internal.pageSize.getWidth();
             const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
 
-            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            pdf.addImage(imgData, 'JPEG', 0, 0, pdfWidth, pdfHeight);
             pdf.save(`Proxima_Mission_Report_${data.teamName || 'Team'}.pdf`);
 
         } catch (err) {
