@@ -173,8 +173,9 @@ const Stages = (function () {
     /**
      * 단계 표시
      * @param {number} stageNum - 단계 번호
+     * @param {number} [phaseNum=1] - 단계 안의 화면 번호. 새로고침 복원에만 1이 아닌 값을 쓴다
      */
-    function showStage(stageNum) {
+    function showStage(stageNum, phaseNum = 1) {
         // 모든 단계 숨기기
         for (let i = 0; i <= 5; i++) {
             if (elements[`stage${i}`]) {
@@ -192,15 +193,14 @@ const Stages = (function () {
             targetStage.classList.remove('hidden');
             targetStage.classList.add('active');
 
-            // Phase 시스템 초기화 - Phase 1만 표시
+            // Phase 표시 - 기본은 첫 화면, 복원할 때는 저장된 화면
             const phases = targetStage.querySelectorAll('.stage-phase');
-            phases.forEach((phase, index) => {
-                if (index === 0) {
-                    phase.classList.remove('hidden');
-                } else {
-                    phase.classList.add('hidden');
-                }
-            });
+            phases.forEach(phase => phase.classList.add('hidden'));
+
+            const target = targetStage.querySelector(`.phase-${phaseNum}`) || phases[0];
+            target?.classList.remove('hidden');
+
+            Storage.setStagePhase(stageNum, phaseNum);
         }
 
         // 헤더 표시 (Stage 1 이상)

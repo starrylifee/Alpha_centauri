@@ -150,7 +150,8 @@ const App = (function () {
                 if (resumeStage > 0 && teamName) {
                     updateTeamNameDisplay(teamName);
                     Timer.start(Storage.getElapsedTime());
-                    Stages.showStage(resumeStage);
+                    Stages.showStage(resumeStage, Storage.getStagePhase(resumeStage));
+                    restoreFormValues();
                     Storage.update('resumeStage', 0);
                     console.log('[App] Resumed at stage', resumeStage);
                     return;
@@ -305,8 +306,9 @@ const App = (function () {
             Timer.restore();
             Timer.start(Storage.getElapsedTime());
 
-            // 해당 단계로 이동
-            Stages.showStage(currentStage);
+            // 하던 단계·화면으로 이동한 뒤 적어둔 값을 되돌려 놓는다
+            Stages.showStage(currentStage, Storage.getStagePhase(currentStage));
+            restoreFormValues();
 
             console.log('[App] State restored - Stage:', currentStage, 'Team:', teamName);
             return true;
@@ -467,6 +469,82 @@ const App = (function () {
         });
     }
 
+    /* ------------------------------------------------------------------
+       새로고침 복원
+
+       학생이 실수로 F5를 눌러도 적던 값을 다시 넣지 않게 한다.
+       스테이지 4는 측정칸만 아홉 개라 손해가 크다.
+       ------------------------------------------------------------------ */
+
+    /** 저장하지 않는 칸 (비밀번호와 팀 이름은 남기면 안 되거나 따로 복원된다) */
+    const SKIP_SAVE_IDS = ['team-name-input', 'stage-password-input'];
+
+    /**
+     * 입력칸 값이 바뀔 때마다 저장
+     */
+    function setupFormPersistence() {
+        const remember = (e) => {
+            const el = e.target;
+            if (!['INPUT', 'SELECT', 'TEXTAREA'].includes(el.tagName)) return;
+
+            // 라디오는 id가 없어 이름으로 묶어 저장한다 (id 검사보다 먼저 봐야 한다)
+            if (el.type === 'radio') {
+                if (el.checked && el.name) Storage.saveFormValue(`radio:${el.name}`, el.value);
+                return;
+            }
+
+            if (!el.id || SKIP_SAVE_IDS.includes(el.id)) return;
+            Storage.saveFormValue(el.id, el.value);
+        };
+
+        document.addEventListener('input', remember);
+        document.addEventListener('change', remember);
+    }
+
+    /**
+     * 저장해둔 입력값을 화면에 되돌려 놓는다
+     *
+     * 값만 넣으면 평균·각도 같은 계산 표시가 비어 있으므로,
+     * 각 칸에 input 이벤트를 다시 흘려보내 화면이 스스로 다시 계산하게 한다.
+     */
+    function restoreFormValues() {
+        const values = Storage.getFormValues();
+        const touched = [];
+
+        Object.entries(values).forEach(([key, value]) => {
+            if (key.startsWith('radio:')) {
+                const name = key.slice(6);
+                const radio = document.querySelector(`input[name="${name}"][value="${value}"]`);
+                if (radio) {
+                    radio.checked = true;
+                    radio.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+                return;
+            }
+
+            const el = document.getElementById(key);
+            if (!el || value === '' || value === undefined) return;
+            el.value = value;
+            touched.push(el);
+        });
+
+        touched.forEach(el => {
+            el.dispatchEvent(new Event('input', { bubbles: true }));
+            el.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+
+        // 평균은 버튼을 눌러야 계산된다. 아홉 칸이 다 차 있으면 대신 눌러준다
+        const cells = ['inner-1', 'inner-2', 'inner-3', 'outer-1', 'outer-2', 'outer-3',
+            'rocket-1', 'rocket-2', 'rocket-3'];
+        const allMeasured = cells.every(id => {
+            const el = document.getElementById(id);
+            return el && el.value.trim() !== '';
+        });
+        if (allMeasured) document.getElementById('calc-avg-btn')?.click();
+
+        console.log('[App] Form values restored:', touched.length, 'fields');
+    }
+
     /**
      * Phase 입력값 검증
      * @param {string} validateId - 검증할 입력 필드 ID 또는 특수 키
@@ -543,6 +621,18 @@ const App = (function () {
     }
 
     /**
+     * 지금 보고 있는 화면 번호를 저장한다 (새로고침하면 여기로 돌아온다)
+     * @param {HTMLElement} stageEl - .stage 요소 (id가 step-N)
+     * @param {string|number} phaseNum - 화면 번호
+     */
+    function rememberPhase(stageEl, phaseNum) {
+        const stageNum = parseInt(String(stageEl.id).replace('step-', ''), 10);
+        if (!isNaN(stageNum)) {
+            Storage.setStagePhase(stageNum, parseInt(phaseNum, 10));
+        }
+    }
+
+    /**
      * 단계 내 Phase 진행 시스템 설정
      */
     function setupPhaseSystem() {
@@ -578,6 +668,7 @@ const App = (function () {
             const nextPhase = currentStage.querySelector(`.phase-${nextPhaseNum}`);
             if (nextPhase) {
                 nextPhase.classList.remove('hidden');
+                rememberPhase(currentStage, nextPhaseNum);
 
                 // 페이지 최상단으로 스크롤
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -608,6 +699,7 @@ const App = (function () {
             const prevPhase = currentStage.querySelector(`.phase-${prevPhaseNum}`);
             if (prevPhase) {
                 prevPhase.classList.remove('hidden');
+                rememberPhase(currentStage, prevPhaseNum);
 
                 // 페이지 최상단으로 스크롤
                 window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1163,6 +1255,7 @@ const App = (function () {
         setupIntro();
         setupTeamModal();
         setupRecordModal();
+        setupFormPersistence();
         setupHomeButton();
         setupPhaseSystem();
         setupTidalSimulation();

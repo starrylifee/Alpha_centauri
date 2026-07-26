@@ -21,6 +21,9 @@ const Storage = (function() {
                 time: null
             }
         },
+        // 새로고침 복원용. formValues는 입력칸 id -> 값, phases는 단계 번호 -> 화면 번호
+        formValues: {},
+        phases: {},
         isCompleted: false,
         completedTimestamp: null
     };
@@ -212,6 +215,49 @@ const Storage = (function() {
     }
     
     /**
+     * 입력칸 값 저장 (새로고침 복원용)
+     * @param {string} id - 입력 요소의 id
+     * @param {string} value - 입력값
+     */
+    function saveFormValue(id, value) {
+        const data = load();
+        data.formValues = data.formValues || {};
+        data.formValues[id] = value;
+        save(data);
+        return data;
+    }
+
+    /**
+     * 저장된 입력칸 값 전체
+     * @returns {Object} { id: value }
+     */
+    function getFormValues() {
+        return load().formValues || {};
+    }
+
+    /**
+     * 단계 안에서 지금 보고 있는 화면(Phase) 저장
+     * @param {number} stage - 단계 번호
+     * @param {number} phase - 화면 번호 (1부터)
+     */
+    function setStagePhase(stage, phase) {
+        const data = load();
+        data.phases = data.phases || {};
+        data.phases[stage] = phase;
+        save(data);
+        return data;
+    }
+
+    /**
+     * 저장된 화면 번호 (없으면 1)
+     * @param {number} stage - 단계 번호
+     * @returns {number} 화면 번호
+     */
+    function getStagePhase(stage) {
+        return (load().phases || {})[stage] || 1;
+    }
+
+    /**
      * 게임 완료 처리
      * @param {number} finalTime - 최종 시간 (초)
      */
@@ -283,6 +329,10 @@ const Storage = (function() {
         getTeamName,
         setStage4Data,
         getStage4Data,
+        saveFormValue,
+        getFormValues,
+        setStagePhase,
+        getStagePhase,
         setCompleted,
         isCompleted,
         reset,
