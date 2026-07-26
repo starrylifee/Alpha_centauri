@@ -154,11 +154,6 @@ const Hints = (function () {
             // 페널티 표시 업데이트
             updatePenaltyDisplay();
 
-            // 보너스 프로그램 체크 (새로 쓴 힌트일 때만)
-            if (!alreadyUsed) {
-                checkBonusProgram();
-            }
-
             // 콜백 실행
             if (typeof onConfirmCallback === 'function') {
                 onConfirmCallback(hintCount);
@@ -209,31 +204,6 @@ const Hints = (function () {
             }
         } else {
             console.warn('[Hints] penalty-display element not found');
-        }
-    }
-
-    /**
-     * 보너스 프로그램 체크 (-30점 이상 감점 시)
-     */
-    function checkBonusProgram() {
-        const penalty = Scoring.penaltyFor(Storage.getHintCount());
-
-        console.log('[Hints] Checking bonus program. Penalty:', penalty);
-
-        // 감점이 기준치에 도달하면 보너스 프로그램 표시
-        if (penalty >= Scoring.BONUS_PENALTY_THRESHOLD) {
-            showBonusProgram();
-        }
-    }
-
-    /**
-     * 보너스 프로그램 표시
-     */
-    function showBonusProgram() {
-        const bonusModal = document.getElementById('bonus-modal');
-        if (bonusModal) {
-            bonusModal.classList.remove('hidden');
-            console.log('[Hints] Bonus program modal shown');
         }
     }
 
@@ -335,7 +305,6 @@ const Hints = (function () {
         isHintUsed,
         reset,
         updatePenaltyDisplay,
-        checkBonusProgram,
         getPenalty
     };
 })();

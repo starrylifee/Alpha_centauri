@@ -316,31 +316,6 @@ const App = (function () {
     }
 
     /**
-     * 보너스 모달 이벤트 설정
-     */
-    function setupBonusModal() {
-        const bonusCloseBtn = document.getElementById('bonus-close');
-        const bonusModal = document.getElementById('bonus-modal');
-
-        if (bonusCloseBtn) {
-            bonusCloseBtn.addEventListener('click', () => {
-                if (bonusModal) {
-                    bonusModal.classList.add('hidden');
-                }
-            });
-        }
-
-        // 배경 클릭으로 닫기
-        if (bonusModal) {
-            bonusModal.addEventListener('click', (e) => {
-                if (e.target === bonusModal) {
-                    bonusModal.classList.add('hidden');
-                }
-            });
-        }
-    }
-
-    /**
      * 키보드 단축키 설정
      */
     function setupKeyboardShortcuts() {
@@ -360,7 +335,6 @@ const App = (function () {
             if (e.key === 'Escape') {
                 const hintModal = document.getElementById('hint-modal');
                 const hintDisplayModal = document.getElementById('hint-display-modal');
-                const bonusModal = document.getElementById('bonus-modal');
 
                 // 비디오 모달 닫기
                 if (videoModal && !videoModal.classList.contains('hidden')) {
@@ -372,9 +346,6 @@ const App = (function () {
                 }
                 if (hintDisplayModal && !hintDisplayModal.classList.contains('hidden')) {
                     hintDisplayModal.classList.add('hidden');
-                }
-                if (bonusModal && !bonusModal.classList.contains('hidden')) {
-                    bonusModal.classList.add('hidden');
                 }
             }
         });
@@ -1101,7 +1072,6 @@ const App = (function () {
         // 이벤트 설정
         setupIntro();
         setupTeamModal();
-        setupBonusModal();
         setupHomeButton();
         setupPhaseSystem();
         setupTidalSimulation();

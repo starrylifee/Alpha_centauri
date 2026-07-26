@@ -75,7 +75,6 @@
     "maxTime": 250,
     "timeUnit": "minutes",
     "hintPenalty": 10,
-    "bonusPenaltyThreshold": 30,
     "formula": "최종점수 = (250 - 소요시간(분)) - (힌트횟수 × 10)",
     "_note": "9시~12시 30분 수업 기준. 쉬는 시간에는 홈 버튼으로 타이머를 멈춘다."
   },

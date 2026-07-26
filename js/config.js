@@ -13,10 +13,6 @@ const Scoring = (function () {
     // 힌트 1회당 감점
     const HINT_PENALTY = 10;
 
-    // 감점이 이 점수에 도달하면 보너스 미션(응원 영상) 안내가 뜹니다.
-    // 힌트는 단계마다 하나씩 총 4개라, 30점이면 3번째 힌트에서 뜹니다.
-    const BONUS_PENALTY_THRESHOLD = 30;
-
     /**
      * 힌트 감점 계산
      * @param {number} hintCount - 힌트 사용 횟수
@@ -49,7 +45,6 @@ const Scoring = (function () {
     return {
         MAX_TIME_MINUTES,
         HINT_PENALTY,
-        BONUS_PENALTY_THRESHOLD,
         penaltyFor,
         calculate
     };
