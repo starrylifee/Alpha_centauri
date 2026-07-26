@@ -316,6 +316,99 @@ const App = (function () {
     }
 
     /**
+     * 지난 기록 모달 설정
+     *
+     * 앞 단계로 되돌아가지 않고도 팀이 적은 답을 볼 수 있게 한다.
+     * 저장된 값을 읽기만 하므로 진행 단계·타이머는 그대로다.
+     */
+    function setupRecordModal() {
+        const recordBtn = document.getElementById('record-btn');
+        const modal = document.getElementById('record-modal');
+        if (!recordBtn || !modal) return;
+
+        const open = () => {
+            renderRecordList();
+            modal.classList.remove('hidden');
+        };
+        const close = () => modal.classList.add('hidden');
+
+        recordBtn.addEventListener('click', open);
+        document.getElementById('record-close')?.addEventListener('click', close);
+        modal.querySelector('.modal-close-btn')?.addEventListener('click', close);
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) close();
+        });
+    }
+
+    /**
+     * 지난 기록 목록 그리기
+     *
+     * 각 단계의 값은 그 단계를 통과할 때 저장된다. 아직 안 간 단계는 목록에 안 나온다.
+     */
+    function renderRecordList() {
+        const listEl = document.getElementById('record-list');
+        if (!listEl) return;
+
+        const data = Storage.getAllData();
+        const s2 = data.stage2Data || {};
+        const s3 = data.stage3Data || {};
+        const s4 = data.stage4Averages || {};
+
+        const keep = (rows) => rows.filter(([, v]) => v !== undefined && v !== null && v !== '');
+
+        const sections = [
+            {
+                title: 'STAGE 2 · 죽음의 두 얼굴',
+                rows: keep([
+                    ['생존 가능 구역', s2.survivalZone],
+                    ['선정 이유', s2.reason]
+                ])
+            },
+            {
+                title: 'STAGE 3 · 어둠 속의 단서',
+                rows: keep([
+                    ['별 궤적 각도', s3.angle],
+                    ['자전 속도', s3.speed],
+                    ['조난자 위치', s3.location],
+                    ['측정한 위도', s3.latitude ? `북위 ${s3.latitude}도` : '']
+                ])
+            },
+            {
+                title: 'STAGE 4 · 운명의 타이밍',
+                rows: keep([
+                    ['내행성 평균 주기', s4.inner ? `${s4.inner.toFixed(1)}초` : ''],
+                    ['외행성 평균 주기', s4.outer ? `${s4.outer.toFixed(1)}초` : ''],
+                    ['로켓 편도 시간', s4.rocket ? `${s4.rocket.toFixed(1)}초` : '']
+                ])
+            }
+        ].filter(s => s.rows.length > 0);
+
+        if (sections.length === 0) {
+            listEl.innerHTML = '<p class="record-empty">아직 기록이 없습니다. 단계를 하나 마치면 여기에 쌓입니다.</p>';
+            return;
+        }
+
+        listEl.innerHTML = sections.map(s => `
+            <div class="record-section">
+                <h3 class="record-title">${s.title}</h3>
+                ${s.rows.map(([label, value]) => `
+                    <div class="record-row">
+                        <span class="record-label">${label}</span>
+                        <span class="record-value">${escapeHtml(String(value))}</span>
+                    </div>
+                `).join('')}
+            </div>
+        `).join('');
+    }
+
+    /** 학생이 적은 문장을 그대로 넣으므로 태그를 막는다 */
+    function escapeHtml(str) {
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+
+    /**
      * 키보드 단축키 설정
      */
     function setupKeyboardShortcuts() {
@@ -335,6 +428,7 @@ const App = (function () {
             if (e.key === 'Escape') {
                 const hintModal = document.getElementById('hint-modal');
                 const hintDisplayModal = document.getElementById('hint-display-modal');
+                const recordModal = document.getElementById('record-modal');
 
                 // 비디오 모달 닫기
                 if (videoModal && !videoModal.classList.contains('hidden')) {
@@ -346,6 +440,9 @@ const App = (function () {
                 }
                 if (hintDisplayModal && !hintDisplayModal.classList.contains('hidden')) {
                     hintDisplayModal.classList.add('hidden');
+                }
+                if (recordModal && !recordModal.classList.contains('hidden')) {
+                    recordModal.classList.add('hidden');
                 }
             }
         });
@@ -519,18 +616,9 @@ const App = (function () {
             }
         });
 
-        // "이전 단계" 버튼 (Stage 간 이동)
-        document.addEventListener('click', (e) => {
-            const prevStageBtn = e.target.closest('.btn-prev-stage');
-            if (!prevStageBtn) return;
-
-            const prevStageNum = parseInt(prevStageBtn.getAttribute('data-prev-stage'));
-            if (!prevStageNum) return;
-
-            Stages.showStage(prevStageNum);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            console.log('[App] Returned to stage', prevStageNum);
-        });
+        // 스테이지 사이를 오가는 버튼은 두지 않는다. showStage()가 저장된 진행 단계를
+        // 덮어써서, 되돌아간 뒤 새로고침하면 앞 단계에 갇히고 비밀번호를 다시 받아야 했다.
+        // 앞 단계 내용은 헤더의 "지난 기록"으로 본다.
 
         console.log('[App] Phase system initialized');
     }
@@ -1074,6 +1162,7 @@ const App = (function () {
         // 이벤트 설정
         setupIntro();
         setupTeamModal();
+        setupRecordModal();
         setupHomeButton();
         setupPhaseSystem();
         setupTidalSimulation();

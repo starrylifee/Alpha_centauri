@@ -3077,6 +3077,86 @@
     box-shadow: 0 0 10px rgba(0, 243, 255, 0.3);
 }
 
+/* ===== 지난 기록 ===== */
+.btn-record {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    height: 36px;
+    padding: 0 var(--spacing-md);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.95rem;
+    white-space: nowrap;
+    margin-right: var(--spacing-sm);
+    transition: all 0.3s ease;
+}
+
+.btn-record:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--neon-green);
+    border-color: var(--neon-green);
+    box-shadow: 0 0 10px var(--neon-green-glow);
+}
+
+.record-content {
+    max-width: 680px;
+}
+
+.record-list {
+    text-align: left;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.record-section+.record-section {
+    margin-top: var(--spacing-xl);
+}
+
+.record-title {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--neon-blue);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: var(--spacing-md);
+}
+
+.record-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--spacing-md);
+    padding: var(--spacing-sm) 0;
+}
+
+.record-label {
+    flex: 0 0 150px;
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.record-value {
+    flex: 1;
+    color: var(--neon-green);
+    font-size: 1.15rem;
+    word-break: break-word;
+}
+
+.record-empty {
+    color: var(--text-dim);
+    padding: var(--spacing-xl) 0;
+}
+
+@media (max-width: 768px) {
+    .record-label {
+        flex-basis: 110px;
+    }
+}
+
 /* ===== Modal Close Button ===== */
 .modal-close-btn {
     background: transparent;

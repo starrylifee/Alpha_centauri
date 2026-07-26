@@ -54,6 +54,7 @@
                 <div class="logo-text">PROXIMA RESCUE COMMAND</div>
             </div>
             <div class="header-right">
+                <button id="record-btn" class="btn-record" title="지금까지 우리 팀이 적은 답 보기">📋 지난 기록</button>
                 <button id="admin-mode-btn" class="btn-admin" title="관리자 모드">⚙️</button>
                 <div class="penalty-container">
                     <span class="penalty-label">힌트 감점</span>
@@ -445,9 +446,6 @@
                     </div>
 
                     <div class="phase-nav-buttons">
-                        <button class="btn btn-secondary btn-prev-stage" data-prev-stage="2">
-                            <span>◀ 이전 단계</span>
-                        </button>
                         <button class="btn btn-primary btn-next hidden" id="phase3-1-next-btn" data-next-phase="2">
                             <span>분석 계속 ▶</span>
                         </button>
@@ -1094,6 +1092,22 @@
             </div>
             <div class="modal-footer">
                 <button id="hint-close" class="btn btn-primary">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 지난 기록 모달 (진행 상태는 건드리지 않고 보기만 한다) -->
+    <div id="record-modal" class="modal hidden">
+        <div class="modal-content record-content">
+            <div class="modal-header">
+                <h2>📋 우리 팀 기록</h2>
+                <button class="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="record-list" class="record-list"></div>
+            </div>
+            <div class="modal-footer">
+                <button id="record-close" class="btn btn-secondary">닫기</button>
             </div>
         </div>
     </div>
