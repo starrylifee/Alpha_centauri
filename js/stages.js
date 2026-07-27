@@ -257,7 +257,7 @@ const Stages = (function () {
     function displayResults() {
         const data = Storage.getAllData();
         const elapsedSeconds = Timer.getElapsed();
-        const hintCount = data.hintCount || 0;
+        const hintCount = Storage.getHintCount();   // 열어본 힌트 단계의 총합
 
         // 점수 계산 기준은 js/config.js에 모여 있다
         const { penalty, finalScore } = Scoring.calculate(elapsedSeconds, hintCount);
@@ -272,7 +272,7 @@ const Stages = (function () {
         }
 
         if (elements.resultHints) {
-            elements.resultHints.textContent = `${hintCount}회`;
+            elements.resultHints.textContent = `${hintCount}단계`;
         }
 
         if (elements.resultPenalty) {

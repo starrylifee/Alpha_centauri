@@ -10,12 +10,15 @@ const Scoring = (function () {
     // 쉬는 시간에는 홈 버튼을 눌러 타이머를 멈추게 하세요.
     const MAX_TIME_MINUTES = 250;
 
-    // 힌트 1회당 감점
-    const HINT_PENALTY = 10;
+    // 힌트는 한 문제당 두 단계다.
+    //   1차 = 방향만 알려주는 힌트, 2차 = 답 직전까지 알려주는 힌트
+    // 한 단계를 열 때마다 아래 점수가 깎인다. 한 문제를 끝까지 보면 5 + 5 = 10점.
+    const HINT_PENALTY = 5;
+    const MAX_HINT_LEVEL = 2;
 
     /**
      * 힌트 감점 계산
-     * @param {number} hintCount - 힌트 사용 횟수
+     * @param {number} hintCount - 열어본 힌트 단계의 총합 (문제 수가 아니라 단계 수)
      * @returns {number} 감점
      */
     function penaltyFor(hintCount) {
@@ -45,6 +48,7 @@ const Scoring = (function () {
     return {
         MAX_TIME_MINUTES,
         HINT_PENALTY,
+        MAX_HINT_LEVEL,
         penaltyFor,
         calculate
     };

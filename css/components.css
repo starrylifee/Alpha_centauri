@@ -1498,6 +1498,29 @@
     line-height: 1.8;
 }
 
+/* 힌트는 문제당 2단계다. 1차와 2차를 나란히 보여줘 어디까지 열었는지 알게 한다 */
+.hint-level + .hint-level {
+    margin-top: var(--spacing-lg);
+    padding-top: var(--spacing-lg);
+    border-top: 1px dashed var(--warning-yellow-dim);
+}
+
+.hint-level-tag {
+    display: inline-block;
+    margin-bottom: var(--spacing-sm);
+    padding: 2px 10px;
+    border: 1px solid var(--warning-yellow-dim);
+    border-radius: 3px;
+    color: var(--warning-yellow);
+    font-size: 0.85rem;
+    letter-spacing: 0.05em;
+}
+
+.hint-level-tag.strong {
+    border-color: var(--alert-red);
+    color: var(--alert-red);
+}
+
 .modal-footer {
     padding: var(--spacing-lg);
     display: flex;

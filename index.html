@@ -1021,7 +1021,7 @@
                         <div class="stat-item">
                             <span class="stat-icon">💡</span>
                             <span class="stat-label">힌트 사용</span>
-                            <span id="result-hints" class="stat-value">0회</span>
+                            <span id="result-hints" class="stat-value">0단계</span>
                         </div>
                         <div class="stat-item penalty">
                             <span class="stat-icon">📉</span>
@@ -1068,11 +1068,12 @@
     <div id="hint-modal" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header warning">
-                <h2>⚠️ 힌트 확인</h2>
+                <h2 id="hint-confirm-title">⚠️ 1차 힌트</h2>
             </div>
             <div class="modal-body">
-                <p class="warning-text">힌트를 사용하면 <strong>5점</strong>이 차감됩니다.</p>
-                <p>정말 힌트를 보시겠습니까?</p>
+                <!-- 문구와 점수는 js/hints.js가 채웁니다 -->
+                <p id="hint-warning" class="warning-text"></p>
+                <p id="hint-confirm-question"></p>
             </div>
             <div class="modal-footer">
                 <button id="hint-cancel" class="btn btn-secondary">취소</button>
@@ -1088,9 +1089,17 @@
                 <h2>💡 힌트</h2>
             </div>
             <div class="modal-body">
-                <p id="hint-text" class="hint-content"></p>
+                <div class="hint-level">
+                    <span class="hint-level-tag">1차 힌트</span>
+                    <p id="hint-text" class="hint-content"></p>
+                </div>
+                <div id="hint-level2" class="hint-level hidden">
+                    <span class="hint-level-tag strong">2차 힌트</span>
+                    <p id="hint-text-2" class="hint-content"></p>
+                </div>
             </div>
             <div class="modal-footer">
+                <button id="hint-more" class="btn btn-secondary hidden">더 자세한 힌트</button>
                 <button id="hint-close" class="btn btn-primary">확인</button>
             </div>
         </div>

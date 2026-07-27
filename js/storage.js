@@ -11,8 +11,8 @@ const Storage = (function() {
         currentStage: 0,
         startTimestamp: null,
         elapsedTime: 0,
-        hintCount: 0,
-        usedHints: [],
+        // 단계 번호 -> 열어본 힌트 레벨 (0 = 안 봄, 1 = 1차, 2 = 2차까지)
+        hintLevels: {},
         teamName: '',
         stageData: {
             stage4: {
@@ -132,51 +132,78 @@ const Storage = (function() {
     }
     
     /**
-     * 힌트 사용 횟수 증가
-     * @returns {number} 증가된 힌트 횟수
+     * 단계별 힌트 레벨 전체 가져오기
+     *
+     * 힌트가 1단계뿐이던 시절의 데이터(usedHints 배열)도 읽는다. 그때 힌트는
+     * 지금의 2차 힌트만큼 알려줬으므로 레벨 2로 옮긴다 — 수업 중에 새로고침해도
+     * 이미 낸 감점이 그대로 유지된다.
+     * @returns {Object} { 단계번호: 레벨 }
      */
-    function incrementHintCount() {
+    function getHintLevels() {
         const data = load();
-        data.hintCount = (data.hintCount || 0) + 1;
-        save(data);
-        return data.hintCount;
-    }
-    
-    /**
-     * 힌트 사용 횟수 가져오기
-     * @returns {number} 힌트 사용 횟수
-     */
-    function getHintCount() {
-        return load().hintCount || 0;
+
+        if (data.hintLevels) {
+            return data.hintLevels;
+        }
+
+        const migrated = {};
+        (data.usedHints || []).forEach(stage => {
+            migrated[Number(stage)] = 2;
+        });
+        return migrated;
     }
 
     /**
-     * 해당 단계 힌트를 이미 봤는지 확인
-     * (새로고침해도 유지되므로 같은 힌트로 두 번 감점되지 않는다)
+     * 해당 단계에서 지금까지 연 힌트 레벨
+     * @param {number} stage - 단계 번호
+     * @returns {number} 0 = 안 봄, 1 = 1차, 2 = 2차까지
+     */
+    function getHintLevel(stage) {
+        return getHintLevels()[Number(stage)] || 0;
+    }
+
+    /**
+     * 힌트 레벨 올리기 (이미 더 높으면 그대로 둔다)
+     *
+     * 새로고침해도 유지되므로 같은 힌트로 두 번 감점되지 않는다.
+     * @param {number} stage - 단계 번호
+     * @param {number} level - 새 레벨
+     * @returns {number} 적용된 레벨
+     */
+    function raiseHintLevel(stage, level) {
+        const data = load();
+        const levels = getHintLevels();
+        const key = Number(stage);
+        const next = Math.max(levels[key] || 0, Number(level) || 0);
+
+        levels[key] = next;
+        data.hintLevels = levels;
+        delete data.usedHints;      // 옮겨 담았으니 옛 필드는 지운다
+        save(data);
+        return next;
+    }
+
+    /**
+     * 열어본 힌트 단계의 총합 (문제 수가 아니라 단계 수)
+     *
+     * 감점은 이 값 × Scoring.HINT_PENALTY 로 계산한다.
+     * @returns {number} 단계 합계
+     */
+    function getHintCount() {
+        return Object.values(getHintLevels())
+            .reduce((sum, level) => sum + (Number(level) || 0), 0);
+    }
+
+    /**
+     * 해당 단계 힌트를 하나라도 봤는지
      * @param {number} stage - 단계 번호
      * @returns {boolean} 사용 여부
      */
     function isHintUsed(stage) {
-        const used = load().usedHints || [];
-        return used.includes(Number(stage));
+        return getHintLevel(stage) > 0;
     }
 
-    /**
-     * 해당 단계 힌트를 봤다고 기록
-     * @param {number} stage - 단계 번호
-     */
-    function markHintUsed(stage) {
-        const data = load();
-        const used = data.usedHints || [];
 
-        if (!used.includes(Number(stage))) {
-            used.push(Number(stage));
-            data.usedHints = used;
-            save(data);
-        }
-        return used;
-    }
-    
     /**
      * 팀 이름 설정
      * @param {string} name - 팀 이름
@@ -321,10 +348,11 @@ const Storage = (function() {
         getStartTime,
         saveElapsedTime,
         getElapsedTime,
-        incrementHintCount,
+        getHintLevels,
+        getHintLevel,
+        raiseHintLevel,
         getHintCount,
         isHintUsed,
-        markHintUsed,
         setTeamName,
         getTeamName,
         setStage4Data,
