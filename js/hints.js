@@ -11,14 +11,20 @@ const Hints = (function () {
 
     const MAX_LEVEL = Scoring.MAX_HINT_LEVEL;
 
-    // 단계별 힌트. level1 = 방향 제시, level2 = 답 직전
+    // 단계별 힌트. level1 = 방향 제시(+ 초성), level2 = 답 직전
+    //
+    // chosung은 답을 직접 적는 문제에만 넣는다. 3단계는 드롭다운 선택과 측정한 숫자,
+    // 4단계는 팀마다 다른 계산값이라 초성으로 좁힐 것이 없다.
     const hintData = {
         1: {
             level1: '세 답은 모두 브리핑 영상과 자료 화면에 나와 있습니다. 놓친 부분이 없는지 다시 보고 오세요. 세 답은 띄어쓰기 없이 순서대로 이어 붙여 입력합니다.',
+            chosung: '행성 ㅍㄹㅅㅁ + 소문자 1글자 · 별 종류 ㅈㅅㅇㅅ · 거리 4.□□',
             level2: '행성 이름은 별 이름 뒤에 소문자 알파벳이 하나 붙은 형태입니다. 별의 종류는 "크기가 작고 붉은 별"을 뜻하는 네 글자입니다. 거리는 4보다 조금 크고, 소수점 둘째 자리까지 씁니다.'
         },
         2: {
-            level1: '조석 고정된 행성은 한쪽 면이 영원히 낮이고 반대쪽은 영원히 밤입니다. 두 곳 다 사람이 살 수 없는 이유를 먼저 생각해 보세요.',
+            // 여기서 "조석 고정"이라는 말을 쓰지 않는다 — 앞 화면의 빈칸 답이라 미리 알려주게 된다
+            level1: '이 행성은 한쪽 면만 계속 별을 향하고 있습니다. 그쪽은 영원히 낮, 반대쪽은 영원히 밤입니다. 두 곳 다 사람이 살 수 없는 이유를 먼저 생각해 보세요.',
+            chosung: 'ㅎㅎ (두 글자)',
             level2: '낮인 곳과 밤인 곳 사이에는 해가 뜨지도 지지도 않는 띠가 있습니다. 지구에서 낮이 밤으로 넘어가는 그 어스름한 무렵을 뭐라고 부르나요? 그 말이 그대로 답입니다.'
         },
         3: {
@@ -182,11 +188,18 @@ const Hints = (function () {
         }
 
         const text1 = document.getElementById('hint-text');
+        const chosung = document.getElementById('hint-chosung');
         const block2 = document.getElementById('hint-level2');
         const text2 = document.getElementById('hint-text-2');
         const moreBtn = document.getElementById('hint-more');
 
         if (text1) text1.textContent = data.level1;
+
+        // 초성은 답을 적는 문제에만 있다
+        if (chosung) {
+            chosung.textContent = data.chosung ? `초성  ${data.chosung}` : '';
+            chosung.classList.toggle('hidden', !data.chosung);
+        }
 
         if (block2 && text2) {
             text2.textContent = data.level2;
