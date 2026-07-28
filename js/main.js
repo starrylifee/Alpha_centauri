@@ -370,7 +370,8 @@ const App = (function () {
                 title: 'STAGE 3 · 어둠 속의 단서',
                 rows: keep([
                     ['별 궤적 각도', s3.angle],
-                    ['자전 속도', s3.speed],
+                    ['사진 촬영 시간', s3.hours],
+                    ['자전 주기', s3.speed],
                     ['조난자 위치', s3.location],
                     ['측정한 위도', s3.latitude ? `북위 ${s3.latitude}도` : '']
                 ])
@@ -961,6 +962,133 @@ const App = (function () {
     }
 
     /**
+     * Stage 3 Phase 1 - 별 궤적 사진 위에 각도기를 겹쳐 그린다.
+     *
+     * 좌표계는 startrails-zoom.jpg 의 크롭 기준(700×510, viewBox와 동일)이다.
+     * 원본 startrails.jpg(1408×752)에서 (430,30)~(1130,540)을 잘라낸 것이라,
+     * 원본에서 실측한 회전 중심 (776,212)는 여기서 (346,182)가 된다.
+     * 각도는 SVG 기준(0°=3시, 증가하면 화면상 시계방향)이며, 눈금값은 A점을 0으로 다시 매긴다.
+     */
+    const TRAIL_GEO = {
+        cx: 346, cy: 182,   // 사진 속 일주운동 회전 중심
+        arcR: 175,          // 추적한 별의 궤도 반지름
+        start: 45,          // A점 위치
+        sweep: 30,          // A→B (학생이 읽어낼 각도)
+        // 눈금 반경은 크롭 사진의 지평선(y≈460)에 걸리지 않는 선에서 잡았다.
+        // 가장 아래로 내려가는 눈금 숫자가 y≈410이라 얼음 위 하늘 안에 들어온다.
+        tickIn: 190, tickShort: 203, tickLong: 212, tickNum: 236,
+        maxTick: 90         // 눈금은 0~90까지
+    };
+
+    function buildTrailOverlay() {
+        const svg = document.getElementById('trail-overlay');
+        if (!svg || svg.dataset.built) return;
+
+        const G = TRAIL_GEO;
+        const pt = (deg, r) => {
+            const t = deg * Math.PI / 180;
+            return [G.cx + r * Math.cos(t), G.cy + r * Math.sin(t)];
+        };
+        const n = v => v.toFixed(1);
+        const CYAN = '#7fe9ff';
+        const AMBER = '#ffb02e';
+        const OUTLINE = 'stroke="#001018" stroke-width="3.5" paint-order="stroke"';
+
+        const out = [];
+        const line = (d1, r1, d2, r2, attr) => {
+            const [x1, y1] = pt(d1, r1), [x2, y2] = pt(d2, r2);
+            out.push(`<line x1="${n(x1)}" y1="${n(y1)}" x2="${n(x2)}" y2="${n(y2)}" ${attr}/>`);
+        };
+        const label = (deg, r, text, color, size, anchor) => {
+            const [x, y] = pt(deg, r);
+            out.push(`<text x="${n(x)}" y="${n(y)}" fill="${color}" font-size="${size}" ` +
+                `font-weight="bold" text-anchor="${anchor || 'middle'}" ` +
+                `dominant-baseline="middle" ${OUTLINE}>${text}</text>`);
+        };
+
+        // 눈금 (10도 간격, 30도마다 숫자)
+        for (let v = 0; v <= G.maxTick; v += 10) {
+            const major = v % 30 === 0;
+            line(G.start + v, G.tickIn, G.start + v, major ? G.tickLong : G.tickShort,
+                `stroke="${CYAN}" stroke-width="${major ? 2.6 : 1.6}" opacity="0.95"`);
+            if (major) label(G.start + v, G.tickNum, String(v), CYAN, 23);
+        }
+
+        // 눈금 호 (눈금 끝을 잇는 원호)
+        const [ax0, ay0] = pt(G.start, G.tickIn);
+        const [ax1, ay1] = pt(G.start + G.maxTick, G.tickIn);
+        out.push(`<path d="M ${n(ax0)} ${n(ay0)} A ${G.tickIn} ${G.tickIn} 0 0 1 ${n(ax1)} ${n(ay1)}" ` +
+            `fill="none" stroke="${CYAN}" stroke-width="1.6" opacity="0.8"/>`);
+
+        // 중심 → A, B 방향 안내선
+        line(G.start, 0, G.start, G.tickLong, `stroke="${AMBER}" stroke-width="2" stroke-dasharray="8 6" opacity="0.9"`);
+        line(G.start + G.sweep, 0, G.start + G.sweep, G.tickLong,
+            `stroke="${AMBER}" stroke-width="2" stroke-dasharray="8 6" opacity="0.9"`);
+
+        // 추적한 별 궤적 (A → B)
+        const [bx0, by0] = pt(G.start, G.arcR);
+        const [bx1, by1] = pt(G.start + G.sweep, G.arcR);
+        out.push(`<path d="M ${n(bx0)} ${n(by0)} A ${G.arcR} ${G.arcR} 0 0 1 ${n(bx1)} ${n(by1)}" ` +
+            `fill="none" stroke="${AMBER}" stroke-width="4.5" stroke-linecap="round"/>`);
+        [[G.start, 'A'], [G.start + G.sweep, 'B']].forEach(([deg, tag]) => {
+            const [x, y] = pt(deg, G.arcR);
+            out.push(`<circle cx="${n(x)}" cy="${n(y)}" r="7" fill="${AMBER}" stroke="#001018" stroke-width="2"/>`);
+            label(deg, G.arcR - 24, tag, AMBER, 27);
+        });
+
+        // 각도 물음표 (중심 가까이 작은 호)
+        const [qx0, qy0] = pt(G.start, 78);
+        const [qx1, qy1] = pt(G.start + G.sweep, 78);
+        out.push(`<path d="M ${n(qx0)} ${n(qy0)} A 78 78 0 0 1 ${n(qx1)} ${n(qy1)}" ` +
+            `fill="none" stroke="${AMBER}" stroke-width="2.2"/>`);
+        label(G.start + G.sweep / 2, 103, '?°', AMBER, 30);
+
+        // 회전 중심
+        out.push(`<circle cx="${G.cx}" cy="${G.cy}" r="6" fill="none" stroke="#ffffff" stroke-width="2"/>`);
+        out.push(`<line x1="${G.cx - 15}" y1="${G.cy}" x2="${G.cx + 15}" y2="${G.cy}" stroke="#ffffff" stroke-width="1.8"/>`);
+        out.push(`<line x1="${G.cx}" y1="${G.cy - 15}" x2="${G.cx}" y2="${G.cy + 15}" stroke="#ffffff" stroke-width="1.8"/>`);
+        out.push(`<text x="${G.cx}" y="${G.cy - 26}" fill="#ffffff" font-size="21" font-weight="bold" ` +
+            `text-anchor="middle" ${OUTLINE}>회전 중심</text>`);
+
+        svg.innerHTML = out.join('\n');
+        svg.dataset.built = '1';
+    }
+
+    /**
+     * Stage 3 Phase 1 - "관측 장비로 분석하기" 버튼
+     */
+    function setupPhotoAnalysis() {
+        const btn = document.getElementById('analyze-photo-btn');
+        const svg = document.getElementById('trail-overlay');
+        const box = document.getElementById('angle-measure-box');
+        const caption = document.getElementById('trail-caption');
+        const input = document.getElementById('star-angle-input');
+
+        if (!btn || !svg || !box) return;
+
+        function openAnalysis(focus) {
+            buildTrailOverlay();
+            svg.classList.remove('hidden');
+            box.classList.remove('hidden');
+            btn.classList.add('hidden');
+            if (caption) caption.textContent = '[장비 분석 완료 — 별 하나를 추적하고 각도기를 겹쳤습니다]';
+            if (focus && input) input.focus();
+        }
+
+        btn.addEventListener('click', () => openAnalysis(true));
+
+        // 새로고침으로 돌아온 팀은 이미 각도를 적어둔 상태일 수 있다.
+        // 복원은 init 끝에서 일어나므로, 값이 들어오는 순간(input 이벤트)에 맞춰 연다.
+        if (input) {
+            input.addEventListener('input', () => {
+                if (input.value.trim() && box.classList.contains('hidden')) openAnalysis(false);
+            });
+        }
+
+        console.log('[App] Photo analysis initialized');
+    }
+
+    /**
      * Stage 3 Phase 1 - 별 궤적 각도 답 확인
      */
     function setupAnswerCheckStarAngle() {
@@ -971,9 +1099,6 @@ const App = (function () {
         const errorEl = document.getElementById('star-angle-error');
 
         if (!checkBtn || !input || !feedback) return;
-
-        // 정답: 30도
-        const correctAnswers = ['30', '30도', '30°', '약30', '약30도', '약 30', '약 30도'];
 
         checkBtn.addEventListener('click', () => {
             const answer = input.value.trim().replace(/\s+/g, '');
@@ -986,8 +1111,9 @@ const App = (function () {
 
             if (errorEl) errorEl.classList.add('hidden');
 
-            // 정답 체크 (30이 포함되어 있으면 정답)
-            const isCorrect = answer.includes('30');
+            // 눈금이 10도 간격이므로 30만 정답. '30', '30도', '약 30°' 등 표기는 모두 허용한다.
+            const num = parseFloat((answer.match(/\d+(\.\d+)?/) || [])[0]);
+            const isCorrect = num === 30;
 
             if (isCorrect) {
                 feedback.className = 'answer-feedback correct';
@@ -995,7 +1121,7 @@ const App = (function () {
                     <div class="feedback-icon">🎉</div>
                     <div class="feedback-text">
                         <strong>정답! 30°입니다.</strong><br>
-                        지구에서는 24시간에 360° 도는데, 이 행성에서는 겨우 30°만 돌았네요!
+                        한 바퀴가 360°니까, 별은 원의 12분의 1만 돌았네요.
                     </div>
                 `;
                 feedback.classList.remove('hidden');
@@ -1005,8 +1131,8 @@ const App = (function () {
                 feedback.innerHTML = `
                     <div class="feedback-icon">🤔</div>
                     <div class="feedback-text">
-                        <strong>사진을 다시 살펴보세요!</strong><br>
-                        별 궤적이 원의 몇 분의 1 정도인지 확인해보세요.
+                        <strong>눈금을 다시 세어보세요!</strong><br>
+                        A가 놓인 눈금이 0입니다. B가 몇 번 눈금에 있나요?
                     </div>
                 `;
                 feedback.classList.remove('hidden');
@@ -1038,7 +1164,7 @@ const App = (function () {
         const feedback = document.getElementById('rotation-feedback');
         const nextBtn = document.getElementById('phase3-2-next-btn');
         const errorEl = document.getElementById('stage3-q1-error');
-        const starSection = document.getElementById('star-visibility-section');
+        const calcSection = document.getElementById('exposure-calc-section');
 
         if (!checkBtn || !select || !feedback) return;
 
@@ -1066,15 +1192,15 @@ const App = (function () {
                     </div>
                 `;
                 feedback.classList.remove('hidden');
-                if (starSection) starSection.classList.remove('hidden');
-                if (nextBtn) nextBtn.classList.remove('hidden');
+                // 다음 버튼은 촬영 시간까지 계산해야 열린다
+                if (calcSection) calcSection.classList.remove('hidden');
             } else {
                 feedback.className = 'answer-feedback wrong';
                 feedback.innerHTML = `
                     <div class="feedback-icon">🤔</div>
                     <div class="feedback-text">
                         <strong>다시 생각해보세요!</strong><br>
-                        지구에서는 24시간에 360° 도는데, 여기서는 30°밖에 안 돌았어요.
+                        지구는 한 바퀴 도는 데 24시간인데, 여기서는 30°밖에 안 돌았어요.
                     </div>
                 `;
                 feedback.classList.remove('hidden');
@@ -1087,11 +1213,85 @@ const App = (function () {
             if (checkBtn.classList.contains('hidden') && !feedback.classList.contains('correct')) {
                 checkBtn.classList.remove('hidden');
                 if (nextBtn) nextBtn.classList.add('hidden');
-                if (starSection) starSection.classList.add('hidden');
+                if (calcSection) calcSection.classList.add('hidden');
             }
         });
 
         console.log('[App] Rotation check initialized');
+    }
+
+    /**
+     * Stage 3 Phase 2 - 촬영 시간 답 확인 (288시간 ÷ 12 = 24시간)
+     */
+    function setupAnswerCheckHours() {
+        const checkBtn = document.getElementById('check-hours-btn');
+        const input = document.getElementById('stage3-hours');
+        const feedback = document.getElementById('hours-feedback');
+        const nextBtn = document.getElementById('phase3-2-next-btn');
+        const errorEl = document.getElementById('stage3-hours-error');
+        const starSection = document.getElementById('star-visibility-section');
+
+        if (!checkBtn || !input || !feedback) return;
+
+        checkBtn.addEventListener('click', () => {
+            const answer = input.value.trim().replace(/\s+/g, '');
+
+            if (!answer) {
+                if (errorEl) errorEl.classList.remove('hidden');
+                input.focus();
+                return;
+            }
+
+            if (errorEl) errorEl.classList.add('hidden');
+
+            const num = parseFloat((answer.match(/\d+(\.\d+)?/) || [])[0]);
+            const isCorrect = num === 24;
+
+            if (isCorrect) {
+                feedback.className = 'answer-feedback correct';
+                feedback.innerHTML = `
+                    <div class="feedback-icon">🎉</div>
+                    <div class="feedback-text">
+                        <strong>정답! 24시간입니다.</strong><br>
+                        대원은 꼬박 하루 동안 카메라를 열어두고 이 사진을 찍었습니다.
+                    </div>
+                `;
+                feedback.classList.remove('hidden');
+                if (starSection) starSection.classList.remove('hidden');
+                if (nextBtn) nextBtn.classList.remove('hidden');
+                Storage.update('stage3Hours', String(num));
+            } else {
+                feedback.className = 'answer-feedback wrong';
+                feedback.innerHTML = `
+                    <div class="feedback-icon">🤔</div>
+                    <div class="feedback-text">
+                        <strong>계산을 다시 해보세요!</strong><br>
+                        이 행성의 하루는 288시간이고, 별은 그중 12분의 1만 돌았습니다.
+                    </div>
+                `;
+                feedback.classList.remove('hidden');
+            }
+
+            checkBtn.classList.add('hidden');
+        });
+
+        input.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') checkBtn.click();
+        });
+
+        input.addEventListener('input', () => {
+            // 새로고침 복원으로 값이 되돌아오면 계산 화면 자체가 닫혀 있을 수 있다
+            const calcSection = document.getElementById('exposure-calc-section');
+            if (input.value.trim() && calcSection) calcSection.classList.remove('hidden');
+
+            if (checkBtn.classList.contains('hidden') && !feedback.classList.contains('correct')) {
+                checkBtn.classList.remove('hidden');
+                if (nextBtn) nextBtn.classList.add('hidden');
+                if (starSection) starSection.classList.add('hidden');
+            }
+        });
+
+        console.log('[App] Exposure hours check initialized');
     }
 
     /**
@@ -1261,8 +1461,10 @@ const App = (function () {
         setupTidalSimulation();
         setupAnswerCheck();
         setupAnswerCheckQ2();
+        setupPhotoAnalysis();
         setupAnswerCheckStarAngle();
         setupAnswerCheckRotation();
+        setupAnswerCheckHours();
         setupAnswerCheckLocation();
         setupImageModal();
 

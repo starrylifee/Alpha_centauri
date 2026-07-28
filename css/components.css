@@ -716,6 +716,13 @@
     font-size: 1.1rem;
 }
 
+/* 마지막 경고(영하 200도)는 한 단계 더 강하게 */
+.twist-reveal.alert-strong {
+    margin-top: var(--spacing-md);
+    background: rgba(255, 51, 51, 0.18);
+    border-width: 2px;
+}
+
 .highlight-red {
     color: var(--alert-red);
     text-shadow: 0 0 10px var(--alert-red-glow);
@@ -2026,13 +2033,77 @@
 }
 
 /* Star Trails Photo */
-.startrails-photo {
+/* 각도기를 겹쳐 읽어야 하므로 예전(400px)보다 크게 띄운다. 크롬북 16:9에서 눈금이 보이는 크기다. */
+.startrail-figure {
+    position: relative;
+    display: inline-block;
+    margin: 0;
+    max-width: 760px;
     width: 100%;
-    max-width: 400px;
+}
+
+.startrails-photo {
+    display: block;
+    width: 100%;
     height: auto;
     border-radius: var(--radius-md);
     border: 2px solid var(--neon-blue);
     box-shadow: 0 0 20px var(--neon-blue-glow);
+}
+
+/* 오버레이는 사진과 같은 비율(1408×752 viewBox)이라 그대로 포개진다 */
+.trail-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    border-radius: var(--radius-md);
+    animation: overlay-fade 0.6s ease-out;
+}
+
+@keyframes overlay-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.angle-measure-box {
+    margin-top: var(--spacing-lg);
+    animation: overlay-fade 0.5s ease-out;
+}
+
+/* 촬영 시간 역산 계산 단계 */
+.calc-steps {
+    margin: var(--spacing-md) 0;
+    padding: var(--spacing-md);
+    background: rgba(0, 0, 0, 0.25);
+    border-left: 3px solid var(--neon-blue);
+    border-radius: var(--radius-sm);
+}
+
+.calc-step {
+    margin: 0 0 var(--spacing-sm);
+    line-height: 1.7;
+}
+
+.calc-step:last-child {
+    margin-bottom: 0;
+}
+
+.calc-formula {
+    display: inline-block;
+    margin-top: 2px;
+    padding-left: var(--spacing-md);
+    font-family: var(--font-mono);
+    color: var(--neon-blue);
+    font-size: 1.05em;
+}
+
+.table-note {
+    margin-top: var(--spacing-sm);
+    font-size: 0.95rem;
+    color: var(--neon-blue);
 }
 
 .inline-text-input:focus {

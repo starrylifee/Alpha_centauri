@@ -210,6 +210,7 @@
                                     </tr>
                                 </tbody>
                             </table>
+                            <p class="table-note">※ 계산할 때는 <strong>12일</strong>로 어림합니다. (12일 = 288시간)</p>
 
                             <div class="observation-question">
                                 <label>🔍 관측 결과: 프록시마 b의 공전과 자전 주기가 같다면, 행성의 한쪽 면은 항상 어디를 바라볼까요?</label>
@@ -412,36 +413,47 @@
                         </div>
                         <div class="worksheet-content">
                             <p class="worksheet-instruction">조난 대원으로부터 암호화된 이미지 파일이 전송되었습니다.</p>
-                            <p class="worksheet-text">분석 결과: 노출 시간(촬영 시간)이 무려 <strong>24시간</strong>입니다!</p>
+                            <p class="worksheet-text">별이 흐르며 찍힌 사진입니다. 그런데 <strong>촬영 시간 정보가 손상되어 있습니다.</strong></p>
 
                             <div class="star-trail-container">
                                 <div class="star-trail-image">
-                                    <img src="assets/images/startrails.jpg" alt="별 궤적 사진" class="startrails-photo">
+                                    <figure class="startrail-figure">
+                                        <img src="assets/images/startrails-zoom.jpg" alt="별 궤적 사진" class="startrails-photo">
+                                        <svg class="trail-overlay hidden" id="trail-overlay" viewBox="0 0 700 510"
+                                            xmlns="http://www.w3.org/2000/svg" aria-hidden="true"></svg>
+                                    </figure>
                                 </div>
-                                <p class="image-caption">[수신된 별 궤적 사진 - 노출 24시간]</p>
+                                <p class="image-caption" id="trail-caption">[수신된 별 궤적 사진 — 촬영 시간 불명]</p>
                             </div>
 
-                            <div class="comparison-box">
-                                <div class="compare-item">
-                                    <span class="compare-label">🌍 지구에서 24시간이면</span>
-                                    <span class="compare-value">별이 한 바퀴 (360°) 돈다</span>
-                                </div>
-                                <div class="compare-item highlight">
-                                    <span class="compare-label">🔴 이 사진에서는</span>
-                                    <span class="compare-value">
-                                        별이 겨우 (<input type="text" id="star-angle-input" class="inline-text-input short"
-                                            placeholder="?" autocomplete="off">)만 움직였다!
-                                    </span>
-                                </div>
-                            </div>
-
-                            <p class="validation-error hidden" id="star-angle-error">⚠️ 사진을 보고 별이 움직인 각도를 입력해주세요!</p>
-
-                            <button id="check-angle-btn" class="btn btn-primary btn-check">
-                                <span>📝 답 확인하기</span>
+                            <button id="analyze-photo-btn" class="btn btn-primary btn-check">
+                                <span>🔬 관측 장비로 분석하기</span>
                             </button>
 
-                            <div id="angle-feedback" class="answer-feedback hidden"></div>
+                            <div class="angle-measure-box hidden" id="angle-measure-box">
+                                <p class="worksheet-text">장비가 별 하나를 추적했습니다. 눈금을 읽어 <strong>A에서 B까지</strong> 몇 도인지 적으세요.</p>
+                                <div class="comparison-box">
+                                    <div class="compare-item">
+                                        <span class="compare-label">🌍 지구라면 하루에</span>
+                                        <span class="compare-value">별이 한 바퀴 (360°) 돈다</span>
+                                    </div>
+                                    <div class="compare-item highlight">
+                                        <span class="compare-label">🔴 이 사진에서 별이 움직인 각도</span>
+                                        <span class="compare-value">
+                                            (<input type="text" id="star-angle-input" class="inline-text-input short"
+                                                placeholder="?" autocomplete="off">)
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <p class="validation-error hidden" id="star-angle-error">⚠️ 눈금을 보고 별이 움직인 각도를 입력해주세요!</p>
+
+                                <button id="check-angle-btn" class="btn btn-primary btn-check">
+                                    <span>📝 답 확인하기</span>
+                                </button>
+
+                                <div id="angle-feedback" class="answer-feedback hidden"></div>
+                            </div>
                         </div>
                     </div>
 
@@ -479,11 +491,36 @@
 
                             <div id="rotation-feedback" class="answer-feedback hidden"></div>
 
+                            <div class="observation-question hidden" id="exposure-calc-section">
+                                <label>⏱️ 그렇다면 이 사진은 몇 시간 동안 찍은 걸까요?</label>
+                                <div class="calc-steps">
+                                    <p class="calc-step">① 미션 1에서 확인한 이 행성의 하루<br>
+                                        <span class="calc-formula">12일 × 24시간 = <strong>288시간</strong></span></p>
+                                    <p class="calc-step">② 별이 움직인 30°는 한 바퀴(360°)의 몇 분의 1?<br>
+                                        <span class="calc-formula">360 ÷ 30 = 12 → <strong>1/12 바퀴</strong></span></p>
+                                    <p class="calc-step">③ 그럼 찍은 시간은?<br>
+                                        <span class="calc-formula">288 ÷ 12 = <strong>?</strong></span></p>
+                                </div>
+                                <div class="inline-input">
+                                    <span>이 사진은 (</span>
+                                    <input type="text" id="stage3-hours" class="inline-text-input short" placeholder="?"
+                                        autocomplete="off">
+                                    <span>) 시간 동안 찍은 사진입니다.</span>
+                                </div>
+                                <p class="validation-error hidden" id="stage3-hours-error">⚠️ 계산한 시간을 입력해주세요!</p>
+
+                                <button id="check-hours-btn" class="btn btn-primary btn-check">
+                                    <span>📝 답 확인하기</span>
+                                </button>
+
+                                <div id="hours-feedback" class="answer-feedback hidden"></div>
+                            </div>
+
                             <div class="observation-question hidden" id="star-visibility-section">
-                                <label>🌟 잠깐, 24시간 동안 별 사진을 찍으려면?</label>
+                                <label>🌟 잠깐, 24시간 내내 별 사진을 찍으려면?</label>
                                 <p class="hint-text">💡 별이 보이려면 하늘이 어때야 할까요?</p>
                                 <div class="answer-reveal">
-                                    <span class="reveal-answer">→ <strong>계속 어두워야</strong> 별이 보입니다!</span>
+                                    <span class="reveal-answer">→ 하루 내내 <strong>한 번도 해가 뜨지 않아야</strong> 별이 계속 보입니다!</span>
                                 </div>
                             </div>
                         </div>
@@ -508,13 +545,19 @@
                         </div>
                         <div class="worksheet-content">
                             <div class="twist-reveal">
-                                <p class="reveal-warning">⚠️ 황혼 지역은 해가 지평선에 걸려 있어서</p>
+                                <p class="reveal-warning">⚠️ 이 사진은 <strong>24시간 내내</strong> 어두운 곳에서 찍혔습니다.</p>
+                                <p class="reveal-warning">황혼 지역은 해가 지평선에 걸려 있어서</p>
                                 <p class="reveal-warning"><strong>밝습니다! 별 사진을 못 찍습니다!</strong></p>
                             </div>
 
                             <div class="big-reveal">
                                 <p class="reveal-text">대원은 현재 낮과 밤이 바뀌는 곳이 아니라...</p>
                                 <p class="reveal-highlight">해가 영원히 뜨지 않는 곳에 있습니다!</p>
+                            </div>
+
+                            <div class="twist-reveal alert-strong">
+                                <p class="reveal-warning">🥶 그곳의 표면 온도는 <strong>영하 200도</strong>에 가깝습니다.</p>
+                                <p class="reveal-warning"><strong>구조를 서둘러야 합니다!</strong></p>
                             </div>
 
                             <div class="observation-question">
@@ -1203,7 +1246,8 @@
                 <div class="report-section">
                     <h3>STAGE 3: LOCATION TRACKING</h3>
                     <p><strong>Star Trail Angle:</strong> <span id="report-angle"></span></p>
-                    <p><strong>Rotation Speed:</strong> <span id="report-speed"></span></p>
+                    <p><strong>Exposure Time:</strong> <span id="report-hours"></span></p>
+                    <p><strong>Rotation Period:</strong> <span id="report-speed"></span></p>
                     <p><strong>Current Location:</strong> <span id="report-location"></span></p>
                     <p><strong>Latitude:</strong> <span id="report-latitude"></span></p>
                 </div>

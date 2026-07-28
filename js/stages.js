@@ -533,19 +533,22 @@ const Stages = (function () {
                     // 저장된 각도 사용 (Phase 1 정답이 30도)
                     const starAngle = Storage.getAllData().stage3Angle || '30';
 
-                    // 자전 속도 = 24시간 동안 움직인 각도 / 24
-                    // 지구는 360/24 = 15도/시간, 이 행성은 30/24 = 1.25도/시간으로 훨씬 느리다
+                    // 자전 주기 = (360 / 잰 각도) × 촬영 시간
+                    // '1.25도/시간'은 감이 안 오므로 '며칠에 한 바퀴'로 환산해 적는다.
+                    // 30도 / 24시간이면 360/30 × 24 = 288시간 = 12일이 나온다.
                     const angleNum = parseFloat(starAngle);
-                    const rotationSpeed = isNaN(angleNum)
+                    const hoursNum = parseFloat(Storage.getAllData().stage3Hours || '24');
+                    const rotationSpeed = (isNaN(angleNum) || angleNum <= 0 || isNaN(hoursNum))
                         ? '-'
-                        : `${(angleNum / 24).toFixed(2)}도/시간`;
+                        : `약 ${Math.round(360 / angleNum * hoursNum / 24)}일에 한 바퀴`;
 
                     // 보고서용 데이터 저장
                     Storage.update('stage3Data', {
                         region: region,
                         latitude: latitude,
                         angle: starAngle + '도', // 사용자 입력값
-                        speed: rotationSpeed,   // 입력 각도에서 계산
+                        hours: isNaN(hoursNum) ? '-' : `${hoursNum}시간`,
+                        speed: rotationSpeed,   // 입력 각도 + 촬영 시간에서 계산
                         location: regionText,   // 선택한 구역 텍스트
                     });
                     showFeedback(elements.stage3Feedback, '✓ 구조 포인트 생성 완료! 궤도 진입 시퀀스 가동...', 'success');
@@ -785,6 +788,7 @@ const Stages = (function () {
         // Stage 3
         const s3 = data.stage3Data || {};
         document.getElementById('report-angle').textContent = s3.angle || '-';
+        document.getElementById('report-hours').textContent = s3.hours || '-';
         document.getElementById('report-speed').textContent = s3.speed || '-';
         document.getElementById('report-location').textContent = s3.location || '-';
         document.getElementById('report-latitude').textContent = s3.latitude ? `북위 ${s3.latitude}도` : '-';
