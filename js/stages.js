@@ -58,15 +58,11 @@ const Stages = (function () {
         elements.restartBtn = document.getElementById('restart-btn');
     }
 
-    // 비밀번호는 vault.js 에 섞어서 보관한다. 첫 수업 때 학생이 '소스 보기'로
-    // 여기 적혀 있던 평문을 읽고 다음 스테이지를 미리 연 적이 있다.
-    // 값을 바꾸려면 worksheets/make_vault.py 를 본다.
-    const STAGE_PASSWORDS = {
-        2: Vault.get('pw2'),
-        3: Vault.get('pw3'),
-        4: Vault.get('pw4')
-    };
-    const ADMIN_PASSWORD = Vault.get('admin');
+    // 비밀번호 검증은 Auth(서버 함수 /api/verify → 환경변수)가 맡는다.
+    // 첫 수업 때 학생이 '소스 보기'로 여기 적혀 있던 평문을 읽고 다음
+    // 스테이지를 미리 연 적이 있어, 평문은 코드 어디에도 두지 않는다.
+    // 비밀번호가 걸린 스테이지 목록만 여기 남긴다.
+    const LOCKED_STAGES = [2, 3, 4];
 
     /**
      * 비밀번호 확인 및 단계 이동
@@ -74,7 +70,7 @@ const Stages = (function () {
      */
     function checkStagePassword(targetStage) {
         // 이미 클리어한 단계거나 비밀번호가 없는 단계는 바로 이동
-        if (targetStage <= 1 || !STAGE_PASSWORDS[targetStage]) {
+        if (targetStage <= 1 || !LOCKED_STAGES.includes(targetStage)) {
             showStage(targetStage);
             return;
         }
@@ -104,10 +100,16 @@ const Stages = (function () {
         };
 
         // 이벤트 핸들러 (중복 방지)
-        const handleSubmit = () => {
+        let checking = false;   // 서버 확인 중 이중 제출 방지
+        const handleSubmit = async () => {
             const password = input.value.trim();
+            if (!password || checking) return;
 
-            if (password.toUpperCase() === STAGE_PASSWORDS[targetStage]) {
+            checking = true;
+            const ok = await Auth.check('stage' + targetStage, password);
+            checking = false;
+
+            if (ok) {
                 closeModal();
                 showStage(targetStage);
             } else {
@@ -143,17 +145,21 @@ const Stages = (function () {
 
     /**
      * 관리자 모달 표시
+     * @param {Object} passwords - Auth.passwords()가 내려준 {stage2, stage3, stage4, admin}
      */
-    function showAdminModal() {
+    function showAdminModal(passwords) {
         const modal = document.getElementById('admin-modal');
         const closeBtn = document.getElementById('admin-close-btn');
         const headerCloseBtn = modal?.querySelector('.modal-close-btn');
 
         if (modal) {
-            // 비밀번호는 HTML에 적어두지 않고 열 때마다 금고에서 꺼내 채운다
-            modal.querySelectorAll('[data-vault]').forEach(el => {
-                el.textContent = Vault.get(el.dataset.vault);
-            });
+            // 비밀번호는 HTML에 적어두지 않는다. 관리자 코드 확인을 통과한
+            // 호출자가 Auth.passwords()로 받아온 목록을 넘겨줘야 채워진다.
+            if (passwords) {
+                modal.querySelectorAll('[data-pw]').forEach(el => {
+                    el.textContent = passwords[el.dataset.pw] || '';
+                });
+            }
 
             modal.classList.remove('hidden');
 
@@ -332,7 +338,7 @@ const Stages = (function () {
                 const trimmedInput = input.trim();
 
                 // 관리자 코드(마스터 키) 확인 -> 바로 통과
-                if (trimmedInput === ADMIN_PASSWORD) {
+                if (await Auth.check('admin', trimmedInput)) {
                     showFeedback(elements.stage1Feedback, '✓ 마스터 키 승인. 시스템 접속 허가.', 'success');
                     // 보고서용 정답 데이터 저장
                     Storage.update('securityCode', Vault.get('s1'));
@@ -406,10 +412,12 @@ const Stages = (function () {
                 errorMsg.classList.add('hidden');
                 input.focus();
 
-                const handleAdminLogin = () => {
-                    if (input.value.trim() === ADMIN_PASSWORD) {
+                const handleAdminLogin = async () => {
+                    // 코드가 맞아야만 서버가 비밀번호 목록을 내려준다
+                    const passwords = await Auth.passwords(input.value);
+                    if (passwords) {
                         modal.classList.add('hidden');
-                        showAdminModal();
+                        showAdminModal(passwords);
 
                         // UI 복구 및 리스너 제거
                         title.textContent = originalTitle;
@@ -438,7 +446,7 @@ const Stages = (function () {
      */
     function setupStage2() {
         if (elements.stage2Submit) {
-            elements.stage2Submit.addEventListener('click', () => {
+            elements.stage2Submit.addEventListener('click', async () => {
                 const input = elements.stage2Input?.value || '';
                 const reason = document.getElementById('stage2-reason')?.value || '';
 
@@ -452,7 +460,7 @@ const Stages = (function () {
                     return;
                 }
 
-                const isValid = Validation.validateStage2(input);
+                const isValid = await Validation.validateStage2(input);
 
                 if (isValid) {
                     // 보고서용 데이터 저장
@@ -516,7 +524,7 @@ const Stages = (function () {
         }
 
         if (elements.stage3Submit) {
-            elements.stage3Submit.addEventListener('click', () => {
+            elements.stage3Submit.addEventListener('click', async () => {
                 const region = elements.stage3Region?.value || '';
                 const latitude = elements.stage3Latitude?.value || '';
 
@@ -530,7 +538,7 @@ const Stages = (function () {
                     return;
                 }
 
-                const result = Validation.validateStage3(region, latitude);
+                const result = await Validation.validateStage3(region, latitude);
 
                 if (result.isValid) {
                     // 구역 텍스트 가져오기
@@ -701,7 +709,7 @@ const Stages = (function () {
         });
 
         if (elements.stage4Submit) {
-            elements.stage4Submit.addEventListener('click', () => {
+            elements.stage4Submit.addEventListener('click', async () => {
                 const selectedRadio = document.querySelector('input[name="mission-result"]:checked');
                 const result = selectedRadio?.value || '';
 
@@ -722,7 +730,7 @@ const Stages = (function () {
                     cause: document.getElementById(`attempt${n}-cause`)?.value || ''
                 }));
 
-                const validation = Validation.validateStage4(result, angle, time);
+                const validation = await Validation.validateStage4(result, angle, time);
 
                 // Stage 4 데이터 저장 (확장)
                 Storage.setStage4Data({
@@ -921,7 +929,6 @@ const Stages = (function () {
         setupAllStages,
         restore,
         checkStagePassword,
-        ADMIN_PASSWORD,
         elements
     };
 })();

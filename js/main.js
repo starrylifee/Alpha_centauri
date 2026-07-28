@@ -102,8 +102,8 @@ const App = (function () {
                     if (closeBtn) closeBtn.onclick = null;
                 };
 
-                const handleSkip = () => {
-                    if (input.value.trim() === Stages.ADMIN_PASSWORD) {
+                const handleSkip = async () => {
+                    if (await Auth.check('admin', input.value)) {
                         closeModal();
                         closeVideoModal();
                         enableStartButton();

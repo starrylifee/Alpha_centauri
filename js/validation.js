@@ -8,16 +8,17 @@
 
 const Validation = (function() {
 
-    // 마스터 코드 (모든 단계 통과용)
-    const MASTER_CODE = Vault.get('admin');
-    
     /**
-     * 마스터 코드 확인
+     * 마스터 코드 확인 (모든 단계 통과용)
+     *
+     * 평문 비교 대신 Auth(서버 함수 → 환경변수, 실패 시 vault)를 거친다.
+     * 네트워크를 탈 수 있으므로, 각 validate는 정답을 먼저 확인하고
+     * 틀렸을 때만 이걸 부른다.
      * @param {string} input - 사용자 입력
-     * @returns {boolean} 마스터 코드 여부
+     * @returns {Promise<boolean>} 마스터 코드 여부
      */
     function isMasterCode(input) {
-        return input.trim() === MASTER_CODE;
+        return Auth.check('admin', String(input));
     }
     
     /**
@@ -49,37 +50,36 @@ const Validation = (function() {
      * @returns {Promise<boolean>} 검증 결과
      */
     async function validateStage1(input) {
-        // 마스터 코드 체크
-        if (isMasterCode(input)) {
-            return true;
-        }
-        
         const normalized = normalize(input);
 
         // 직접 비교
         const correctAnswer = normalize(Vault.get('s1'));
+        if (normalized === correctAnswer) {
+            return true;
+        }
 
-        return normalized === correctAnswer;
+        // 마스터 코드 체크
+        return isMasterCode(input);
     }
     
     /**
      * Stage 2 검증: 생존 구역
      * 정답 키워드: "황혼", "경계", "twilight" 중 하나 포함
      * @param {string} input - 사용자 입력
-     * @returns {boolean} 검증 결과
+     * @returns {Promise<boolean>} 검증 결과
      */
-    function validateStage2(input) {
-        // 마스터 코드 체크
-        if (isMasterCode(input)) {
-            return true;
-        }
-        
+    async function validateStage2(input) {
         const normalized = normalize(input);
 
         // 정답 키워드 목록
         const keywords = Vault.list('s2kw');
 
-        return keywords.some(keyword => normalized.includes(normalize(keyword)));
+        if (keywords.some(keyword => normalized.includes(normalize(keyword)))) {
+            return true;
+        }
+
+        // 마스터 코드 체크
+        return isMasterCode(input);
     }
     
     /**
@@ -88,29 +88,33 @@ const Validation = (function() {
      * @param {string} region - 선택한 구역
      * @param {number|string} latitude - 입력한 위도
      * @param {string} masterInput - 마스터코드 체크용 (선택)
-     * @returns {Object} 검증 결과 { isValid, regionValid, latitudeValid }
+     * @returns {Promise<Object>} 검증 결과 { isValid, regionValid, latitudeValid }
      */
-    function validateStage3(region, latitude, masterInput = '') {
+    async function validateStage3(region, latitude, masterInput = '') {
+        const lat = parseFloat(latitude);
+
+        // 구역 검증: "밤의 지역"만 정답
+        const regionValid = region === 'night';
+
+        // 위도 검증: 30~60도 범위 허용 (교실 측정 상황에 따라 유연하게)
+        const latitudeValid = !isNaN(lat)
+            && lat >= Vault.num('latmin') && lat <= Vault.num('latmax');
+
+        if (regionValid && latitudeValid) {
+            return { isValid: true, regionValid, latitudeValid };
+        }
+
         // 마스터 코드 체크 (위도 입력란에 마스터코드 입력 시)
-        if (isMasterCode(String(latitude)) || isMasterCode(masterInput)) {
+        if (await isMasterCode(String(latitude)) || await isMasterCode(masterInput)) {
             return {
                 isValid: true,
                 regionValid: true,
                 latitudeValid: true
             };
         }
-        
-        const lat = parseFloat(latitude);
-        
-        // 구역 검증: "밤의 지역"만 정답
-        const regionValid = region === 'night';
-        
-        // 위도 검증: 30~60도 범위 허용 (교실 측정 상황에 따라 유연하게)
-        const latitudeValid = !isNaN(lat)
-            && lat >= Vault.num('latmin') && lat <= Vault.num('latmax');
-        
+
         return {
-            isValid: regionValid && latitudeValid,
+            isValid: false,
             regionValid,
             latitudeValid
         };
@@ -122,11 +126,13 @@ const Validation = (function() {
      * @param {string} result - 성공/실패 선택
      * @param {number|string} angle - 발사 각도 (선택)
      * @param {string} time - 소요 시간 (선택)
-     * @returns {Object} 입력 데이터
+     * @returns {Promise<Object>} 입력 데이터
      */
-    function validateStage4(result, angle, time) {
+    async function validateStage4(result, angle, time) {
         // 마스터 코드 체크 (각도나 시간에 마스터코드 입력 시)
-        if (isMasterCode(String(angle)) || isMasterCode(time)) {
+        // 스테이지 4는 정답이 없어서 마스터 체크가 먼저 온다. angle은 숫자
+        // 입력칸이라 코드가 들어올 일이 거의 없고, 빈 값은 Auth가 바로 걸러낸다.
+        if (await isMasterCode(String(angle)) || await isMasterCode(time)) {
             return {
                 isValid: true,
                 isSuccess: true,
