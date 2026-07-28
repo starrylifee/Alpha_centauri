@@ -19,7 +19,8 @@ CLEAR = 15.0                # 로봇끼리 최소 간격
 
 R_OUT = 285.0               # 바깥 궤도(외행성) 선 중심
 R_IN = 190.0                # 안쪽 궤도(내행성) 선 중심
-R_PAD = 95.0                # 발사대 중심 = 로켓 주차 위치
+R_PAD = 95.0                # 발사 원 = 로켓을 놓는 자리 (원 위 아무 각도나 가능)
+R_PAD_NUM = 72.0            # 발사각 숫자 (중심별 글로우 56.7과 발사 원 95 사이)
 LINE_W = 20.0               # 궤도 선 폭 (햄스터 바닥 센서용)
 
 R_STAR = 42.0               # 중심별
@@ -38,6 +39,7 @@ BLUE = "#1f5fa8"    # 내행성 / 본부
 RED = "#c0392b"     # 외행성 / 조난자
 ORANGE = "#e07b1f"  # 로켓 / 중심별
 GRAY = "#8a8f96"
+LAUNCH = "#f6d5b4"  # 발사 원·눈금·방향선 (연해야 바닥 센서가 흰 바닥으로 읽는다)
 
 
 def pt(theta_deg, r):
@@ -75,20 +77,24 @@ A(f'<text x="{CX}" y="{CY+7:.0f}" font-family="{FONT}" font-size="17" fill="#fff
 A(f'<circle cx="{CX}" cy="{CY}" r="{R_IN}" fill="none" stroke="{INK}" stroke-width="{LINE_W}"/>')
 A(f'<circle cx="{CX}" cy="{CY}" r="{R_OUT}" fill="none" stroke="{INK}" stroke-width="{LINE_W}"/>')
 
-# ── 발사선 (반지름 방향 점선) ────────────────────────────────────
-# 내행성 로봇이 이 선을 밟고 지나간다. 진한 색이면 바닥 센서가 궤도선으로 착각하므로
-# 아주 연한 주황으로 뽑는다 (센서는 흰 바닥으로 읽는다).
-x1, y1 = pt(0, R_PAD + 26)
-x2, y2 = pt(0, R_OUT - LINE_W / 2 - 4)
-A(f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" '
-  f'stroke="#f6d5b4" stroke-width="6" stroke-dasharray="16 12"/>')
+# ── 발사 원 + 발사각 각도판 ──────────────────────────────────────
+# 발사대를 0도에 고정하지 않는다. 이 원 위 아무 눈금에나 로켓을 놓고 쏘면
+# 바깥 궤도의 같은 눈금에 도착하므로, 학생이 발사각을 직접 고를 수 있다.
+# 로켓이 출발하며 눈금선을 밟고 지나가므로 선은 전부 연한 색으로 뽑는다.
+A(f'<circle cx="{CX}" cy="{CY}" r="{R_PAD}" fill="none" stroke="{LAUNCH}" stroke-width="2"/>')
 
-# ── 발사대 ───────────────────────────────────────────────────────
-px, py = pt(0, R_PAD)
-A(f'<circle cx="{px:.1f}" cy="{py:.1f}" r="22" fill="none" stroke="{ORANGE}" stroke-width="4"/>')
-A(f'<polygon points="{px+11:.1f},{py:.1f} {px-8:.1f},{py-9:.1f} {px-8:.1f},{py+9:.1f}" fill="{ORANGE}"/>')
-A(f'<text x="{px:.1f}" y="{py+44:.0f}" font-family="{FONT}" font-size="16" fill="{ORANGE}" '
-  f'text-anchor="middle" font-weight="bold">발사대</text>')
+for deg in range(0, 360, 10):
+    major = (deg % 30 == 0)
+    d = 12 if major else 6
+    x1, y1 = pt(deg, R_PAD - d)
+    x2, y2 = pt(deg, R_PAD + d)
+    A(f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" '
+      f'stroke="{LAUNCH}" stroke-width="{3 if major else 2}"/>')
+    if major:
+        nx, ny = pt(deg, R_PAD_NUM)
+        c = ORANGE if deg == 0 else GRAY
+        A(f'<text x="{nx:.1f}" y="{ny+5:.1f}" font-family="{FONT}" font-size="15" '
+          f'fill="{c}" text-anchor="middle" font-weight="bold">{deg}</text>')
 
 # ── 진행 방향 화살표 (궤도 사이 빈 띠, 반시계) ───────────────────
 def arrow(theta, r, color):
@@ -105,12 +111,11 @@ def arrow(theta, r, color):
       f'{p3[0]:.1f},{p3[1]:.1f}" fill="{color}"/>')
 
 # 두 궤도가 같은 방향으로 도므로 안쪽 빈 공간에 한 쌍만 둔다.
+# 예전에는 화살표 안쪽에 '도는 방향' 글씨를 넣었지만, 그 자리가 발사각 각도판과
+# 겹치게 되어 화살표만 남겼다. 방향 설명은 오른쪽 패널에 있다.
 R_ARROW = R_IN - ROBOT_HALF - 22
 for th in (270, 90):
     arrow(th, R_ARROW, GRAY)
-ax_, ay_ = pt(270, R_ARROW - 34)
-A(f'<text x="{ax_:.1f}" y="{ay_:.1f}" font-family="{FONT}" font-size="16" fill="{GRAY}" '
-  f'text-anchor="middle">도는 방향</text>')
 
 # ── 눈금 (10도) ──────────────────────────────────────────────────
 for deg in range(0, 360, 10):
@@ -127,13 +132,15 @@ for deg in range(0, 360, 10):
         A(f'<text x="{nx:.1f}" y="{ny+8:.1f}" font-family="{FONT}" font-size="23" '
           f'fill="{c}" font-weight="{w}" text-anchor="middle">{deg}</text>')
 
-# ── 도착 지점 강조 (0도) ─────────────────────────────────────────
+# ── 0도 기준선 강조 ──────────────────────────────────────────────
+# 예전에는 여기가 유일한 '도착 지점'이었다. 이제 도착 지점은 발사각을 따라가므로
+# 두 눈금(바깥·발사 원)이 함께 0에서 출발한다는 표시로만 남긴다.
 # 바깥 로봇이 지나는 띠(R_OUT ± 40) 밖에만 표시한다.
 tx, ty = pt(0, R_TICK0 - 4)
 A(f'<polygon points="{tx:.1f},{ty:.1f} {tx+24:.1f},{ty-14:.1f} {tx+24:.1f},{ty+14:.1f}" fill="{ORANGE}"/>')
 nx, ny = pt(0, R_NUM)
-A(f'<text x="{nx-6:.1f}" y="{ny-30:.1f}" font-family="{FONT}" font-size="19" fill="{ORANGE}" '
-  f'text-anchor="middle" font-weight="bold">도착 지점</text>')
+A(f'<text x="{nx-30:.1f}" y="{ny-30:.1f}" font-family="{FONT}" font-size="19" fill="{ORANGE}" '
+  f'text-anchor="middle" font-weight="bold">기준선 0°</text>')
 
 # ── 오른쪽 안내 패널 ─────────────────────────────────────────────
 A(f'<line x1="{PANEL_X-30:.0f}" y1="60" x2="{PANEL_X-30:.0f}" y2="{H-60:.0f}" '
@@ -145,10 +152,10 @@ A(f'<text x="{PANEL_X}" y="{y}" font-family="{FONT}" font-size="27" fill="#111" 
 y += 32
 A(f'<text x="{PANEL_X}" y="{y}" font-family="{FONT}" font-size="21" fill="{GRAY}">궤도 매트 · ORBIT MAT</text>')
 
-LH = 24.0   # 줄 간격
+LH = 22.0   # 줄 간격
 
 
-def block(title, color, lines, gap=40.0):
+def block(title, color, lines, gap=36.0):
     global y
     y += gap
     A(f'<text x="{PANEL_X}" y="{y}" font-family="{FONT}" font-size="20" fill="{color}" '
@@ -162,29 +169,32 @@ def block(title, color, lines, gap=40.0):
 block('궤도 안내', '#333', [], gap=48)
 for i, (c, label) in enumerate([(BLUE, '안쪽 궤도 — 내행성 (본부)'),
                                 (RED, '바깥 궤도 — 외행성 (조난자)'),
-                                (ORANGE, '발사대 · 발사선 · 도착 지점')]):
+                                (ORANGE, '가운데 발사 원 — 로켓 발사각')]):
     y += LH
     A(f'<circle cx="{PANEL_X+7:.0f}" cy="{y-5:.0f}" r="7" fill="{c}"/>')
     A(f'<text x="{PANEL_X+22:.0f}" y="{y:.0f}" font-family="{FONT}" font-size="16" '
       f'fill="#333">{esc(label)}</text>')
 
-block('눈금 읽는 법', RED, ['눈금은 도착 지점(0°)에서 진행',
-                            '방향의 반대쪽으로 매겨져 있습니다.',
-                            '조난자가 눈금 40에 있으면 도착',
-                            '지점보다 40도 뒤에 있는 것입니다.'])
+block('눈금 읽는 법', RED, ['눈금 두 개가 같은 각도를 씁니다.',
+                            '· 바깥 눈금 = 조난자 위치',
+                            '· 발사 원 눈금 = 로켓 발사각',
+                            '눈금은 0°에서 진행 방향의 반대로',
+                            '커집니다. 40°에 놓고 쏜 로켓은',
+                            '바깥 궤도 40°에 도착합니다.'])
 
-block('발사 타이밍 계산', BLUE, ['① 360 ÷ 외행성 주기(초)',
-                                 '      = 초당 각도',
-                                 '② 초당 각도 × 로켓 비행 시간',
-                                 '      = 리드 각도',
-                                 '③ 조난자가 리드 각도 눈금에',
-                                 '      왔을 때 발사'])
+block('발사 계산', BLUE, ['① 360 ÷ 외행성 주기(초)',
+                          '      = 초당 각도',
+                          '② 초당 각도 × 로켓 비행 시간',
+                          '      = 리드 각도',
+                          '③ 발사각을 하나 고른다 (예: 40°)',
+                          '④ 조난자가 [발사각 + 리드 각도]',
+                          '      눈금에 왔을 때 발사'])
 
-block('시작 전 확인', ORANGE, ['· 로켓은 발사대 표시에 맞춰 놓기',
-                               '· 세 로봇을 같은 속도로 두면 외행성',
-                               '   30초 / 내행성 20초 / 로켓 3초',
-                               '· 내행성이 발사선 위에 있으면',
-                               '   한 박자 쉬었다 발사'])
+block('시작 전 확인', ORANGE, ['· 로켓은 발사 원 눈금에 맞춰 놓고',
+                               '   머리를 바깥쪽으로',
+                               '· 같은 속도 기준 외행성 30초 /',
+                               '   내행성 20초 / 로켓 3초',
+                               '· 내행성과 부딪힐 것 같으면 한 박자'])
 
 A(f'<text x="{PANEL_X}" y="{H-70:.0f}" font-family="{FONT}" font-size="15" fill="{GRAY}">'
   f'A0 1189 × 841 mm</text>')

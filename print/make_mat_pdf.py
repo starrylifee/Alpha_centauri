@@ -27,7 +27,8 @@ CX, CY = 420.0, 420.0
 
 R_OUT = 285.0
 R_IN = 190.0
-R_PAD = 95.0
+R_PAD = 95.0                # 발사 원 = 로켓을 놓는 자리 (원 위 아무 각도나 가능)
+R_PAD_NUM = 72.0            # 발사각 숫자 (중심별 글로우 56.7과 발사 원 95 사이)
 LINE_W = 20.0
 
 ROBOT_HALF = 40.0
@@ -132,23 +133,27 @@ def draw_mat(c, orbit=True, panel=True):
         c.circle(sx, sy, R_IN, stroke=1, fill=0)
         c.circle(sx, sy, R_OUT, stroke=1, fill=0)
 
-        # ── 발사선 (반지름 방향 점선) ────────────────────────────
-        x1, y1 = pt(0, R_PAD + 26)
-        x2, y2 = pt(0, R_OUT - LINE_W / 2 - 4)
-        c.saveState()
+        # ── 발사 원 + 발사각 각도판 ──────────────────────────────
+        # 발사대를 0도에 고정하지 않는다. 이 원 위 아무 눈금에나 로켓을 놓고 쏘면
+        # 바깥 궤도의 같은 눈금에 도착하므로, 학생이 발사각을 직접 고를 수 있다.
+        # 로켓이 출발하며 눈금선을 밟고 지나가므로 선은 전부 연한 색으로 뽑는다.
         c.setStrokeColor(LAUNCH)
-        c.setLineWidth(6)
-        c.setDash(16, 12)
-        c.line(x1, y1, x2, y2)
-        c.restoreState()
+        c.setLineWidth(2)
+        c.circle(sx, sy, R_PAD, stroke=1, fill=0)
 
-        # ── 발사대 ───────────────────────────────────────────────
-        px, py = pt(0, R_PAD)
-        c.setStrokeColor(ORANGE)
-        c.setLineWidth(4)
-        c.circle(px, py, 22, stroke=1, fill=0)
-        poly([(px + 11, py), (px - 8, py + 9), (px - 8, py - 9)], ORANGE)
-        text(px, Y(py) + 44, '발사대', 16, ORANGE, BOLD, 'middle')   # Y(py) = 발사대의 SVG 좌표 y
+        for deg in range(0, 360, 10):
+            major = (deg % 30 == 0)
+            d = 12 if major else 6
+            ax, ay = pt(deg, R_PAD - d)
+            bx, by = pt(deg, R_PAD + d)
+            c.setStrokeColor(LAUNCH)
+            c.setLineWidth(3 if major else 2)
+            c.line(ax, ay, bx, by)
+            if major:
+                nx, ny = pt(deg, R_PAD_NUM)
+                c.setFont(BOLD, 15)
+                c.setFillColor(ORANGE if deg == 0 else GRAY)
+                c.drawCentredString(nx, ny - 5, str(deg))
 
         # ── 진행 방향 화살표 (궤도 사이 빈 띠, 반시계) ───────────
         R_ARROW = R_IN - ROBOT_HALF - 22
@@ -163,11 +168,10 @@ def draw_mat(c, orbit=True, panel=True):
                   (ax - dx * 5 + nx * Wd, ay - dy * 5 + ny * Wd),
                   (ax - dx * 5 - nx * Wd, ay - dy * 5 - ny * Wd)], color)
 
+        # 예전에는 화살표 안쪽에 '도는 방향' 글씨를 넣었지만, 그 자리가 발사각
+        # 각도판과 겹치게 되어 화살표만 남겼다. 방향 설명은 오른쪽 패널에 있다.
         for th in (270, 90):
             arrow(th, R_ARROW, GRAY)
-        c.setFont(REG, 16)
-        c.setFillColor(GRAY)
-        c.drawCentredString(pt(270, R_ARROW - 34)[0], pt(270, R_ARROW - 34)[1], '도는 방향')
 
         # ── 눈금 (10도) ──────────────────────────────────────────
         c.setStrokeColor(INK)
@@ -184,13 +188,17 @@ def draw_mat(c, orbit=True, panel=True):
                 c.drawCentredString(nx, ny - 8, str(deg))
                 c.setStrokeColor(INK)
 
-        # ── 도착 지점 강조 (0도) ─────────────────────────────────
+        # ── 0도 기준선 강조 ──────────────────────────────────────
+        # 예전에는 여기가 유일한 '도착 지점'이었다. 이제 도착 지점은 발사각을
+        # 따라가므로, 두 눈금이 함께 0에서 출발한다는 표시로만 남긴다.
         tx, ty = pt(0, R_TICK0 - 4)
         poly([(tx, ty), (tx + 24, ty + 14), (tx + 24, ty - 14)], ORANGE)
         nx, ny = pt(0, R_NUM)
         c.setFont(BOLD, 19)
         c.setFillColor(ORANGE)
-        c.drawCentredString(nx - 6, ny + 30, '도착 지점')
+        # 글자가 한 자 늘어 오른쪽 잉크 경계(타일 분할이 실측해 둔 값)를 넘지 않도록
+        # 예전보다 왼쪽으로 당겨 놓는다.
+        c.drawCentredString(nx - 30, ny + 30, '기준선 0°')
 
     if panel:
         # ── 오른쪽 안내 패널 ─────────────────────────────────────
@@ -203,9 +211,9 @@ def draw_mat(c, orbit=True, panel=True):
         state['y'] += 32
         text(PANEL_X, state['y'], '궤도 매트 · ORBIT MAT', 21, GRAY)
 
-        LH = 24.0
+        LH = 22.0
 
-        def block(title, color, lines, gap=40.0):
+        def block(title, color, lines, gap=36.0):
             state['y'] += gap
             text(PANEL_X, state['y'], title, 20, color, BOLD)
             for ln in lines:
@@ -215,29 +223,32 @@ def draw_mat(c, orbit=True, panel=True):
         block('궤도 안내', TEXT2, [], gap=48)
         for col, label in [(BLUE, '안쪽 궤도 — 내행성 (본부)'),
                            (RED, '바깥 궤도 — 외행성 (조난자)'),
-                           (ORANGE, '발사대 · 발사선 · 도착 지점')]:
+                           (ORANGE, '가운데 발사 원 — 로켓 발사각')]:
             state['y'] += LH
             c.setFillColor(col)
             c.circle(PANEL_X + 7, Y(state['y'] - 5), 7, stroke=0, fill=1)
             text(PANEL_X + 22, state['y'], label, 16, TEXT2)
 
-        block('눈금 읽는 법', RED, ['눈금은 도착 지점(0°)에서 진행',
-                                    '방향의 반대쪽으로 매겨져 있습니다.',
-                                    '조난자가 눈금 40에 있으면 도착',
-                                    '지점보다 40도 뒤에 있는 것입니다.'])
+        block('눈금 읽는 법', RED, ['눈금 두 개가 같은 각도를 씁니다.',
+                                    '· 바깥 눈금 = 조난자 위치',
+                                    '· 발사 원 눈금 = 로켓 발사각',
+                                    '눈금은 0°에서 진행 방향의 반대로',
+                                    '커집니다. 40°에 놓고 쏜 로켓은',
+                                    '바깥 궤도 40°에 도착합니다.'])
 
-        block('발사 타이밍 계산', BLUE, ['① 360 ÷ 외행성 주기(초)',
-                                         '      = 초당 각도',
-                                         '② 초당 각도 × 로켓 비행 시간',
-                                         '      = 리드 각도',
-                                         '③ 조난자가 리드 각도 눈금에',
-                                         '      왔을 때 발사'])
+        block('발사 계산', BLUE, ['① 360 ÷ 외행성 주기(초)',
+                                  '      = 초당 각도',
+                                  '② 초당 각도 × 로켓 비행 시간',
+                                  '      = 리드 각도',
+                                  '③ 발사각을 하나 고른다 (예: 40°)',
+                                  '④ 조난자가 [발사각 + 리드 각도]',
+                                  '      눈금에 왔을 때 발사'])
 
-        block('시작 전 확인', ORANGE, ['· 로켓은 발사대 표시에 맞춰 놓기',
-                                       '· 세 로봇을 같은 속도로 두면 외행성',
-                                       '   30초 / 내행성 20초 / 로켓 3초',
-                                       '· 내행성이 발사선 위에 있으면',
-                                       '   한 박자 쉬었다 발사'])
+        block('시작 전 확인', ORANGE, ['· 로켓은 발사 원 눈금에 맞춰 놓고',
+                                       '   머리를 바깥쪽으로',
+                                       '· 같은 속도 기준 외행성 30초 /',
+                                       '   내행성 20초 / 로켓 3초',
+                                       '· 내행성과 부딪힐 것 같으면 한 박자'])
 
         text(PANEL_X, H - 70, 'A0 1189 × 841 mm', 15, GRAY)
         text(PANEL_X, H - 48, '궤도선 검정 K100 · 폭 20 mm', 15, GRAY)
