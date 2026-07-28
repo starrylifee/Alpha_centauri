@@ -1,0 +1,9 @@
+# 배포에서 뺄 것들 — Vercel은 저장소의 모든 파일을 정적으로 서빙하므로,
+# 여기 안 적으면 학생이 주소만 쳐도 문서를 열 수 있다.
+# (UX-시나리오.md 에 정답 흐름이 다 적혀 있다)
+*.md
+print/
+worksheets/
+config/
+.claude/
+.gitignore

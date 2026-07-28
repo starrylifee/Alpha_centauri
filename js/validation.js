@@ -1,12 +1,15 @@
 /**
  * PROXIMA RESCUE COMMAND - Validation Module
- * 정답 검증 로직 (해시 기반 보안)
+ * 정답 검증 로직
+ *
+ * 정답 문자열은 vault.js 에 섞어서 보관한다. 학생이 '소스 보기'로
+ * 정답을 읽는 것을 막기 위한 것으로, 바꾸려면 worksheets/make_vault.py 를 본다.
  */
 
 const Validation = (function() {
-    
+
     // 마스터 코드 (모든 단계 통과용)
-    const MASTER_CODE = 'tlsekq';
+    const MASTER_CODE = Vault.get('admin');
     
     /**
      * 마스터 코드 확인
@@ -52,10 +55,10 @@ const Validation = (function() {
         }
         
         const normalized = normalize(input);
-        
+
         // 직접 비교
-        const correctAnswer = normalize('프록시마b적색왜성4.24');
-        
+        const correctAnswer = normalize(Vault.get('s1'));
+
         return normalized === correctAnswer;
     }
     
@@ -72,10 +75,10 @@ const Validation = (function() {
         }
         
         const normalized = normalize(input);
-        
+
         // 정답 키워드 목록
-        const keywords = ['황혼', '경계', 'twilight', 'terminator'];
-        
+        const keywords = Vault.list('s2kw');
+
         return keywords.some(keyword => normalized.includes(normalize(keyword)));
     }
     
@@ -103,7 +106,8 @@ const Validation = (function() {
         const regionValid = region === 'night';
         
         // 위도 검증: 30~60도 범위 허용 (교실 측정 상황에 따라 유연하게)
-        const latitudeValid = !isNaN(lat) && lat >= 30 && lat <= 60;
+        const latitudeValid = !isNaN(lat)
+            && lat >= Vault.num('latmin') && lat <= Vault.num('latmax');
         
         return {
             isValid: regionValid && latitudeValid,

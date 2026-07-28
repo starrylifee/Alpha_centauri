@@ -797,8 +797,8 @@ const App = (function () {
 
         if (!checkBtn || !input || !feedback || !simulation) return;
 
-        // 정답 목록 (태양, 항성, 별 등)
-        const correctAnswers = ['태양', '항성', '별', '프록시마', '프록시마센타우리', '중심별', '모항성'];
+        // 정답 목록 — 소스 보기로 못 읽게 vault.js 에 보관 (태양, 항성 등)
+        const correctAnswers = Vault.list('q1');
         let answerCorrect = false;
 
         checkBtn.addEventListener('click', () => {
@@ -901,8 +901,8 @@ const App = (function () {
 
         if (!checkBtn || !input || !feedback) return;
 
-        // 정답 목록 (조석고정, 조석 고정 등)
-        const correctAnswers = ['조석고정', '조석 고정', '동주기자전', '동주기 자전'];
+        // 정답 목록 — vault.js 에 보관 (조석고정, 동주기자전. 비교 전에 공백을 빼므로 붙인 형태만 있으면 된다)
+        const correctAnswers = Vault.list('q2');
 
         checkBtn.addEventListener('click', () => {
             const answer = input.value.trim().replace(/\s+/g, '');
@@ -1111,9 +1111,9 @@ const App = (function () {
 
             if (errorEl) errorEl.classList.add('hidden');
 
-            // 눈금이 10도 간격이므로 30만 정답. '30', '30도', '약 30°' 등 표기는 모두 허용한다.
+            // 눈금이 10도 간격이므로 정확한 값만 정답. '30', '30도', '약 30°' 등 표기는 모두 허용한다.
             const num = parseFloat((answer.match(/\d+(\.\d+)?/) || [])[0]);
-            const isCorrect = num === 30;
+            const isCorrect = num === Vault.num('ang');
 
             if (isCorrect) {
                 feedback.className = 'answer-feedback correct';
@@ -1245,7 +1245,7 @@ const App = (function () {
             if (errorEl) errorEl.classList.add('hidden');
 
             const num = parseFloat((answer.match(/\d+(\.\d+)?/) || [])[0]);
-            const isCorrect = num === 24;
+            const isCorrect = num === Vault.num('hrs');
 
             if (isCorrect) {
                 feedback.className = 'answer-feedback correct';
@@ -1306,8 +1306,8 @@ const App = (function () {
 
         if (!checkBtn || !input || !feedback) return;
 
-        // 정답: 밤, 밤의 지역, night 등
-        const correctAnswers = ['밤', '밤의 지역', '밤의지역', '밤 지역', 'night', '어둠', '어두운 곳'];
+        // 정답: 밤, 밤의 지역 등 — 소스 보기로 못 읽게 vault.js 에 보관
+        const correctAnswers = Vault.list('loc');
 
         checkBtn.addEventListener('click', () => {
             const answer = input.value.trim().toLowerCase();

@@ -58,13 +58,15 @@ const Stages = (function () {
         elements.restartBtn = document.getElementById('restart-btn');
     }
 
-    // 비밀번호 설정
+    // 비밀번호는 vault.js 에 섞어서 보관한다. 첫 수업 때 학생이 '소스 보기'로
+    // 여기 적혀 있던 평문을 읽고 다음 스테이지를 미리 연 적이 있다.
+    // 값을 바꾸려면 worksheets/make_vault.py 를 본다.
     const STAGE_PASSWORDS = {
-        2: 'ZEBRA',
-        3: 'PIZZA',
-        4: 'JAZZ'
+        2: Vault.get('pw2'),
+        3: Vault.get('pw3'),
+        4: Vault.get('pw4')
     };
-    const ADMIN_PASSWORD = 'tlsekq';
+    const ADMIN_PASSWORD = Vault.get('admin');
 
     /**
      * 비밀번호 확인 및 단계 이동
@@ -148,6 +150,11 @@ const Stages = (function () {
         const headerCloseBtn = modal?.querySelector('.modal-close-btn');
 
         if (modal) {
+            // 비밀번호는 HTML에 적어두지 않고 열 때마다 금고에서 꺼내 채운다
+            modal.querySelectorAll('[data-vault]').forEach(el => {
+                el.textContent = Vault.get(el.dataset.vault);
+            });
+
             modal.classList.remove('hidden');
 
             const close = () => {
@@ -328,7 +335,7 @@ const Stages = (function () {
                 if (trimmedInput === ADMIN_PASSWORD) {
                     showFeedback(elements.stage1Feedback, '✓ 마스터 키 승인. 시스템 접속 허가.', 'success');
                     // 보고서용 정답 데이터 저장
-                    Storage.update('securityCode', '프록시마b적색왜성4.24');
+                    Storage.update('securityCode', Vault.get('s1'));
                     setTimeout(() => {
                         checkStagePassword(2);
                     }, 1000);
@@ -706,8 +713,10 @@ const Stages = (function () {
                 const angle = elements.stage4Angle?.value || '';
                 const time = elements.stage4Time?.value || '';
 
-                // 시도 기록 3회 (발사한 눈금 / 결과 / 실패 원인)
+                // 시도 기록 3회 (발사각 / 발사 때 조난자 눈금 / 결과 / 실패 원인)
+                // angle 칸의 id가 -time 인 것은 예전 '비행 시간' 시절 이름이 저장·복원에 묶여 있어서다
                 const attempts = [1, 2, 3].map(n => ({
+                    launch: document.getElementById(`attempt${n}-launch`)?.value || '',
                     result: document.getElementById(`attempt${n}-result`)?.value || '',
                     angle: document.getElementById(`attempt${n}-time`)?.value || '',
                     cause: document.getElementById(`attempt${n}-cause`)?.value || ''

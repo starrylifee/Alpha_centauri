@@ -760,12 +760,12 @@
                         </div>
                         <div class="worksheet-content">
                             <p class="worksheet-text">A0 궤도 매트에서 로봇 <strong>세 대</strong>를 각각 <strong>3회씩</strong> 측정하세요.
-                                두 행성은 <strong>한 바퀴 도는 시간</strong>, 로켓은 <strong>발사대에서 조난자 궤도까지 가는 시간</strong>입니다.</p>
+                                두 행성은 <strong>한 바퀴 도는 시간</strong>, 로켓은 <strong>발사 원에서 조난자 궤도까지 가는 시간</strong>입니다.</p>
 
                             <figure class="activity-photo">
                                 <img src="assets/images/orbit-activity.jpg"
                                     alt="A0 궤도 매트 위에서 햄스터 로봇이 안쪽·바깥쪽 궤도를 도는 모습">
-                                <figcaption>▲ 궤도 매트 배치: 안쪽이 본부(내행성), 바깥쪽이 조난자(외행성), 가운데가 로켓 발사대 (클릭하면 크게 보입니다)</figcaption>
+                                <figcaption>▲ 궤도 매트 배치: 안쪽이 본부(내행성), 바깥쪽이 조난자(외행성), 가운데 발사 원 위에 로켓 — 원하는 눈금에 놓고 쏩니다 (클릭하면 크게 보입니다)</figcaption>
                             </figure>
 
                             <table class="measurement-table">
@@ -859,7 +859,7 @@
                                 <div class="calc-step highlight-step">
                                     <label>③ 결론 (발사 타이밍)</label>
                                     <div class="calc-conclusion">
-                                        <span>로켓 도착 예정 지점보다 외행성이 (</span>
+                                        <span>내가 정한 발사각보다 외행성이 (</span>
                                         <input type="number" id="stage4-angle" class="calc-input result-input"
                                             placeholder="?">
                                         <span>) 도 뒤에 있을 때 발사해야 한다!</span>
@@ -889,13 +889,14 @@
                         </div>
                         <div class="worksheet-content">
                             <p class="worksheet-text">실제 매트 위에서 시뮬레이션을 수행하고 결과를 기록하세요!</p>
-                            <p class="worksheet-text">로켓을 쏜 순간 <strong>조난자가 서 있던 눈금</strong>을 적으세요. 눈금 38에서 쐈다면 조난자가 도착 지점보다 38도 뒤에 있을 때 쏜 것입니다.</p>
+                            <p class="worksheet-text">먼저 발사 원에서 <strong>발사각</strong>을 하나 골라 로켓을 놓으세요. 로켓을 쏜 순간 <strong>조난자가 서 있던 눈금</strong>도 적습니다. 발사각이 40°이고 계산한 각도가 36°라면, 조난자가 76° 눈금에 왔을 때 쏘는 것입니다.</p>
 
                             <table class="result-table">
                                 <thead>
                                     <tr>
                                         <th>시도</th>
-                                        <th>발사한 눈금 (°)</th>
+                                        <th>발사각 (°)</th>
+                                        <th>발사 때 조난자 눈금 (°)</th>
                                         <th>결과</th>
                                         <th>실패했다면 왜?</th>
                                     </tr>
@@ -903,6 +904,7 @@
                                 <tbody>
                                     <tr>
                                         <td>1차</td>
+                                        <td><input type="number" id="attempt1-launch" class="table-input small" placeholder="°"></td>
                                         <td><input type="number" id="attempt1-time" class="table-input small" placeholder="°"></td>
                                         <td>
                                             <select id="attempt1-result" class="table-select">
@@ -923,6 +925,7 @@
                                     </tr>
                                     <tr>
                                         <td>2차</td>
+                                        <td><input type="number" id="attempt2-launch" class="table-input small" placeholder="°"></td>
                                         <td><input type="number" id="attempt2-time" class="table-input small" placeholder="°"></td>
                                         <td>
                                             <select id="attempt2-result" class="table-select">
@@ -943,6 +946,7 @@
                                     </tr>
                                     <tr>
                                         <td>3차</td>
+                                        <td><input type="number" id="attempt3-launch" class="table-input small" placeholder="°"></td>
                                         <td><input type="number" id="attempt3-time" class="table-input small" placeholder="°"></td>
                                         <td>
                                             <select id="attempt3-result" class="table-select">
@@ -1195,22 +1199,24 @@
                 <button class="modal-close-btn">&times;</button>
             </div>
             <div class="modal-body">
+                <!-- 비밀번호를 HTML에 적어두면 소스 보기로 다 보인다.
+                     모달을 열 때 stages.js가 vault에서 꺼내 채운다. -->
                 <div class="admin-password-list">
                     <div class="admin-item">
                         <span class="stage-label">Stage 1 → 2:</span>
-                        <span class="password-value">ZEBRA</span>
+                        <span class="password-value" data-vault="pw2"></span>
                     </div>
                     <div class="admin-item">
                         <span class="stage-label">Stage 2 → 3:</span>
-                        <span class="password-value">PIZZA</span>
+                        <span class="password-value" data-vault="pw3"></span>
                     </div>
                     <div class="admin-item">
                         <span class="stage-label">Stage 3 → 4:</span>
-                        <span class="password-value">JAZZ</span>
+                        <span class="password-value" data-vault="pw4"></span>
                     </div>
                     <div class="admin-item">
                         <span class="stage-label">영상 건너뛰기:</span>
-                        <span class="password-value">tlsekq</span>
+                        <span class="password-value" data-vault="admin"></span>
                     </div>
                 </div>
             </div>
@@ -1280,6 +1286,7 @@
     <script src="js/vendor/jspdf.umd.min.js"></script>
 
     <!-- 스크립트 -->
+    <script src="js/vault.js"></script>
     <script src="js/config.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/timer.js"></script>

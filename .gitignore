@@ -2,3 +2,8 @@
 # 파이썬 캐시
 __pycache__/
 *.pyc
+
+# 학습지와 비밀번호·정답 원본 — 저장소가 공개라 올리지 않는다.
+# worksheets/make_vault.py 가 비밀번호 평문 원본, config/answers.json 이 정답 기록이다.
+worksheets/
+config/answers.json
