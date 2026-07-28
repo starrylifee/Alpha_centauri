@@ -14,11 +14,14 @@
 const Vault = (function () {
     const K = 'proxima-rescue';
 
+    // 비밀번호 항목(pw2~4, admin)은 개발용 가짜 값이다. 진짜는 Vercel 환경변수에만
+    // 있고 서버(api/verify.js)가 대조한다. 여기 값이 쓰이는 건 로컬 개발뿐이다.
+    // 콘솔에서 Vault.get()을 쳐보는 학생이 있어도 나오는 건 가짜 값이다.
     const DATA = {
-        pw2: 'PyAmNyc=',
-        pw3: 'PCchOQ==',
-        pw4: 'Mz0iPT0=',
-        admin: 'BxgLHBAJFUcA',
+        pw2: 'NDc5Sg==',
+        pw3: 'NDc5Sw==',
+        pw4: 'NDc5TA==',
+        admin: 'FBcZFQYJBA==',
         s1: 'nebrk8jwjabujtTrF4nQ84P74IH4sZ7hwldbV0Q=',
         s2kw: 'nevGlfHRHcfA2JnQ8RkEBQYUAAoJWQ4RFhEYDB4TGxcb',
         q1: 'nfHzlP/8HcDnyJ/nxBmbwesEhPnlxtP4n+jpjtf6E5X96YqM74n4/57C+J7rxITu4cHo1ZjF2Rmc1v6U4sGKnvYZmMndiOXfg/zY',
