@@ -19,8 +19,9 @@ CLEAR = 15.0                # 로봇끼리 최소 간격
 
 R_OUT = 285.0               # 바깥 궤도(외행성) 선 중심
 R_IN = 190.0                # 안쪽 궤도(내행성) 선 중심
-R_PAD = 95.0                # 발사 원 = 로켓을 놓는 자리 (원 위 아무 각도나 가능)
-R_PAD_NUM = 72.0            # 발사각 숫자 (중심별 글로우 56.7과 발사 원 95 사이)
+R_PAD = 95.0                # 발사대 중심 = 로켓 주차 위치 (0도 방향에 고정)
+R_DIAL = 48.0               # 발사각 각도판(발사대 둘레 반원) 반지름
+                            # 바깥 끝이 중심에서 최대 143mm — 내행성 로봇 띠(150~)에 안 걸린다
 LINE_W = 20.0               # 궤도 선 폭 (햄스터 바닥 센서용)
 
 R_STAR = 42.0               # 중심별
@@ -77,24 +78,55 @@ A(f'<text x="{CX}" y="{CY+7:.0f}" font-family="{FONT}" font-size="17" fill="#fff
 A(f'<circle cx="{CX}" cy="{CY}" r="{R_IN}" fill="none" stroke="{INK}" stroke-width="{LINE_W}"/>')
 A(f'<circle cx="{CX}" cy="{CY}" r="{R_OUT}" fill="none" stroke="{INK}" stroke-width="{LINE_W}"/>')
 
-# ── 발사 원 + 발사각 각도판 ──────────────────────────────────────
-# 발사대를 0도에 고정하지 않는다. 이 원 위 아무 눈금에나 로켓을 놓고 쏘면
-# 바깥 궤도의 같은 눈금에 도착하므로, 학생이 발사각을 직접 고를 수 있다.
-# 로켓이 출발하며 눈금선을 밟고 지나가므로 선은 전부 연한 색으로 뽑는다.
-A(f'<circle cx="{CX}" cy="{CY}" r="{R_PAD}" fill="none" stroke="{LAUNCH}" stroke-width="2"/>')
+# ── 발사대 + 발사각 각도판 ───────────────────────────────────────
+# 로켓은 언제나 이 발사대에서 출발한다. 둘레의 반원 각도판(각도기와 같은
+# 0~180, 정면이 90)으로 로켓 머리 방향 = 발사각을 정한다.
+# 정면(90)으로 쏘면 발사선을 따라 기준선 0°에 도착한다.
+px, py = pt(0, R_PAD)
 
-for deg in range(0, 360, 10):
-    major = (deg % 30 == 0)
-    d = 12 if major else 6
-    x1, y1 = pt(deg, R_PAD - d)
-    x2, y2 = pt(deg, R_PAD + d)
+
+def dial_pt(p_deg, r):
+    """각도판 위 점. p=0 이 아래(진행 눈금이 커지는 쪽), 90이 정면(바깥), 180이 위."""
+    t = math.radians(p_deg)
+    return px + r * math.sin(t), py + r * math.cos(t)
+
+
+# 발사선 (정면 90도 경로 안내, 반지름 방향 점선)
+# 내행성 로봇이 이 선을 밟고 지나가므로 아주 연한 색으로 뽑는다.
+lx1, ly1 = pt(0, R_PAD + R_DIAL + 6)
+lx2, ly2 = pt(0, R_OUT - LINE_W / 2 - 4)
+A(f'<line x1="{lx1:.1f}" y1="{ly1:.1f}" x2="{lx2:.1f}" y2="{ly2:.1f}" '
+  f'stroke="{LAUNCH}" stroke-width="6" stroke-dasharray="16 12"/>')
+
+# 각도판: 반원 호 + 지름 밑금
+ax0, ay0 = dial_pt(0, R_DIAL)
+ax1, ay1 = dial_pt(180, R_DIAL)
+A(f'<path d="M {ax0:.1f} {ay0:.1f} A {R_DIAL} {R_DIAL} 0 0 0 {ax1:.1f} {ay1:.1f}" '
+  f'fill="none" stroke="{LAUNCH}" stroke-width="2.5"/>')
+A(f'<line x1="{ax0:.1f}" y1="{ay0:.1f}" x2="{ax1:.1f}" y2="{ay1:.1f}" '
+  f'stroke="{LAUNCH}" stroke-width="1.5"/>')
+
+# 눈금 (10도 간격) — 로켓이 밟고 지날 수 있어 전부 연한 색
+for p in range(0, 181, 10):
+    major = (p % 30 == 0)
+    x1, y1 = dial_pt(p, R_DIAL)
+    x2, y2 = dial_pt(p, R_DIAL - (10 if major else 6))
     A(f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" '
-      f'stroke="{LAUNCH}" stroke-width="{3 if major else 2}"/>')
+      f'stroke="{LAUNCH}" stroke-width="{2.5 if major else 1.8}"/>')
     if major:
-        nx, ny = pt(deg, R_PAD_NUM)
-        c = ORANGE if deg == 0 else GRAY
-        A(f'<text x="{nx:.1f}" y="{ny+5:.1f}" font-family="{FONT}" font-size="15" '
-          f'fill="{c}" text-anchor="middle" font-weight="bold">{deg}</text>')
+        nx, ny = dial_pt(p, R_DIAL - 16)
+        c = ORANGE if p == 90 else GRAY
+        A(f'<text x="{nx:.1f}" y="{ny+3:.1f}" font-family="{FONT}" font-size="8.5" '
+          f'fill="{c}" text-anchor="middle" font-weight="bold">{p}</text>')
+
+A(f'<text x="{px-6:.1f}" y="{py-R_DIAL-8:.1f}" font-family="{FONT}" font-size="13" '
+  f'fill="{ORANGE}" text-anchor="middle" font-weight="bold">발사각</text>')
+
+# 발사대 (로켓 주차 표시)
+A(f'<circle cx="{px:.1f}" cy="{py:.1f}" r="16" fill="none" stroke="{ORANGE}" stroke-width="3.5"/>')
+A(f'<polygon points="{px+9:.1f},{py:.1f} {px-6:.1f},{py-7:.1f} {px-6:.1f},{py+7:.1f}" fill="{ORANGE}"/>')
+A(f'<text x="{px:.1f}" y="{py+R_DIAL+16:.1f}" font-family="{FONT}" font-size="14" fill="{ORANGE}" '
+  f'text-anchor="middle" font-weight="bold">발사대</text>')
 
 # ── 진행 방향 화살표 (궤도 사이 빈 띠, 반시계) ───────────────────
 def arrow(theta, r, color):
@@ -155,7 +187,7 @@ A(f'<text x="{PANEL_X}" y="{y}" font-family="{FONT}" font-size="21" fill="{GRAY}
 LH = 22.0   # 줄 간격
 
 
-def block(title, color, lines, gap=36.0):
+def block(title, color, lines, gap=32.0):
     global y
     y += gap
     A(f'<text x="{PANEL_X}" y="{y}" font-family="{FONT}" font-size="20" fill="{color}" '
@@ -166,35 +198,35 @@ def block(title, color, lines, gap=36.0):
           f'fill="#333">{esc(ln)}</text>')
 
 
-block('궤도 안내', '#333', [], gap=48)
+block('궤도 안내', '#333', [], gap=44)
 for i, (c, label) in enumerate([(BLUE, '안쪽 궤도 — 내행성 (본부)'),
                                 (RED, '바깥 궤도 — 외행성 (조난자)'),
-                                (ORANGE, '가운데 발사 원 — 로켓 발사각')]):
+                                (ORANGE, '발사대 · 발사각 각도판 · 기준선')]):
     y += LH
     A(f'<circle cx="{PANEL_X+7:.0f}" cy="{y-5:.0f}" r="7" fill="{c}"/>')
     A(f'<text x="{PANEL_X+22:.0f}" y="{y:.0f}" font-family="{FONT}" font-size="16" '
       f'fill="#333">{esc(label)}</text>')
 
-block('눈금 읽는 법', RED, ['눈금 두 개가 같은 각도를 씁니다.',
-                            '· 바깥 눈금 = 조난자 위치',
-                            '· 발사 원 눈금 = 로켓 발사각',
-                            '눈금은 0°에서 진행 방향의 반대로',
-                            '커집니다. 40°에 놓고 쏜 로켓은',
-                            '바깥 궤도 40°에 도착합니다.'])
+block('눈금 읽는 법', RED, ['바깥 눈금 = 조난자 위치.',
+                            '0°에서 진행 방향의 반대로 커집니다.',
+                            '조난자가 40에 있으면 기준선보다',
+                            '40도 뒤에 있다는 뜻입니다.'])
 
-block('발사 계산', BLUE, ['① 360 ÷ 외행성 주기(초)',
-                          '      = 초당 각도',
+block('발사각 각도판', ORANGE, ['발사대 둘레 반원 = 로켓 머리 방향.',
+                                '정면이 90°, 정면으로 쏘면',
+                                '기준선 0°에 도착합니다.',
+                                '방향을 바꾸면 시험 발사로 확인.'])
+
+block('발사 계산', BLUE, ['① 360 ÷ 외행성 주기(초) = 초당 각도',
                           '② 초당 각도 × 로켓 비행 시간',
                           '      = 리드 각도',
-                          '③ 발사각을 하나 고른다 (예: 40°)',
-                          '④ 조난자가 [발사각 + 리드 각도]',
+                          '③ 조난자가 [도착 눈금 + 리드 각도]',
                           '      눈금에 왔을 때 발사'])
 
-block('시작 전 확인', ORANGE, ['· 로켓은 발사 원 눈금에 맞춰 놓고',
-                               '   머리를 바깥쪽으로',
+block('시작 전 확인', ORANGE, ['· 로켓은 발사대에, 머리는 각도판',
+                               '   눈금에 맞춰 놓기',
                                '· 같은 속도 기준 외행성 30초 /',
-                               '   내행성 20초 / 로켓 3초',
-                               '· 내행성과 부딪힐 것 같으면 한 박자'])
+                               '   내행성 20초 / 로켓 3초'])
 
 A(f'<text x="{PANEL_X}" y="{H-70:.0f}" font-family="{FONT}" font-size="15" fill="{GRAY}">'
   f'A0 1189 × 841 mm</text>')

@@ -8,55 +8,39 @@
 <text x="420.0" y="427" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="17" fill="#ffffff" text-anchor="middle" font-weight="bold">프록시마</text>
 <circle cx="420.0" cy="420.0" r="190.0" fill="none" stroke="#111111" stroke-width="20.0"/>
 <circle cx="420.0" cy="420.0" r="285.0" fill="none" stroke="#111111" stroke-width="20.0"/>
-<circle cx="420.0" cy="420.0" r="95.0" fill="none" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="503.0" y1="420.0" x2="527.0" y2="420.0" stroke="#f6d5b4" stroke-width="3"/>
-<text x="492.0" y="425.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="15" fill="#e07b1f" text-anchor="middle" font-weight="bold">0</text>
-<line x1="507.6" y1="435.5" x2="519.5" y2="437.5" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="503.6" y1="450.4" x2="514.9" y2="454.5" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="491.9" y1="461.5" x2="512.7" y2="473.5" stroke="#f6d5b4" stroke-width="3"/>
-<text x="482.4" y="461.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="15" fill="#8a8f96" text-anchor="middle" font-weight="bold">30</text>
-<line x1="488.2" y1="477.2" x2="497.4" y2="484.9" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="477.2" y1="488.2" x2="484.9" y2="497.4" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="461.5" y1="491.9" x2="473.5" y2="512.7" stroke="#f6d5b4" stroke-width="3"/>
-<text x="456.0" y="487.4" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="15" fill="#8a8f96" text-anchor="middle" font-weight="bold">60</text>
-<line x1="450.4" y1="503.6" x2="454.5" y2="514.9" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="435.5" y1="507.6" x2="437.5" y2="519.5" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="420.0" y1="503.0" x2="420.0" y2="527.0" stroke="#f6d5b4" stroke-width="3"/>
-<text x="420.0" y="497.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="15" fill="#8a8f96" text-anchor="middle" font-weight="bold">90</text>
-<line x1="404.5" y1="507.6" x2="402.5" y2="519.5" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="389.6" y1="503.6" x2="385.5" y2="514.9" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="378.5" y1="491.9" x2="366.5" y2="512.7" stroke="#f6d5b4" stroke-width="3"/>
-<text x="384.0" y="487.4" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="15" fill="#8a8f96" text-anchor="middle" font-weight="bold">120</text>
-<line x1="362.8" y1="488.2" x2="355.1" y2="497.4" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="351.8" y1="477.2" x2="342.6" y2="484.9" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="348.1" y1="461.5" x2="327.3" y2="473.5" stroke="#f6d5b4" stroke-width="3"/>
-<text x="357.6" y="461.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="15" fill="#8a8f96" text-anchor="middle" font-weight="bold">150</text>
-<line x1="336.4" y1="450.4" x2="325.1" y2="454.5" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="332.4" y1="435.5" x2="320.5" y2="437.5" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="337.0" y1="420.0" x2="313.0" y2="420.0" stroke="#f6d5b4" stroke-width="3"/>
-<text x="348.0" y="425.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="15" fill="#8a8f96" text-anchor="middle" font-weight="bold">180</text>
-<line x1="332.4" y1="404.5" x2="320.5" y2="402.5" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="336.4" y1="389.6" x2="325.1" y2="385.5" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="348.1" y1="378.5" x2="327.3" y2="366.5" stroke="#f6d5b4" stroke-width="3"/>
-<text x="357.6" y="389.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="15" fill="#8a8f96" text-anchor="middle" font-weight="bold">210</text>
-<line x1="351.8" y1="362.8" x2="342.6" y2="355.1" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="362.8" y1="351.8" x2="355.1" y2="342.6" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="378.5" y1="348.1" x2="366.5" y2="327.3" stroke="#f6d5b4" stroke-width="3"/>
-<text x="384.0" y="362.6" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="15" fill="#8a8f96" text-anchor="middle" font-weight="bold">240</text>
-<line x1="389.6" y1="336.4" x2="385.5" y2="325.1" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="404.5" y1="332.4" x2="402.5" y2="320.5" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="420.0" y1="337.0" x2="420.0" y2="313.0" stroke="#f6d5b4" stroke-width="3"/>
-<text x="420.0" y="353.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="15" fill="#8a8f96" text-anchor="middle" font-weight="bold">270</text>
-<line x1="435.5" y1="332.4" x2="437.5" y2="320.5" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="450.4" y1="336.4" x2="454.5" y2="325.1" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="461.5" y1="348.1" x2="473.5" y2="327.3" stroke="#f6d5b4" stroke-width="3"/>
-<text x="456.0" y="362.6" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="15" fill="#8a8f96" text-anchor="middle" font-weight="bold">300</text>
-<line x1="477.2" y1="351.8" x2="484.9" y2="342.6" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="488.2" y1="362.8" x2="497.4" y2="355.1" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="491.9" y1="378.5" x2="512.7" y2="366.5" stroke="#f6d5b4" stroke-width="3"/>
-<text x="482.4" y="389.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="15" fill="#8a8f96" text-anchor="middle" font-weight="bold">330</text>
-<line x1="503.6" y1="389.6" x2="514.9" y2="385.5" stroke="#f6d5b4" stroke-width="2"/>
-<line x1="507.6" y1="404.5" x2="519.5" y2="402.5" stroke="#f6d5b4" stroke-width="2"/>
+<line x1="569.0" y1="420.0" x2="691.0" y2="420.0" stroke="#f6d5b4" stroke-width="6" stroke-dasharray="16 12"/>
+<path d="M 515.0 468.0 A 48.0 48.0 0 0 0 515.0 372.0" fill="none" stroke="#f6d5b4" stroke-width="2.5"/>
+<line x1="515.0" y1="468.0" x2="515.0" y2="372.0" stroke="#f6d5b4" stroke-width="1.5"/>
+<line x1="515.0" y1="468.0" x2="515.0" y2="458.0" stroke="#f6d5b4" stroke-width="2.5"/>
+<text x="515.0" y="455.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="8.5" fill="#8a8f96" text-anchor="middle" font-weight="bold">0</text>
+<line x1="523.3" y1="467.3" x2="522.3" y2="461.4" stroke="#f6d5b4" stroke-width="1.8"/>
+<line x1="531.4" y1="465.1" x2="529.4" y2="459.5" stroke="#f6d5b4" stroke-width="1.8"/>
+<line x1="539.0" y1="461.6" x2="534.0" y2="452.9" stroke="#f6d5b4" stroke-width="2.5"/>
+<text x="531.0" y="450.7" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="8.5" fill="#8a8f96" text-anchor="middle" font-weight="bold">30</text>
+<line x1="545.9" y1="456.8" x2="542.0" y2="452.2" stroke="#f6d5b4" stroke-width="1.8"/>
+<line x1="551.8" y1="450.9" x2="547.2" y2="447.0" stroke="#f6d5b4" stroke-width="1.8"/>
+<line x1="556.6" y1="444.0" x2="547.9" y2="439.0" stroke="#f6d5b4" stroke-width="2.5"/>
+<text x="542.7" y="439.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="8.5" fill="#8a8f96" text-anchor="middle" font-weight="bold">60</text>
+<line x1="560.1" y1="436.4" x2="554.5" y2="434.4" stroke="#f6d5b4" stroke-width="1.8"/>
+<line x1="562.3" y1="428.3" x2="556.4" y2="427.3" stroke="#f6d5b4" stroke-width="1.8"/>
+<line x1="563.0" y1="420.0" x2="553.0" y2="420.0" stroke="#f6d5b4" stroke-width="2.5"/>
+<text x="547.0" y="423.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="8.5" fill="#e07b1f" text-anchor="middle" font-weight="bold">90</text>
+<line x1="562.3" y1="411.7" x2="556.4" y2="412.7" stroke="#f6d5b4" stroke-width="1.8"/>
+<line x1="560.1" y1="403.6" x2="554.5" y2="405.6" stroke="#f6d5b4" stroke-width="1.8"/>
+<line x1="556.6" y1="396.0" x2="547.9" y2="401.0" stroke="#f6d5b4" stroke-width="2.5"/>
+<text x="542.7" y="407.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="8.5" fill="#8a8f96" text-anchor="middle" font-weight="bold">120</text>
+<line x1="551.8" y1="389.1" x2="547.2" y2="393.0" stroke="#f6d5b4" stroke-width="1.8"/>
+<line x1="545.9" y1="383.2" x2="542.0" y2="387.8" stroke="#f6d5b4" stroke-width="1.8"/>
+<line x1="539.0" y1="378.4" x2="534.0" y2="387.1" stroke="#f6d5b4" stroke-width="2.5"/>
+<text x="531.0" y="395.3" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="8.5" fill="#8a8f96" text-anchor="middle" font-weight="bold">150</text>
+<line x1="531.4" y1="374.9" x2="529.4" y2="380.5" stroke="#f6d5b4" stroke-width="1.8"/>
+<line x1="523.3" y1="372.7" x2="522.3" y2="378.6" stroke="#f6d5b4" stroke-width="1.8"/>
+<line x1="515.0" y1="372.0" x2="515.0" y2="382.0" stroke="#f6d5b4" stroke-width="2.5"/>
+<text x="515.0" y="391.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="8.5" fill="#8a8f96" text-anchor="middle" font-weight="bold">180</text>
+<text x="509.0" y="364.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="13" fill="#e07b1f" text-anchor="middle" font-weight="bold">발사각</text>
+<circle cx="515.0" cy="420.0" r="16" fill="none" stroke="#e07b1f" stroke-width="3.5"/>
+<polygon points="524.0,420.0 509.0,413.0 509.0,427.0" fill="#e07b1f"/>
+<text x="515.0" y="484.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="14" fill="#e07b1f" text-anchor="middle" font-weight="bold">발사대</text>
 <polygon points="403.0,292.0 425.0,283.0 425.0,301.0" fill="#8a8f96"/>
 <polygon points="437.0,548.0 415.0,557.0 415.0,539.0" fill="#8a8f96"/>
 <line x1="760.0" y1="420.0" x2="786.0" y2="420.0" stroke="#111111" stroke-width="3.5"/>
@@ -112,34 +96,34 @@
 <line x1="850" y1="60" x2="850" y2="781" stroke="#dcdfe3" stroke-width="2"/>
 <text x="880.0" y="96.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="27" fill="#111" font-weight="bold">PROXIMA RESCUE</text>
 <text x="880.0" y="128.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="21" fill="#8a8f96">궤도 매트 · ORBIT MAT</text>
-<text x="880.0" y="176.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="20" fill="#333" font-weight="bold">궤도 안내</text>
-<circle cx="887" cy="193" r="7" fill="#1f5fa8"/>
-<text x="902" y="198" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">안쪽 궤도 — 내행성 (본부)</text>
-<circle cx="887" cy="215" r="7" fill="#c0392b"/>
-<text x="902" y="220" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">바깥 궤도 — 외행성 (조난자)</text>
-<circle cx="887" cy="237" r="7" fill="#e07b1f"/>
-<text x="902" y="242" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">가운데 발사 원 — 로켓 발사각</text>
-<text x="880.0" y="278.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="20" fill="#c0392b" font-weight="bold">눈금 읽는 법</text>
-<text x="880.0" y="300.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">눈금 두 개가 같은 각도를 씁니다.</text>
-<text x="880.0" y="322.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">· 바깥 눈금 = 조난자 위치</text>
-<text x="880.0" y="344.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">· 발사 원 눈금 = 로켓 발사각</text>
-<text x="880.0" y="366.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">눈금은 0°에서 진행 방향의 반대로</text>
-<text x="880.0" y="388.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">커집니다. 40°에 놓고 쏜 로켓은</text>
-<text x="880.0" y="410.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">바깥 궤도 40°에 도착합니다.</text>
-<text x="880.0" y="446.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="20" fill="#1f5fa8" font-weight="bold">발사 계산</text>
-<text x="880.0" y="468.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">① 360 ÷ 외행성 주기(초)</text>
-<text x="880.0" y="490.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">      = 초당 각도</text>
-<text x="880.0" y="512.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">② 초당 각도 × 로켓 비행 시간</text>
-<text x="880.0" y="534.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">      = 리드 각도</text>
-<text x="880.0" y="556.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">③ 발사각을 하나 고른다 (예: 40°)</text>
-<text x="880.0" y="578.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">④ 조난자가 [발사각 + 리드 각도]</text>
-<text x="880.0" y="600.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">      눈금에 왔을 때 발사</text>
-<text x="880.0" y="636.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="20" fill="#e07b1f" font-weight="bold">시작 전 확인</text>
-<text x="880.0" y="658.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">· 로켓은 발사 원 눈금에 맞춰 놓고</text>
-<text x="880.0" y="680.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">   머리를 바깥쪽으로</text>
-<text x="880.0" y="702.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">· 같은 속도 기준 외행성 30초 /</text>
-<text x="880.0" y="724.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">   내행성 20초 / 로켓 3초</text>
-<text x="880.0" y="746.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">· 내행성과 부딪힐 것 같으면 한 박자</text>
+<text x="880.0" y="172.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="20" fill="#333" font-weight="bold">궤도 안내</text>
+<circle cx="887" cy="189" r="7" fill="#1f5fa8"/>
+<text x="902" y="194" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">안쪽 궤도 — 내행성 (본부)</text>
+<circle cx="887" cy="211" r="7" fill="#c0392b"/>
+<text x="902" y="216" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">바깥 궤도 — 외행성 (조난자)</text>
+<circle cx="887" cy="233" r="7" fill="#e07b1f"/>
+<text x="902" y="238" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">발사대 · 발사각 각도판 · 기준선</text>
+<text x="880.0" y="270.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="20" fill="#c0392b" font-weight="bold">눈금 읽는 법</text>
+<text x="880.0" y="292.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">바깥 눈금 = 조난자 위치.</text>
+<text x="880.0" y="314.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">0°에서 진행 방향의 반대로 커집니다.</text>
+<text x="880.0" y="336.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">조난자가 40에 있으면 기준선보다</text>
+<text x="880.0" y="358.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">40도 뒤에 있다는 뜻입니다.</text>
+<text x="880.0" y="390.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="20" fill="#e07b1f" font-weight="bold">발사각 각도판</text>
+<text x="880.0" y="412.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">발사대 둘레 반원 = 로켓 머리 방향.</text>
+<text x="880.0" y="434.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">정면이 90°, 정면으로 쏘면</text>
+<text x="880.0" y="456.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">기준선 0°에 도착합니다.</text>
+<text x="880.0" y="478.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">방향을 바꾸면 시험 발사로 확인.</text>
+<text x="880.0" y="510.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="20" fill="#1f5fa8" font-weight="bold">발사 계산</text>
+<text x="880.0" y="532.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">① 360 ÷ 외행성 주기(초) = 초당 각도</text>
+<text x="880.0" y="554.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">② 초당 각도 × 로켓 비행 시간</text>
+<text x="880.0" y="576.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">      = 리드 각도</text>
+<text x="880.0" y="598.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">③ 조난자가 [도착 눈금 + 리드 각도]</text>
+<text x="880.0" y="620.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">      눈금에 왔을 때 발사</text>
+<text x="880.0" y="652.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="20" fill="#e07b1f" font-weight="bold">시작 전 확인</text>
+<text x="880.0" y="674.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">· 로켓은 발사대에, 머리는 각도판</text>
+<text x="880.0" y="696.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">   눈금에 맞춰 놓기</text>
+<text x="880.0" y="718.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">· 같은 속도 기준 외행성 30초 /</text>
+<text x="880.0" y="740.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">   내행성 20초 / 로켓 3초</text>
 <text x="880.0" y="771" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="15" fill="#8a8f96">A0 1189 × 841 mm</text>
 <text x="880.0" y="793" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="15" fill="#8a8f96">궤도선 검정 K100 · 폭 20 mm</text>
 <text x="880.0" y="815" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="15" fill="#8a8f96">무광 인쇄 (광택 코팅 금지)</text>
