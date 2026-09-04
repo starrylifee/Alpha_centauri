@@ -87,6 +87,7 @@ const App = (function () {
                 if (!modal || !input || !submitBtn) return;
 
                 modal.classList.remove('hidden');
+                input.type = 'password';   // 관리자 코드는 가려서 입력
                 input.value = '';
                 errorMsg.classList.add('hidden');
                 input.focus();

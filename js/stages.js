@@ -82,8 +82,9 @@ const Stages = (function () {
 
         if (!modal || !input || !submitBtn) return;
 
-        // 모달 표시
+        // 모달 표시 (스테이지 비밀번호는 보이게 입력)
         modal.classList.remove('hidden');
+        input.type = 'text';
         input.value = '';
         errorMsg.classList.add('hidden');
         input.focus();
@@ -157,7 +158,10 @@ const Stages = (function () {
             // 호출자가 Auth.passwords()로 받아온 목록을 넘겨줘야 채워진다.
             if (passwords) {
                 modal.querySelectorAll('[data-pw]').forEach(el => {
-                    el.textContent = passwords[el.dataset.pw] || '';
+                    // 관리자 코드(영상 건너뛰기)는 교사 개인 정보라 화면에 찍지 않는다
+                    el.textContent = el.dataset.pw === 'admin'
+                        ? '(관리자 코드와 동일)'
+                        : (passwords[el.dataset.pw] || '');
                 });
             }
 
@@ -408,6 +412,7 @@ const Stages = (function () {
                 instruction.textContent = '관리자 접근 권한을 확인합니다.';
 
                 modal.classList.remove('hidden');
+                input.type = 'password';   // 관리자 코드는 가려서 입력
                 input.value = '';
                 errorMsg.classList.add('hidden');
                 input.focus();
