@@ -113,17 +113,17 @@
 <text x="880.0" y="434.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">정면이 90°, 정면으로 쏘면</text>
 <text x="880.0" y="456.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">기준선 0°에 도착합니다.</text>
 <text x="880.0" y="478.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">방향을 바꾸면 시험 발사로 확인.</text>
-<text x="880.0" y="510.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="20" fill="#1f5fa8" font-weight="bold">발사 계산</text>
-<text x="880.0" y="532.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">① 360 ÷ 외행성 주기(초) = 초당 각도</text>
-<text x="880.0" y="554.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">② 초당 각도 × 로켓 비행 시간</text>
-<text x="880.0" y="576.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">      = 리드 각도</text>
-<text x="880.0" y="598.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">③ 조난자가 [도착 눈금 + 리드 각도]</text>
-<text x="880.0" y="620.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">      눈금에 왔을 때 발사</text>
-<text x="880.0" y="652.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="20" fill="#e07b1f" font-weight="bold">시작 전 확인</text>
-<text x="880.0" y="674.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">· 로켓은 발사대에, 머리는 각도판</text>
-<text x="880.0" y="696.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">   눈금에 맞춰 놓기</text>
-<text x="880.0" y="718.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">· 같은 속도 기준 외행성 30초 /</text>
-<text x="880.0" y="740.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">   내행성 20초 / 로켓 3초</text>
+<text x="880.0" y="510.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="20" fill="#1f5fa8" font-weight="bold">발사 규칙</text>
+<text x="880.0" y="532.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">① 로켓은 발사대에, 머리는 각도판에</text>
+<text x="880.0" y="554.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">② 내행성(본부)이 발사선을 지나는</text>
+<text x="880.0" y="576.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">      순간 로켓 출발 + 스톱워치 시작</text>
+<text x="880.0" y="598.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">③ 조난자와 만나면(도킹) 시간 기록</text>
+<text x="880.0" y="620.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">④ 발사각을 바꿔 가며 가장 빨리</text>
+<text x="880.0" y="642.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">      도킹하는 각도 찾기</text>
+<text x="880.0" y="674.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="20" fill="#e07b1f" font-weight="bold">시작 전 확인</text>
+<text x="880.0" y="696.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">· 로봇 속도는 선생님이 정합니다</text>
+<text x="880.0" y="718.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">· 정면(90°) 시험 발사로 방향을 확인한</text>
+<text x="880.0" y="740.0" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="16" fill="#333">   뒤 기록을 시작하세요</text>
 <text x="880.0" y="771" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="15" fill="#8a8f96">A0 1189 × 841 mm</text>
 <text x="880.0" y="793" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="15" fill="#8a8f96">궤도선 검정 K100 · 폭 20 mm</text>
 <text x="880.0" y="815" font-family="'Malgun Gothic','맑은 고딕','Noto Sans KR',sans-serif" font-size="15" fill="#8a8f96">무광 인쇄 (광택 코팅 금지)</text>
