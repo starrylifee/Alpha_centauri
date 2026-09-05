@@ -2525,6 +2525,23 @@
     font-weight: 500;
 }
 
+/* Stage 4 발사 규칙 (번호 붙은 네 줄) */
+.launch-rules {
+    margin: var(--spacing-md) 0;
+    padding: var(--spacing-md) var(--spacing-lg);
+    background: rgba(0, 0, 0, 0.3);
+    border-left: 3px solid var(--neon-green);
+    border-radius: var(--radius-sm);
+}
+
+.launch-rules .worksheet-text {
+    margin: var(--spacing-xs) 0;
+}
+
+.result-table .table-input.small {
+    width: 64px;
+}
+
 /* Final Result Section */
 .final-result-section {
     margin-top: var(--spacing-xl);

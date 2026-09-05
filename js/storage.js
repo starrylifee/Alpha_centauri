@@ -17,8 +17,9 @@ const Storage = (function() {
         stageData: {
             stage4: {
                 result: null,
-                angle: null,
-                time: null
+                angle: null,      // 가장 빨리 도킹한 발사각
+                time: null,       // 그 이유 (칸 이름은 예전 '비행 시간' 시절 것)
+                attempts: []      // {launch, time, result} 최대 5회
             }
         },
         // 새로고침 복원용. formValues는 입력칸 id -> 값, phases는 단계 번호 -> 화면 번호
@@ -238,7 +239,7 @@ const Storage = (function() {
      */
     function getStage4Data() {
         const data = load();
-        return data.stageData?.stage4 || { result: null, angle: null, time: null };
+        return data.stageData?.stage4 || { result: null, angle: null, time: null, attempts: [] };
     }
     
     /**

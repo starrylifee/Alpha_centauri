@@ -44,7 +44,6 @@ const Stages = (function () {
         elements.stage4Submit = document.getElementById('stage4-submit');
         elements.stage4Feedback = document.getElementById('stage4-feedback');
         elements.stage4Hint = document.getElementById('stage4-hint');
-        elements.successDetails = document.getElementById('success-details');
 
         // Stage 5
         elements.finalCompleteBtn = document.getElementById('final-complete-btn');
@@ -600,86 +599,6 @@ const Stages = (function () {
      * Stage 4 이벤트 설정
      */
     function setupStage4() {
-        // 공전 주기 평균 계산 버튼
-        const calcAvgBtn = document.getElementById('calc-avg-btn');
-        if (calcAvgBtn) {
-            calcAvgBtn.addEventListener('click', () => {
-                // 내행성 평균 계산
-                const inner1 = parseFloat(document.getElementById('inner-1')?.value) || 0;
-                const inner2 = parseFloat(document.getElementById('inner-2')?.value) || 0;
-                const inner3 = parseFloat(document.getElementById('inner-3')?.value) || 0;
-                const innerAvg = (inner1 + inner2 + inner3) / 3;
-
-                const innerAvgEl = document.getElementById('inner-avg');
-                if (innerAvgEl) {
-                    innerAvgEl.textContent = innerAvg > 0 ? innerAvg.toFixed(1) : '--';
-                }
-
-                // 외행성 평균 계산
-                const outer1 = parseFloat(document.getElementById('outer-1')?.value) || 0;
-                const outer2 = parseFloat(document.getElementById('outer-2')?.value) || 0;
-                const outer3 = parseFloat(document.getElementById('outer-3')?.value) || 0;
-                const outerAvg = (outer1 + outer2 + outer3) / 3;
-
-                const outerAvgEl = document.getElementById('outer-avg');
-                if (outerAvgEl) {
-                    outerAvgEl.textContent = outerAvg > 0 ? outerAvg.toFixed(1) : '--';
-                }
-
-                // 로켓 편도 시간 평균 (예전에는 3초로 고정돼 있던 값)
-                const rocket1 = parseFloat(document.getElementById('rocket-1')?.value) || 0;
-                const rocket2 = parseFloat(document.getElementById('rocket-2')?.value) || 0;
-                const rocket3 = parseFloat(document.getElementById('rocket-3')?.value) || 0;
-                const rocketAvg = (rocket1 + rocket2 + rocket3) / 3;
-
-                const rocketAvgEl = document.getElementById('rocket-avg');
-                if (rocketAvgEl) {
-                    rocketAvgEl.textContent = rocketAvg > 0 ? rocketAvg.toFixed(1) : '--';
-                }
-
-                // 발사 윈도우 계산식 ②에 로켓 시간을 바로 물려준다
-                const rocketDisplay = document.getElementById('calc-rocket-display');
-                if (rocketDisplay) {
-                    rocketDisplay.textContent = rocketAvg > 0 ? rocketAvg.toFixed(1) : '?';
-                }
-
-                console.log('[Stages] Calculated averages - Inner:', innerAvg, 'Outer:', outerAvg, 'Rocket:', rocketAvg);
-
-                // 보고서용 데이터 저장
-                Storage.update('stage4Averages', {
-                    inner: innerAvg,
-                    outer: outerAvg,
-                    rocket: rocketAvg
-                });
-            });
-        }
-
-        // 각속도 계산 시 자동 연동
-        const calcPeriod = document.getElementById('calc-period');
-        const calcSpeed = document.getElementById('calc-speed');
-        const calcSpeedDisplay = document.getElementById('calc-speed-display');
-
-        if (calcPeriod) {
-            calcPeriod.addEventListener('input', (e) => {
-                const period = parseFloat(e.target.value) || 0;
-                if (period > 0) {
-                    const speed = (360 / period).toFixed(1);
-                    if (calcSpeed) calcSpeed.value = speed;
-                    if (calcSpeedDisplay) calcSpeedDisplay.textContent = speed;
-                }
-            });
-        }
-
-        if (calcSpeed) {
-            calcSpeed.addEventListener('input', (e) => {
-                if (calcSpeedDisplay) {
-                    calcSpeedDisplay.textContent = e.target.value || '?';
-                }
-            });
-        }
-
-
-        // Simulation Check (Phase 1)
         // Simulation Check (Phase 1)
         const simFailBtn = document.getElementById('sim-fail-btn');
         // Stage 4의 Phase 1 버튼만 선택하도록 수정
@@ -699,54 +618,43 @@ const Stages = (function () {
             });
         }
 
-        // 라디오 버튼 변경 시 상세 입력 표시/숨김
-        const radioButtons = document.querySelectorAll('input[name="mission-result"]');
-        radioButtons.forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                if (elements.successDetails) {
-                    if (e.target.value === 'success') {
-                        elements.successDetails.classList.remove('hidden');
-                    } else {
-                        elements.successDetails.classList.add('hidden');
-                    }
-                }
-            });
-        });
-
         if (elements.stage4Submit) {
             elements.stage4Submit.addEventListener('click', async () => {
-                const selectedRadio = document.querySelector('input[name="mission-result"]:checked');
-                const result = selectedRadio?.value || '';
+                const angle = elements.stage4Angle?.value.trim() || '';
+                const time = elements.stage4Time?.value.trim() || '';
+                const errorEl = document.getElementById('stage4-record-error');
 
-                if (!result) {
-                    showFeedback(elements.stage4Feedback, '미션 결과를 선택해주세요.', 'warning');
+                // 시도 기록 최대 5회 (발사각 / 도킹까지 시간 / 결과). 비어 있는 줄은 버린다.
+                // 칸 id의 -time 은 예전 '비행 시간' 시절 이름이다. 지금은 실제로 시간(초)을 담는다.
+                const attempts = [1, 2, 3, 4, 5].map(n => ({
+                    launch: document.getElementById(`attempt${n}-launch`)?.value.trim() || '',
+                    time: document.getElementById(`attempt${n}-time`)?.value.trim() || '',
+                    result: document.getElementById(`attempt${n}-result`)?.value || ''
+                })).filter(a => a.launch || a.time || a.result);
+
+                const complete = attempts.filter(a => a.launch && a.time && a.result);
+                const isMaster = await Validation.isMasterCode(time);
+
+                if (!isMaster && (complete.length === 0 || !angle || !time)) {
+                    if (errorEl) errorEl.classList.remove('hidden');
+                    showFeedback(elements.stage4Feedback, '시도 기록과 가장 빨랐던 발사각, 이유를 채워 주세요.', 'warning');
                     return;
                 }
+                if (errorEl) errorEl.classList.add('hidden');
 
-                const angle = elements.stage4Angle?.value || '';
-                const time = elements.stage4Time?.value || '';
-
-                // 시도 기록 3회 (발사각 / 발사 때 조난자 눈금 / 결과 / 실패 원인)
-                // angle 칸의 id가 -time 인 것은 예전 '비행 시간' 시절 이름이 저장·복원에 묶여 있어서다
-                const attempts = [1, 2, 3].map(n => ({
-                    launch: document.getElementById(`attempt${n}-launch`)?.value || '',
-                    result: document.getElementById(`attempt${n}-result`)?.value || '',
-                    angle: document.getElementById(`attempt${n}-time`)?.value || '',
-                    cause: document.getElementById(`attempt${n}-cause`)?.value || ''
-                }));
-
+                // 한 번이라도 도킹했으면 구조 성공
+                const result = complete.some(a => a.result === 'success') ? 'success' : 'fail';
                 const validation = await Validation.validateStage4(result, angle, time);
 
-                // Stage 4 데이터 저장 (확장)
                 Storage.setStage4Data({
                     ...validation.data,
                     attempts
                 });
 
                 if (validation.isSuccess) {
-                    showFeedback(elements.stage4Feedback, '🎉 축하합니다! 햄스터 로봇이 성공적으로 목표에 도달했습니다!', 'success');
+                    showFeedback(elements.stage4Feedback, '🎉 축하합니다! 구조 로켓이 조난자와 도킹했습니다!', 'success');
                 } else {
-                    showFeedback(elements.stage4Feedback, '💪 아쉽지만 괜찮아요. 다음에는 꼭 성공할 거예요! 실제 구조 작전을 진행해봅시다.', 'warning');
+                    showFeedback(elements.stage4Feedback, '💪 도킹은 못 했지만 기록은 남았습니다. 실제 구조 작전을 진행해봅시다.', 'warning');
                 }
 
                 setTimeout(() => {
@@ -815,19 +723,17 @@ const Stages = (function () {
         document.getElementById('report-location').textContent = s3.location || '-';
         document.getElementById('report-latitude').textContent = s3.latitude ? `북위 ${s3.latitude}도` : '-';
 
-        // Stage 4
-        const s4Avg = data.stage4Averages || {};
+        // Stage 4 (가장 빨리 도킹한 발사각 + 시도 기록)
         const s4Data = data.stageData?.stage4 || {};
+        const attempts = (s4Data.attempts || []).filter(a => a.launch && a.time && a.result);
 
-        document.getElementById('report-inner').textContent = s4Avg.inner ? s4Avg.inner.toFixed(1) : '-';
-        document.getElementById('report-outer').textContent = s4Avg.outer ? s4Avg.outer.toFixed(1) : '-';
-
-        document.getElementById('report-rocket').textContent = s4Avg.rocket ? s4Avg.rocket.toFixed(1) : '-';
-
-        // 발사 윈도우 (팀이 계산한 리드 각도)
-        const launchAngle = s4Data.angle || '-';
         document.getElementById('report-window').textContent =
-            launchAngle === '-' ? '-' : `${launchAngle}도 (계산됨)`;
+            s4Data.angle ? `${s4Data.angle}°` : '-';
+        document.getElementById('report-attempts').textContent = attempts.length
+            ? attempts.map(a => `${a.launch}° → ${a.time}s ${a.result === 'success' ? '✓' : '✗'}`).join(' / ')
+            : '-';
+        document.getElementById('report-docking').textContent =
+            s4Data.result === 'success' ? 'SUCCESS' : (s4Data.result === 'fail' ? 'FAILED' : '-');
 
         // PDF 생성
         template.classList.remove('hidden');

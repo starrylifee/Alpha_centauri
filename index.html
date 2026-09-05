@@ -747,221 +747,100 @@
                     </div>
 
                     <button class="btn btn-primary btn-next" data-next-phase="2">
-                        <span>공전 주기 측정 시작 ▶</span>
+                        <span>발사 실험 시작 ▶</span>
                     </button>
                 </div>
 
                 <!-- Phase 2: 공전 주기 측정 -->
+                <!-- Phase 2: 발사 실험 기록 -->
                 <div class="stage-phase phase-2 hidden" data-phase="2">
                     <div class="worksheet-panel">
                         <div class="worksheet-header">
-                            <span class="worksheet-icon">⏱️</span>
-                            <span>미션 1. 공전 주기 측정</span>
+                            <span class="worksheet-icon">🎮</span>
+                            <span>미션. 가장 빠른 발사각 찾기</span>
                         </div>
                         <div class="worksheet-content">
-                            <p class="worksheet-text">A0 궤도 매트에서 로봇 <strong>세 대</strong>를 각각 <strong>3회씩</strong> 측정하세요.
-                                두 행성은 <strong>한 바퀴 도는 시간</strong>, 로켓은 <strong>발사대에서 조난자 궤도까지 가는 시간</strong>입니다.</p>
-
+                            <p class="worksheet-text">A0 궤도 매트에서 로봇 <strong>세 대</strong>로 실험합니다. 안쪽이 본부(내행성), 바깥쪽이 조난자(외행성), 가운데가 로켓 발사대입니다.</p>
                             <figure class="activity-photo">
                                 <img src="assets/images/orbit-activity.jpg"
                                     alt="A0 궤도 매트 위에서 햄스터 로봇이 안쪽·바깥쪽 궤도를 도는 모습">
-                                <figcaption>▲ 궤도 매트 배치: 안쪽이 본부(내행성), 바깥쪽이 조난자(외행성), 가운데가 로켓 발사대 — 머리 방향은 둘레의 발사각 각도판으로 정합니다 (클릭하면 크게 보입니다)</figcaption>
+                                <figcaption>▲ 궤도 매트 배치 — 로켓 머리 방향은 발사대 둘레의 발사각 각도판으로 정합니다.</figcaption>
                             </figure>
 
-                            <table class="measurement-table">
-                                <thead>
-                                    <tr>
-                                        <th>구분</th>
-                                        <th>1회</th>
-                                        <th>2회</th>
-                                        <th>3회</th>
-                                        <th>평균(초)</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>🌍 내행성 (본부)</td>
-                                        <td><input type="number" class="table-input" id="inner-1" placeholder="초"></td>
-                                        <td><input type="number" class="table-input" id="inner-2" placeholder="초"></td>
-                                        <td><input type="number" class="table-input" id="inner-3" placeholder="초"></td>
-                                        <td><span id="inner-avg" class="avg-value">--</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>🔴 외행성 (조난자)</td>
-                                        <td><input type="number" class="table-input" id="outer-1" placeholder="초"></td>
-                                        <td><input type="number" class="table-input" id="outer-2" placeholder="초"></td>
-                                        <td><input type="number" class="table-input" id="outer-3" placeholder="초"></td>
-                                        <td><span id="outer-avg" class="avg-value">--</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>🚀 로켓 (편도)</td>
-                                        <td><input type="number" class="table-input" id="rocket-1" placeholder="초"></td>
-                                        <td><input type="number" class="table-input" id="rocket-2" placeholder="초"></td>
-                                        <td><input type="number" class="table-input" id="rocket-3" placeholder="초"></td>
-                                        <td><span id="rocket-avg" class="avg-value">--</span></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-
-                            <button class="btn btn-secondary btn-calc" id="calc-avg-btn">
-                                <span>평균 계산하기</span>
-                            </button>
-                            <p class="validation-error hidden" id="stage4-measure-error">⚠️ 측정값을 모두 입력하고 평균 계산을 해주세요!
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="phase-nav-buttons">
-                        <button class="btn btn-secondary btn-prev" data-prev-phase="1">
-                            <span>◀ 이전</span>
-                        </button>
-                        <button class="btn btn-primary btn-next" data-next-phase="3" data-validate="stage4-measure">
-                            <span>발사 윈도우 계산 ▶</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Phase 3: 발사 윈도우 계산 -->
-                <div class="stage-phase phase-3 hidden" data-phase="3">
-                    <div class="worksheet-panel">
-                        <div class="worksheet-header">
-                            <span class="worksheet-icon">🧮</span>
-                            <span>미션 2. 발사 윈도우 계산</span>
-                        </div>
-                        <div class="worksheet-content">
-                            <p class="worksheet-text">앞에서 잰 <strong>로켓 비행 시간</strong>을 그대로 씁니다. 팀마다 다른 값이 나옵니다.</p>
-
-                            <div class="calculation-steps">
-                                <div class="calc-step">
-                                    <label>① 외행성이 1초에 움직이는 각도</label>
-                                    <div class="calc-formula">
-                                        <span>360° ÷ (</span>
-                                        <input type="number" id="calc-period" class="calc-input" placeholder="외행성 주기">
-                                        <span>) = (</span>
-                                        <input type="number" id="calc-speed" class="calc-input" placeholder="결과">
-                                        <span>) °/sec</span>
-                                    </div>
-                                </div>
-
-                                <div class="calc-step">
-                                    <label>② 로켓 이동 중 외행성이 움직이는 각도</label>
-                                    <div class="calc-formula">
-                                        <span>(</span>
-                                        <span id="calc-speed-display" class="calc-display">?</span>
-                                        <span>)° × (</span>
-                                        <span id="calc-rocket-display" class="calc-display">?</span>
-                                        <span>)초 = (</span>
-                                        <input type="number" id="calc-travel" class="calc-input" placeholder="결과">
-                                        <span>) °</span>
-                                    </div>
-                                </div>
-
-                                <div class="calc-step highlight-step">
-                                    <label>③ 결론 (발사 타이밍)</label>
-                                    <div class="calc-conclusion">
-                                        <span>로켓이 도착할 눈금보다 외행성이 (</span>
-                                        <input type="number" id="stage4-angle" class="calc-input result-input"
-                                            placeholder="?">
-                                        <span>) 도 뒤에 있을 때 발사해야 한다!</span>
-                                    </div>
-                                    <p class="validation-error hidden" id="stage4-angle-error">⚠️ 계산 과정을 모두 채우고 발사 각도를 입력해주세요!</p>
-                                </div>
+                            <div class="launch-rules">
+                                <p class="worksheet-text"><strong>① 준비</strong> 로켓을 발사대에 놓고, 머리를 각도판 눈금에 맞춥니다. 정면이 90°입니다.</p>
+                                <p class="worksheet-text"><strong>② 발사</strong> 내행성(본부)이 발사선을 지나는 <strong>순간</strong> 로켓을 출발시키고 스톱워치를 켭니다.</p>
+                                <p class="worksheet-text"><strong>③ 기록</strong> 로켓이 조난자와 만나면(도킹) 스톱워치를 멈추고 시간을 적습니다.</p>
+                                <p class="worksheet-text"><strong>④ 반복</strong> 발사각을 바꿔 가며 <strong>가장 빨리 도킹하는 각도</strong>를 찾습니다.</p>
                             </div>
-                        </div>
-                    </div>
-
-                    <div class="phase-nav-buttons">
-                        <button class="btn btn-secondary btn-prev" data-prev-phase="2">
-                            <span>◀ 이전</span>
-                        </button>
-                        <button class="btn btn-primary btn-next" data-next-phase="4" data-validate="stage4-angle">
-                            <span>실제 시뮬레이션 시작! ▶</span>
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Phase 4: 발사 기록 (칸 id의 time은 예전 '비행 시간' 시절 이름이라 그대로 둔다) -->
-                <div class="stage-phase phase-4 hidden" data-phase="4">
-                    <div class="worksheet-panel">
-                        <div class="worksheet-header">
-                            <span class="worksheet-icon">🎮</span>
-                            <span>미션 3. 발사 기록</span>
-                        </div>
-                        <div class="worksheet-content">
-                            <p class="worksheet-text">실제 매트 위에서 시뮬레이션을 수행하고 결과를 기록하세요!</p>
-                            <p class="worksheet-text">발사대 둘레 각도판으로 <strong>발사각</strong>(로켓 머리 방향)을 정하세요. 정면(90°)으로 쏘면 <strong>기준선 0°</strong>에 도착합니다. 리드 각도가 36°라면 조난자가 36° 눈금에 왔을 때 쏘고, 발사각을 바꿨다면 시험 발사로 도착 눈금을 먼저 확인해 거기에 리드 각도를 더한 눈금에서 쏩니다.</p>
 
                             <table class="result-table">
                                 <thead>
                                     <tr>
                                         <th>시도</th>
                                         <th>발사각 (°)</th>
-                                        <th>발사 때 조난자 눈금 (°)</th>
+                                        <th>도킹까지 시간 (초)</th>
                                         <th>결과</th>
-                                        <th>실패했다면 왜?</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
                                         <td>1차</td>
                                         <td><input type="number" id="attempt1-launch" class="table-input small" placeholder="°"></td>
-                                        <td><input type="number" id="attempt1-time" class="table-input small" placeholder="°"></td>
+                                        <td><input type="number" id="attempt1-time" class="table-input small" placeholder="초" step="0.1"></td>
                                         <td>
                                             <select id="attempt1-result" class="table-select">
                                                 <option value="">선택</option>
-                                                <option value="success">🎉 성공</option>
+                                                <option value="success">🎉 도킹 성공</option>
                                                 <option value="fail">실패</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select id="attempt1-cause" class="table-select">
-                                                <option value="">선택</option>
-                                                <option value="early">너무 일찍 쐈다</option>
-                                                <option value="late">너무 늦게 쐈다</option>
-                                                <option value="off">로켓이 길을 벗어났다</option>
-                                                <option value="etc">그 밖의 이유</option>
                                             </select>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>2차</td>
                                         <td><input type="number" id="attempt2-launch" class="table-input small" placeholder="°"></td>
-                                        <td><input type="number" id="attempt2-time" class="table-input small" placeholder="°"></td>
+                                        <td><input type="number" id="attempt2-time" class="table-input small" placeholder="초" step="0.1"></td>
                                         <td>
                                             <select id="attempt2-result" class="table-select">
                                                 <option value="">선택</option>
-                                                <option value="success">🎉 성공</option>
+                                                <option value="success">🎉 도킹 성공</option>
                                                 <option value="fail">실패</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <select id="attempt2-cause" class="table-select">
-                                                <option value="">선택</option>
-                                                <option value="early">너무 일찍 쐈다</option>
-                                                <option value="late">너무 늦게 쐈다</option>
-                                                <option value="off">로켓이 길을 벗어났다</option>
-                                                <option value="etc">그 밖의 이유</option>
                                             </select>
                                         </td>
                                     </tr>
                                     <tr>
                                         <td>3차</td>
                                         <td><input type="number" id="attempt3-launch" class="table-input small" placeholder="°"></td>
-                                        <td><input type="number" id="attempt3-time" class="table-input small" placeholder="°"></td>
+                                        <td><input type="number" id="attempt3-time" class="table-input small" placeholder="초" step="0.1"></td>
                                         <td>
                                             <select id="attempt3-result" class="table-select">
                                                 <option value="">선택</option>
-                                                <option value="success">🎉 성공</option>
+                                                <option value="success">🎉 도킹 성공</option>
                                                 <option value="fail">실패</option>
                                             </select>
                                         </td>
+                                    </tr>
+                                    <tr>
+                                        <td>4차</td>
+                                        <td><input type="number" id="attempt4-launch" class="table-input small" placeholder="°"></td>
+                                        <td><input type="number" id="attempt4-time" class="table-input small" placeholder="초" step="0.1"></td>
                                         <td>
-                                            <select id="attempt3-cause" class="table-select">
+                                            <select id="attempt4-result" class="table-select">
                                                 <option value="">선택</option>
-                                                <option value="early">너무 일찍 쐈다</option>
-                                                <option value="late">너무 늦게 쐈다</option>
-                                                <option value="off">로켓이 길을 벗어났다</option>
-                                                <option value="etc">그 밖의 이유</option>
+                                                <option value="success">🎉 도킹 성공</option>
+                                                <option value="fail">실패</option>
+                                            </select>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>5차</td>
+                                        <td><input type="number" id="attempt5-launch" class="table-input small" placeholder="°"></td>
+                                        <td><input type="number" id="attempt5-time" class="table-input small" placeholder="초" step="0.1"></td>
+                                        <td>
+                                            <select id="attempt5-result" class="table-select">
+                                                <option value="">선택</option>
+                                                <option value="success">🎉 도킹 성공</option>
+                                                <option value="fail">실패</option>
                                             </select>
                                         </td>
                                     </tr>
@@ -970,34 +849,25 @@
 
                             <div class="final-result-section">
                                 <div class="observation-question">
-                                    <label>📝 최종 미션 결과</label>
-                                    <div class="radio-group horizontal">
-                                        <label class="radio-item">
-                                            <input type="radio" name="mission-result" value="success">
-                                            <span class="radio-custom"></span>
-                                            <span>🎉 구조 성공!</span>
-                                        </label>
-                                        <label class="radio-item">
-                                            <input type="radio" name="mission-result" value="fail">
-                                            <span class="radio-custom"></span>
-                                            <span>😢 재도전 필요</span>
-                                        </label>
+                                    <label>🏆 가장 빨리 도킹한 발사각</label>
+                                    <div class="calc-conclusion">
+                                        <span>발사각 (</span>
+                                        <input type="number" id="stage4-angle" class="calc-input result-input" placeholder="?">
+                                        <span>) ° 일 때 가장 빨리 도킹했다.</span>
                                     </div>
                                 </div>
-
-                                <div id="success-details" class="success-details hidden">
-                                    <div class="observation-question">
-                                        <!-- id는 예전 "비행 시간" 칸을 그대로 쓴다 (저장·보고서가 이 이름을 참조) -->
-                                        <label>🎯 계산한 각도와 실제로 성공한 눈금이 달랐다면, 왜 그럴까요?</label>
-                                        <input type="text" id="stage4-time" class="code-input"
-                                            placeholder="예: 스톱워치를 늦게 눌러서 주기를 길게 쟀다">
-                                    </div>
+                                <div class="observation-question">
+                                    <!-- id는 예전 "비행 시간" 칸을 그대로 쓴다 (저장·보고서가 이 이름을 참조) -->
+                                    <label>🤔 왜 그 각도일 때 가장 빨랐을까요? 정면(90°)으로 쐈을 때와 비교해 써 보세요.</label>
+                                    <input type="text" id="stage4-time" class="code-input"
+                                        placeholder="예: 조난자가 도는 쪽으로 미리 겨냥해서 기다리는 시간이 줄었다">
                                 </div>
                             </div>
+                            <p class="validation-error hidden" id="stage4-record-error">⚠️ 시도를 한 번 이상 기록하고, 가장 빨랐던 발사각과 이유를 써 주세요.</p>
                         </div>
                     </div>
 
-                    <button class="btn btn-secondary btn-prev btn-prev-top" data-prev-phase="3">
+                    <button class="btn btn-secondary btn-prev btn-prev-top" data-prev-phase="1">
                         <span>◀ 이전 단계</span>
                     </button>
 
@@ -1259,10 +1129,9 @@
                 </div>
                 <div class="report-section">
                     <h3>STAGE 4: HOHMANN TRANSFER</h3>
-                    <p><strong>Inner Orbit Period:</strong> <span id="report-inner"></span> sec</p>
-                    <p><strong>Outer Orbit Period:</strong> <span id="report-outer"></span> sec</p>
-                    <p><strong>Rocket Flight Time:</strong> <span id="report-rocket"></span> sec</p>
-                    <p><strong>Transfer Window:</strong> <span id="report-window">-</span></p>
+                    <p><strong>Best Launch Angle:</strong> <span id="report-window">-</span></p>
+                    <p><strong>Attempts:</strong> <span id="report-attempts">-</span></p>
+                    <p><strong>Docking:</strong> <span id="report-docking">-</span></p>
                 </div>
                 <div class="report-footer">
                     <p>MISSION STATUS: <strong>SUCCESS</strong></p>

@@ -355,7 +355,8 @@ const App = (function () {
         const data = Storage.getAllData();
         const s2 = data.stage2Data || {};
         const s3 = data.stage3Data || {};
-        const s4 = data.stage4Averages || {};
+        const s4 = data.stageData?.stage4 || {};
+        const s4Attempts = (s4.attempts || []).filter(a => a.launch && a.time && a.result);
 
         const keep = (rows) => rows.filter(([, v]) => v !== undefined && v !== null && v !== '');
 
@@ -380,9 +381,11 @@ const App = (function () {
             {
                 title: 'STAGE 4 · 운명의 타이밍',
                 rows: keep([
-                    ['내행성 평균 주기', s4.inner ? `${s4.inner.toFixed(1)}초` : ''],
-                    ['외행성 평균 주기', s4.outer ? `${s4.outer.toFixed(1)}초` : ''],
-                    ['로켓 편도 시간', s4.rocket ? `${s4.rocket.toFixed(1)}초` : '']
+                    ...s4Attempts.map((a, i) => [
+                        `${i + 1}차 발사각 ${a.launch}°`,
+                        `${a.time}초 · ${a.result === 'success' ? '도킹 성공' : '실패'}`
+                    ]),
+                    ['가장 빠른 발사각', s4.angle && s4.angle !== 'MASTER' ? `${s4.angle}°` : '']
                 ])
             }
         ].filter(s => s.rows.length > 0);
@@ -506,7 +509,7 @@ const App = (function () {
     /**
      * 저장해둔 입력값을 화면에 되돌려 놓는다
      *
-     * 값만 넣으면 평균·각도 같은 계산 표시가 비어 있으므로,
+     * 값만 넣으면 각도 같은 계산 표시가 비어 있으므로,
      * 각 칸에 input 이벤트를 다시 흘려보내 화면이 스스로 다시 계산하게 한다.
      */
     function restoreFormValues() {
@@ -535,15 +538,6 @@ const App = (function () {
             el.dispatchEvent(new Event('change', { bubbles: true }));
         });
 
-        // 평균은 버튼을 눌러야 계산된다. 아홉 칸이 다 차 있으면 대신 눌러준다
-        const cells = ['inner-1', 'inner-2', 'inner-3', 'outer-1', 'outer-2', 'outer-3',
-            'rocket-1', 'rocket-2', 'rocket-3'];
-        const allMeasured = cells.every(id => {
-            const el = document.getElementById(id);
-            return el && el.value.trim() !== '';
-        });
-        if (allMeasured) document.getElementById('calc-avg-btn')?.click();
-
         console.log('[App] Form values restored:', touched.length, 'fields');
     }
 
@@ -561,34 +555,6 @@ const App = (function () {
             const el = document.getElementById(id);
             return el && el.value.trim() !== '';
         });
-
-        // 특수 검증 케이스
-        if (validateId === 'stage4-measure') {
-            // Stage 4 Phase 2: 측정값 9칸 + 평균 계산 버튼까지 눌렀는지 검증
-            const measured = allFilled(['inner-1', 'inner-2', 'inner-3',
-                'outer-1', 'outer-2', 'outer-3',
-                'rocket-1', 'rocket-2', 'rocket-3']);
-            const avgs = ['inner-avg', 'outer-avg', 'rocket-avg']
-                .map(id => document.getElementById(id)?.textContent);
-            const isValid = measured && avgs.every(v => v && v !== '--');
-
-            if (errorEl) errorEl.classList.toggle('hidden', isValid);
-            return isValid;
-        }
-
-        if (validateId === 'stage4-angle') {
-            // Stage 4 Phase 3: 계산 과정 전체와 발사 각도가 채워졌는지 검증
-            const isValid = allFilled(['calc-period', 'calc-speed', 'calc-travel', 'stage4-angle']);
-
-            if (errorEl) errorEl.classList.toggle('hidden', isValid);
-            if (!isValid) {
-                const firstEmpty = ['calc-period', 'calc-speed', 'calc-travel', 'stage4-angle']
-                    .map(id => document.getElementById(id))
-                    .find(el => el && el.value.trim() === '');
-                firstEmpty?.focus();
-            }
-            return isValid;
-        }
 
         // 일반 입력 필드 검증
         const inputEl = document.getElementById(validateId);
