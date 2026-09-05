@@ -157,10 +157,10 @@ def page_panel(c):
     text(c, MARGIN + pdfmetrics.stringWidth(head, M.BOLD, 7) + 5, H - MARGIN - 5,
          '매트 오른쪽 설명을 이걸로 대신하세요', 4.4, M.GRAY)
     text(c, MARGIN, H - MARGIN - 12,
-         '발사 계산이 없어졌습니다 — 내행성이 발사선을 지날 때 쏘고,',
+         '발사 계산이 없어졌습니다 — 두 로봇을 0° 출발점에서 동시 출발, 내행성이 한 바퀴 돌아올 때 발사.',
          3.8, M.RED)
     text(c, MARGIN, H - MARGIN - 17,
-         '발사각을 바꿔 가며 가장 빨리 도킹하는 각도를 찾습니다. 로봇 속도는 선생님이 정합니다.',
+         '시도마다 출발점에 다시 놓고, 발사각을 바꿔 가며 가장 빨리 도킹하는 각도를 찾습니다.',
          3.8, M.RED)
 
     top = H - MARGIN - 24
