@@ -7,3 +7,7 @@ __pycache__/
 # worksheets/make_vault.py 가 비밀번호 평문 원본, config/answers.json 이 정답 기록이다.
 worksheets/
 config/answers.json
+
+# Vercel 연결 정보·환경변수 (비밀번호 포함)
+.vercel
+.env*
